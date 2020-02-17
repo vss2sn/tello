@@ -2,13 +2,11 @@
 
 int main(){
   boost::asio::io_service io_service;
-  Tello tello(io_service, "192.168.10.1", "8889", "8889");
+  Tello tello(io_service, "192.168.10.1", "8889", "8889", 3,5);
   tello.sendCommand("command");
-  usleep(3000000);
   tello.sendCommand("takeoff");
-  usleep(9000000);
   tello.sendCommand("land");
-  usleep(3000000);
+  usleep(20000000); // Ensure this is greater than timeout to prevent seg faults
   io_service.stop();
   return 0;
 }

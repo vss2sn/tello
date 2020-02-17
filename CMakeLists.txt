@@ -2,9 +2,9 @@ project(tello)
 
 cmake_minimum_required(VERSION 3.5)
 
-add_definitions(-std=c++11)
+add_definitions(-std=c++11 -DSIMPLE)
 
-set(CMAKE_CXX_FLAGS "-w -g -Werror -Wall")
+set(CMAKE_CXX_FLAGS "-w -g -Werror -Wall -O0")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
