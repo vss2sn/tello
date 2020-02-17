@@ -141,3 +141,20 @@ Tello::~Tello(){
  socket_.close();
  io_service_.stop();
 }
+
+void Tello::addCommandToQueue(const std::string& cmd){
+  command_queue_.push(cmd);
+}
+
+void Tello::executeQueue(){
+  LogInfo() << "Executing queue commands";
+  boost::thread run_thread(&Tello::sendQueueCommands, this);
+}
+
+void Tello::sendQueueCommands(){
+  while(!command_queue_.empty()){
+    sendCommand(command_queue_.front());
+    command_queue_.pop();
+  }
+  LogInfo() << "Command queue empty.";
+}
