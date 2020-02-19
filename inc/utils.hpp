@@ -1,3 +1,6 @@
+#ifndef UTILS_H
+#define UTILS_H
+
 #include <iostream>
 #include <mutex>
 #include <sstream>
@@ -69,3 +72,5 @@ public:
 		_log_level = LogLevel::Status;
 	}
 };
+
+#endif UTILS_H

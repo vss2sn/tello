@@ -1,16 +1,12 @@
 #include "video_socket.hpp"
+#include "utils.hpp"
 
 VideoSocket::VideoSocket(boost::asio::io_service& io_service,
   const std::string& drone_ip,
   const std::string& drone_port,
-  const std::string& local_port//,
-  )
-  :
-  io_service_(io_service),
-  local_port_(local_port),
-  drone_ip_(drone_ip),
-  drone_port_(drone_port),
-  socket_(io_service_, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), std::stoi(local_port)))
+  const std::string& local_port
+):
+  BaseSocket(io_service, drone_ip, drone_port, local_port)
 {
     boost::asio::ip::udp::resolver resolver(io_service_);
     boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), drone_ip_, drone_port_);
@@ -88,4 +84,10 @@ void VideoSocket::decodeFrame()
 
 VideoSocket::~VideoSocket(){
   socket_.close();
+}
+
+void VideoSocket::handleSendCommand(const boost::system::error_code& error,
+   size_t bytes_sent, const std::string& cmd)
+{
+  std::cout << "VideoSocket class does not implement handleSendCommand()" << std::endl;
 }

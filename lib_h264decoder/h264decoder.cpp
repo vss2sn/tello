@@ -1,3 +1,5 @@
+// From: https://github.com/DaWelter/h264decode
+
 extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavutil/avutil.h>

@@ -6,15 +6,11 @@ CommandSocket::CommandSocket(boost::asio::io_service& io_service,
   const std::string& drone_port,
   const std::string& local_port,
   int n_retries_allowed,
-  int timeout)
-  :
-  io_service_(io_service),
-  local_port_(local_port),
-  drone_ip_(drone_ip),
-  drone_port_(drone_port),
+  int timeout
+):
+  BaseSocket(io_service, drone_ip, drone_port, local_port),
   n_retries_allowed_(n_retries_allowed),
-  timeout_(timeout),
-  socket_(io_service_, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), std::stoi(local_port)))
+  timeout_(timeout)
 {
   boost::asio::ip::udp::resolver resolver(io_service_);
   boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), drone_ip_, drone_port_);
@@ -138,7 +134,6 @@ void CommandSocket::retry(const std::string& cmd){
 }
 
 CommandSocket::~CommandSocket(){
- socket_.close();
  io_service_.stop();
 }
 

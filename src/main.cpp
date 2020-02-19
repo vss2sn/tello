@@ -7,8 +7,8 @@ int main(){
   c_tello.addCommandToQueue("command");
   c_tello.addCommandToQueue("streamon");
 
-  // tello.addCommandToQueue("takeoff");
-  // tello.addCommandToQueue("land");
+  c_tello.addCommandToQueue("takeoff");
+  c_tello.addCommandToQueue("land");
   c_tello.executeQueue();
 
   VideoSocket v_tello(io_service, "0.0.0.0", "11111", "11111");

@@ -1,3 +1,5 @@
+// From: https://github.com/DaWelter/h264decode
+
 #include <cstdlib>
 #include <stdexcept>
 
