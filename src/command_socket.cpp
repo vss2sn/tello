@@ -57,17 +57,7 @@ void CommandSocket::handleResponseFromDrone(const boost::system::error_code& err
 }
 
 void CommandSocket::sendCommand(const std::string& cmd){
-
-  // Run reponse thread only after sending command rather than always
-  if(!received_response_){
-    usleep(10000); // Next send command grabs mutex before handleSendCommand.
-    LogInfo() << "Waiting to send [command] " << cmd << " as no response has been received for the previous command. Thread calling send command paused." ;
-  }
-  while(!received_response_){
-    // LogInfo() << "In while";
-    usleep(500000);
-  }
-
+  //
   received_response_ = false;
   n_retries_ = 0;
 
@@ -138,18 +128,60 @@ CommandSocket::~CommandSocket(){
 }
 
 void CommandSocket::addCommandToQueue(const std::string& cmd){
-  command_queue_.push(cmd);
+  command_queue_.push_back(cmd);
+  if(execute_queue_){
+    executeQueue();
+  }
 }
 
 void CommandSocket::executeQueue(){
   LogInfo() << "Executing queue commands";
+  execute_queue_ = true;
   boost::thread run_thread(&CommandSocket::sendQueueCommands, this);
 }
 
 void CommandSocket::sendQueueCommands(){
-  while(!command_queue_.empty()){
+
+  while(!command_queue_.empty() && execute_queue_){
+    if(command_queue_.front().substr(0,5) == "delay"){
+      usleep(stoi(command_queue_.front().substr(5, command_queue_.front().size())));
+      command_queue_.pop_front();
+      continue;
+    }
+    if(command_queue_.front().substr(0,5) =="stop"){
+      sendCommand(command_queue_.front());
+      command_queue_.pop_front();
+      continue;
+    }
+    // Run reponse thread only after sending command rather than always
+    if(!received_response_){
+      usleep(10000); // Next send command grabs mutex before handleSendCommand.
+      LogInfo() << "Waiting to send [command] " << command_queue_.front() << " as no response has been received for the previous command. Thread calling send command paused." ;
+    }
+    while(!received_response_){
+      // LogInfo() << "In while";
+      usleep(500000);
+    }
     sendCommand(command_queue_.front());
-    command_queue_.pop();
+    command_queue_.pop_front();
   }
+  if(!execute_queue_) LogInfo() << "Queue execution paused";
   LogInfo() << "Command queue empty.";
+}
+
+void CommandSocket::addCommandToFrontOfQueue(const std::string& cmd){
+  bool flag = execute_queue_;
+  execute_queue_ = false;
+  command_queue_.push_front(cmd);
+  execute_queue_ = flag;
+}
+
+void CommandSocket::stopQueueExecution(){
+  LogInfo() << "Stopping queue execution. " << command_queue_.size() << " commands stilll in queue.";
+  execute_queue_ = false;
+}
+
+void CommandSocket::clearQueue(){
+  LogInfo() <<  "Clearing queue.";
+  command_queue_.clear();
 }
