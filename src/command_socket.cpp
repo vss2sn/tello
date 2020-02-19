@@ -1,7 +1,7 @@
-#include "tello.hpp"
+#include "command_socket.hpp"
 #include "utils.hpp"
 
-Tello::Tello(boost::asio::io_service& io_service,
+CommandSocket::CommandSocket(boost::asio::io_service& io_service,
   const std::string& drone_ip,
   const std::string& drone_port,
   const std::string& local_port,
@@ -24,7 +24,7 @@ Tello::Tello(boost::asio::io_service& io_service,
   socket_.async_receive_from(
     boost::asio::buffer(data_, max_length_),
     endpoint_,
-    boost::bind(&Tello::handleResponseFromDrone,
+    boost::bind(&CommandSocket::handleResponseFromDrone,
                 this,
                 boost::asio::placeholders::error,
                 boost::asio::placeholders::bytes_transferred));
@@ -32,7 +32,7 @@ Tello::Tello(boost::asio::io_service& io_service,
   boost::thread run_thread(boost::bind(&boost::asio::io_service::run, boost::ref(io_service_)));
 }
 
-void Tello::handleResponseFromDrone(const boost::system::error_code& error,
+void CommandSocket::handleResponseFromDrone(const boost::system::error_code& error,
                        size_t bytes_recvd)
 {
  // response_ = "";
@@ -54,13 +54,13 @@ void Tello::handleResponseFromDrone(const boost::system::error_code& error,
  socket_.async_receive_from(
    boost::asio::buffer(data_, max_length_),
    endpoint_,
-   boost::bind(&Tello::handleResponseFromDrone,
+   boost::bind(&CommandSocket::handleResponseFromDrone,
      this,
      boost::asio::placeholders::error,
      boost::asio::placeholders::bytes_transferred));
 }
 
-void Tello::sendCommand(const std::string& cmd){
+void CommandSocket::sendCommand(const std::string& cmd){
 
   // Run reponse thread only after sending command rather than always
   if(!received_response_){
@@ -78,17 +78,17 @@ void Tello::sendCommand(const std::string& cmd){
  socket_.async_send_to(
      boost::asio::buffer(cmd, cmd.size()),
      endpoint_,
-     boost::bind(&Tello::handleSendCommand,
+     boost::bind(&CommandSocket::handleSendCommand,
        this,
        boost::asio::placeholders::error,
        boost::asio::placeholders::bytes_transferred,
        cmd));
-    // boost::thread run_thread(boost::bind(&Tello::waitForResponse, this));
-    if(n_retries_allowed_) boost::thread run_thread(boost::bind(&Tello::retry, this, cmd));
+    // boost::thread run_thread(boost::bind(&CommandSocket::waitForResponse, this));
+    if(n_retries_allowed_) boost::thread run_thread(boost::bind(&CommandSocket::retry, this, cmd));
     // while(true){};
 }
 
-void Tello::waitForResponse(){
+void CommandSocket::waitForResponse(){
   std::chrono::system_clock::time_point start = std::chrono::system_clock::now();
   while(std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - start).count() < timeout_){
     if(received_response_){
@@ -107,7 +107,7 @@ void Tello::waitForResponse(){
   }
 }
 
-void Tello::handleSendCommand(const boost::system::error_code& error,
+void CommandSocket::handleSendCommand(const boost::system::error_code& error,
    size_t bytes_sent, const std::string& cmd)
 {
  if(!error && bytes_sent>0){
@@ -119,7 +119,7 @@ void Tello::handleSendCommand(const boost::system::error_code& error,
  }
 }
 
-void Tello::retry(const std::string& cmd){
+void CommandSocket::retry(const std::string& cmd){
   waitForResponse();
   if(received_response_) return;
   while(n_retries_ < n_retries_allowed_ && !received_response_){
@@ -128,7 +128,7 @@ void Tello::retry(const std::string& cmd){
     socket_.async_send_to(
         boost::asio::buffer(cmd, cmd.size()),
         endpoint_,
-        boost::bind(&Tello::handleSendCommand,
+        boost::bind(&CommandSocket::handleSendCommand,
           this,
           boost::asio::placeholders::error,
           boost::asio::placeholders::bytes_transferred,
@@ -137,21 +137,21 @@ void Tello::retry(const std::string& cmd){
   }
 }
 
-Tello::~Tello(){
+CommandSocket::~CommandSocket(){
  socket_.close();
  io_service_.stop();
 }
 
-void Tello::addCommandToQueue(const std::string& cmd){
+void CommandSocket::addCommandToQueue(const std::string& cmd){
   command_queue_.push(cmd);
 }
 
-void Tello::executeQueue(){
+void CommandSocket::executeQueue(){
   LogInfo() << "Executing queue commands";
-  boost::thread run_thread(&Tello::sendQueueCommands, this);
+  boost::thread run_thread(&CommandSocket::sendQueueCommands, this);
 }
 
-void Tello::sendQueueCommands(){
+void CommandSocket::sendQueueCommands(){
   while(!command_queue_.empty()){
     sendCommand(command_queue_.front());
     command_queue_.pop();
