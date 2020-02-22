@@ -42,7 +42,7 @@ private:
   bool do_not_land = true;
   bool on_ = true;
   int do_not_land_timeout = 10;
-  std::thread worker;
+  boost::thread io_thread, cmd_thread;
 
   std::mutex m;
   std::condition_variable cv;

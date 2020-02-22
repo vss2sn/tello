@@ -25,9 +25,8 @@ CommandSocket::CommandSocket(boost::asio::io_service& io_service,
                 boost::asio::placeholders::error,
                 boost::asio::placeholders::bytes_transferred));
 
-  boost::thread run_thread(boost::bind(&boost::asio::io_service::run, boost::ref(io_service_)));
-
-  worker = std::thread(&CommandSocket::sendQueueCommands, this);
+  io_thread(boost::bind(&boost::asio::io_service::run, boost::ref(io_service_)));
+  cmd_thread(boost::bind(&CommandSocket::sendQueueCommands, this));
 }
 
 void CommandSocket::handleResponseFromDrone(const boost::system::error_code& error,
@@ -73,7 +72,8 @@ void CommandSocket::sendCommand(const std::string& cmd){
       boost::asio::placeholders::error,
       boost::asio::placeholders::bytes_transferred,
       cmd));
-  if(n_retries_allowed_) boost::thread run_thread(boost::bind(&CommandSocket::retry, this, cmd));
+  // TODO: Check whether this works with all the updates
+  // if(n_retries_allowed_) boost::thread run_thread(boost::bind(&CommandSocket::retry, this, cmd));
 }
 
 void CommandSocket::waitForResponse(){
@@ -84,7 +84,7 @@ void CommandSocket::waitForResponse(){
     }
     usleep(100000);
   }
-  if(waiting_for_response_) LogInfo() << "Timeout - Attempt #" << n_retries_;
+  if(waiting_for_response_) LogInfo() << "Timeout - Attempt #" << n_retries_ << " for command [" << last_command_ << "]";
   if(n_retries_ == n_retries_allowed_){
     if(n_retries_allowed_ > 0){
       LogInfo() << "Exhausted retries" ;
@@ -135,12 +135,9 @@ void CommandSocket::addCommandToQueue(const std::string& cmd){
 
 void CommandSocket::executeQueue(){
   LogInfo() << "Executing queue commands";
-  // need to reserfev a thread for execute queue that needs to be pausedand unpaused.
-  // boost::thread run_thread(&CommandSocket::sendQueueCommands, this);
   {
     std::lock_guard<std::mutex> lk(m);
     execute_queue_ = true;
-    std::cout << "executeQueue() signals data ready for processing\n";
   }
   cv.notify_one();
 }
@@ -162,19 +159,17 @@ void CommandSocket::sendQueueCommands(){
       }
       if(cmd.substr(0,4) =="stop"){
         waiting_for_response_ = false; // to prevent retries of prev sent command if none received in spit of comman dbeing sent.
-        continue;
       }
       // Run reponse thread only after sending command rather than always
       if(waiting_for_response_){
         usleep(10000); // Next send command grabs mutex before handleSendCommand.
-        // The abpve should no longer be required
+        // TODO: The abpve should no longer be required
         LogInfo() << "Waiting to send command [" << cmd << "] as no response has been received for the previous command. Thread calling send command paused." ;
       }
       while(waiting_for_response_){
         usleep(500000);
       }
       waiting_for_response_ = true;
-
       sendCommand(cmd);
       command_sent_time = std::chrono::system_clock::now();
     }
@@ -185,7 +180,7 @@ void CommandSocket::sendQueueCommands(){
 void CommandSocket::addCommandToFrontOfQueue(const std::string& cmd){
   queue_mutex_.lock();
   command_queue_.push_front(cmd);
-  queue_mutex_.lock();
+  queue_mutex_.unlock();
 }
 
 void CommandSocket::stopQueueExecution(){
@@ -227,5 +222,4 @@ CommandSocket::~CommandSocket(){
   execute_queue_ = false;
   on_ = false;
   io_service_.stop();
-  worker.join();
 }
