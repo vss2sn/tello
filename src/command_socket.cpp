@@ -1,7 +1,12 @@
 #include "command_socket.hpp"
 #include "utils.hpp"
 
-CommandSocket::CommandSocket(boost::asio::io_service& io_service,
+CommandSocket::CommandSocket(
+#ifdef USE_BOOST
+  boost::asio::io_service& io_service,
+#else
+  asio::io_service& io_service,
+#endif
   const std::string& drone_ip,
   const std::string& drone_port,
   const std::string& local_port,
@@ -12,6 +17,7 @@ CommandSocket::CommandSocket(boost::asio::io_service& io_service,
   n_retries_allowed_(n_retries_allowed),
   timeout_(timeout)
 {
+#ifdef USE_BOOST
   boost::asio::ip::udp::resolver resolver(io_service_);
   boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), drone_ip_, drone_port_);
   boost::asio::ip::udp::resolver::iterator iter = resolver.resolve(query);
@@ -25,12 +31,38 @@ CommandSocket::CommandSocket(boost::asio::io_service& io_service,
                 boost::asio::placeholders::error,
                 boost::asio::placeholders::bytes_transferred));
 
-  io_thread(boost::bind(&boost::asio::io_service::run, boost::ref(io_service_)));
-  cmd_thread(boost::bind(&CommandSocket::sendQueueCommands, this));
+  io_thread = boost::thread(boost::bind(&boost::asio::io_service::run, boost::ref(io_service_)));
+  cmd_thread = boost::thread(boost::bind(&CommandSocket::sendQueueCommands, this));
+#else
+  asio::ip::udp::resolver resolver(io_service_);
+  asio::ip::udp::resolver::query query(asio::ip::udp::v4(), drone_ip_, drone_port_);
+  asio::ip::udp::resolver::iterator iter = resolver.resolve(query);
+  endpoint_ = *iter;
+
+  socket_.async_receive_from(
+    asio::buffer(data_, max_length_),
+    endpoint_,
+    [&](const std::error_code& error, size_t bytes_recvd)
+    {return handleResponseFromDrone(error, bytes_recvd);});
+    // [&](auto... args){return handleResponseFromDrone(args...);});
+
+    io_thread = std::thread([&]{io_service_.run();});
+    cmd_thread = std::thread(&CommandSocket::sendQueueCommands, this);
+#endif
+
+// NOTE: Possible methods to call threads
+// io_thread(boost::bind(&boost::asio::io_service::run, boost::ref(io_service_)));
+// io_thread = std::thread([&]{io_service_.run();});
+// io_thread = std::thread( static_cast<std::size_t(boost::asio::io_service::*)()>(&boost::asio::io_service::run), io_service);
+// cmd_thread = std::thread(&CommandSocket::sendQueueCommands, this);
+// cmd_thread = std::thread([&](void){sendQueueCommands();});
 }
 
-void CommandSocket::handleResponseFromDrone(const boost::system::error_code& error,
-                       size_t bytes_recvd)
+#ifdef USE_BOOST
+void CommandSocket::handleResponseFromDrone(const boost::system::error_code& error, size_t bytes_recvd)
+#else
+void CommandSocket::handleResponseFromDrone(const std::error_code& error, size_t bytes_recvd)
+#endif
 {
  if(!error && bytes_recvd>0){
    waiting_for_response_ = false;
@@ -51,8 +83,9 @@ void CommandSocket::handleResponseFromDrone(const boost::system::error_code& err
    LogInfo() << "Received response [" << response_ << "] after sending command ["<< last_command_ << "] from address [" << drone_ip_ << ":" << drone_port_ << "]";
  }
  else{
-   LogInfo() << "Error/Nothing received" ;
+   LogWarn() << "Nothing received" ;
  }
+#if USE_BOOST
  socket_.async_receive_from(
    boost::asio::buffer(data_, max_length_),
    endpoint_,
@@ -60,10 +93,18 @@ void CommandSocket::handleResponseFromDrone(const boost::system::error_code& err
      this,
      boost::asio::placeholders::error,
      boost::asio::placeholders::bytes_transferred));
+#else
+  socket_.async_receive_from(
+    asio::buffer(data_, max_length_),
+    endpoint_,
+    [&](auto... args){return handleResponseFromDrone(args...);});
+#endif
 }
 
-void CommandSocket::sendCommand(const std::string& cmd){
+void CommandSocket::sendCommand(std::string cmd){
   n_retries_ = 0;
+  LogDebug() << "Command ["<< cmd << "] ";
+#if USE_BOOST
   socket_.async_send_to(
     boost::asio::buffer(cmd, cmd.size()),
     endpoint_,
@@ -72,8 +113,17 @@ void CommandSocket::sendCommand(const std::string& cmd){
       boost::asio::placeholders::error,
       boost::asio::placeholders::bytes_transferred,
       cmd));
+#else
+  socket_.async_send_to(
+    asio::buffer(cmd, cmd.size()),
+    endpoint_,
+    [&](const std::error_code& error, size_t bytes_recvd)
+    {return handleSendCommand(error, bytes_recvd, cmd);});
+    // [&](auto... args){return handleSendCommand(args..., cmd);});
+#endif
   // TODO: Check whether this works with all the updates
   // if(n_retries_allowed_) boost::thread run_thread(boost::bind(&CommandSocket::retry, this, cmd));
+  LogDebug() << "At the end of send command. Command is ["<<cmd<<"]";
 }
 
 void CommandSocket::waitForResponse(){
@@ -87,23 +137,27 @@ void CommandSocket::waitForResponse(){
   if(waiting_for_response_) LogInfo() << "Timeout - Attempt #" << n_retries_ << " for command [" << last_command_ << "]";
   if(n_retries_ == n_retries_allowed_){
     if(n_retries_allowed_ > 0){
-      LogInfo() << "Exhausted retries" ;
+      LogWarn() << "Exhausted retries" ;
     }
     waiting_for_response_ = false; // Timeout
   }
 }
 
-void CommandSocket::handleSendCommand(const boost::system::error_code& error,
-                                      size_t bytes_sent,
-                                      const std::string& cmd)
+#ifdef USE_BOOST
+void CommandSocket::handleSendCommand(const boost::system::error_code& error, size_t bytes_sent, std::string cmd)
+#else
+void CommandSocket::handleSendCommand(const std::error_code& error, size_t bytes_sent, std::string cmd)
+#endif
 {
+ LogDebug() << "Beginning of handleSendCommand. Command is ["<<cmd<<"]";
  if(!error && bytes_sent>0){
    LogInfo() << "Successfully sent command [" << cmd << "] to address [" << drone_ip_ << ":" << drone_port_ << "]";
    last_command_ = cmd;
  }
  else{
-   LogInfo() << "Failed to send command [" << cmd <<"]";
+   LogDebug() << "Failed to send command [" << cmd <<"]";
  }
+ LogDebug() << "End of handleSendCommand. Command is ["<<cmd<<"]";
 }
 
 void CommandSocket::retry(const std::string& cmd){
@@ -112,14 +166,21 @@ void CommandSocket::retry(const std::string& cmd){
   while(n_retries_ < n_retries_allowed_ && waiting_for_response_){
     LogInfo() << "Retrying..." ;
     n_retries_++;
+#if USE_BOOST
     socket_.async_send_to(
-        boost::asio::buffer(cmd, cmd.size()),
-        endpoint_,
-        boost::bind(&CommandSocket::handleSendCommand,
-          this,
-          boost::asio::placeholders::error,
-          boost::asio::placeholders::bytes_transferred,
-          cmd));
+      boost::asio::buffer(cmd, cmd.size()),
+      endpoint_,
+      boost::bind(&CommandSocket::handleSendCommand,
+        this,
+        boost::asio::placeholders::error,
+        boost::asio::placeholders::bytes_transferred,
+        cmd));
+#else
+    socket_.async_send_to(
+      asio::buffer(cmd, cmd.size()),
+      endpoint_,
+      [&](auto... args){return handleSendCommand(args..., cmd);});
+#endif
     last_command_ = cmd;
     command_sent_time = std::chrono::system_clock::now();
     waitForResponse();
@@ -145,12 +206,14 @@ void CommandSocket::executeQueue(){
 void CommandSocket::sendQueueCommands(){
   std::string cmd;
   while(true){
+    LogInfo () << "Beginning of while loop";
     std::unique_lock<std::mutex> lk(m);
     cv.wait(lk, [this]{return execute_queue_ && !command_queue_.empty();});
     if(!on_) break;
     while(!command_queue_.empty() && execute_queue_){
       queue_mutex_.lock();
       cmd = command_queue_.front();
+      LogDebug() << "Popped queue. Command is now ["<<cmd<<"]";
       command_queue_.pop_front();
       queue_mutex_.unlock();
       if(cmd.substr(0,5) == "delay"){
@@ -169,6 +232,7 @@ void CommandSocket::sendQueueCommands(){
       while(waiting_for_response_){
         usleep(500000);
       }
+      LogDebug() << "About to call send command with command ["<<cmd<<"]";
       waiting_for_response_ = true;
       sendCommand(cmd);
       command_sent_time = std::chrono::system_clock::now();
@@ -203,6 +267,7 @@ void CommandSocket::removeNextFromQueue(){
   LogInfo() << "Removing command [" << cmd << "] from queue.";
 }
 
+// TODO: test this
 void CommandSocket::DoNotLand(){
   std::chrono::system_clock::time_point start;
   while(do_not_land){

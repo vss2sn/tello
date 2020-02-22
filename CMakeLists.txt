@@ -2,9 +2,11 @@ project(tello)
 
 cmake_minimum_required(VERSION 3.5)
 
-add_definitions(-std=c++11 -DSIMPLE)
+add_definitions(-std=c++17)
 
 set(CMAKE_CXX_FLAGS "-w -g -Werror -Wall -O0")
+set(SIMPLE "Use simple formatting for all output to terminal" ON)
+set(USE_BOOST "Use boost libraries for asio, thread, etc" OFF)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc
 ${CMAKE_CURRENT_SOURCE_DIR}/lib_h264decoder)
@@ -14,7 +16,15 @@ file( GLOB LIB_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.hpp)
 
 list(REMOVE_ITEM LIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 
-find_package(Boost COMPONENTS system thread REQUIRED)
+if(SIMPLE)
+  add_definitions(-DSIMPLE)
+endif(SIMPLE)
+
+if(USE_BOOST)
+  find_package(Boost COMPONENTS system thread REQUIRED)
+  add_definitions(-DUSE_BOOST)
+endif(USE_BOOST)
+
 find_package(Threads REQUIRED)
 find_package(OpenCV REQUIRED)
 

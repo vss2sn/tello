@@ -4,12 +4,17 @@
 #include "utils.hpp"
 
 int main(){
+#ifdef USE_BOOST
   boost::asio::io_service io_service;
+#else
+  asio::io_service io_service;
+#endif
 
   CommandSocket c_tello(io_service, "192.168.10.1", "8889", "8889", 3,5);
   c_tello.addCommandToQueue("command");
   c_tello.addCommandToQueue("streamon");
   c_tello.addCommandToQueue("takeoff");
+  c_tello.addCommandToQueue("stop");
   c_tello.addCommandToQueue("land");
   c_tello.executeQueue();
 

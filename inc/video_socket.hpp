@@ -13,14 +13,23 @@
 
 class VideoSocket  : public BaseSocket{
 public:
-
+#ifdef USE_BOOST
   VideoSocket(boost::asio::io_service& io_service, const std::string& drone_ip, const std::string& drone_port, const std::string& local_port);
+#else
+  VideoSocket(asio::io_service& io_service, const std::string& drone_ip, const std::string& drone_port, const std::string& local_port);
+#endif
   ~VideoSocket();
 
 private:
 
+#ifdef USE_BOOST
   void handleResponseFromDrone(const boost::system::error_code& error, size_t r) override;
-  void handleSendCommand(const boost::system::error_code& error, size_t bytes_sent, const std::string& cmd) override;
+  void handleSendCommand(const boost::system::error_code& error, size_t bytes_sent, std::string cmd) override;
+#else
+  void handleResponseFromDrone(const std::error_code& error, size_t r) override;
+  void handleSendCommand(const std::error_code& error, size_t bytes_sent, std::string cmd) override;
+#endif
+
   void decodeFrame();
 
   enum{ max_length_ =  2048 };
