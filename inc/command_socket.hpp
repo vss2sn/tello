@@ -3,7 +3,9 @@
 
 #include <chrono>
 #include <deque>
-
+#include <mutex>
+#include <thread>
+#include <condition_variable>
 #include "base_socket.hpp"
 
 class CommandSocket : public BaseSocket {
@@ -15,6 +17,8 @@ public:
   void addCommandToFrontOfQueue(const std::string& cmd);
   void clearQueue();
   void stopQueueExecution();
+  void removeNextFromQueue();
+  void DoNotLand();
   ~CommandSocket();
 
 private:
@@ -27,12 +31,23 @@ private:
   void sendCommand(const std::string& cmd);
 
   enum{ max_length_ = 1024 };
-  bool received_response_ = true;
+  bool waiting_for_response_ = false;
   bool execute_queue_ = false;
   char data_[max_length_];
   int timeout_, n_retries_ = 0, n_retries_allowed_;
   std::string last_command_, response_;
   std::deque<std::string> command_queue_;
+  std::mutex queue_mutex_;
+  std::chrono::system_clock::time_point command_sent_time;
+  bool do_not_land = true;
+  bool on_ = true;
+  int do_not_land_timeout = 10;
+  std::thread worker;
+
+  std::mutex m;
+  std::condition_variable cv;
+  // bool ready = false;
+  // bool processed = false;
 
 };
 
