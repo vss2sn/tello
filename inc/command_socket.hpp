@@ -22,7 +22,10 @@ public:
   void clearQueue();
   void stopQueueExecution();
   void removeNextFromQueue();
-  void DoNotLand();
+  void doNotAutoLand();
+  void allowAutoLand();
+  void emergency();
+  void stop();
   ~CommandSocket();
 
 private:
@@ -39,27 +42,24 @@ private:
   void retry(const std::string& cmd);
   void sendQueueCommands();
   void sendCommand(std::string cmd);
+  void doNotAutoLandWorker();
 
   enum{ max_length_ = 1024 };
-  bool waiting_for_response_ = false;
-  bool execute_queue_ = false;
+  bool waiting_for_response_ = false, execute_queue_ = false, dnal_ = true, on_ = true;
   char data_[max_length_];
-  int timeout_, n_retries_ = 0, n_retries_allowed_;
+  int timeout_, n_retries_ = 0, n_retries_allowed_, dnal_timeout = 7 /*dnal --> do not auto land*/ ;
   std::string last_command_, response_;
   std::deque<std::string> command_queue_;
-  std::mutex queue_mutex_;
-  std::chrono::system_clock::time_point command_sent_time;
-  bool do_not_land = true;
-  bool on_ = true;
-  int do_not_land_timeout = 10;
+  std::mutex queue_mutex_, m, dnal_mutex;
+  std::condition_variable cv_execute_queue_, cv_dnal_;
+  std::chrono::system_clock::time_point command_sent_time_;
+
 #ifdef USE_BOOST
-  boost::thread cmd_thread;
+  boost::thread cmd_thread, dnal_thread;
 #else
-  std::thread cmd_thread;
+  std::thread cmd_thread, dnal_thread;
 #endif
 
-  std::mutex m;
-  std::condition_variable cv;
 };
 
 #endif COMMANDSOCKET_H

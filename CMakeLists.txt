@@ -5,8 +5,8 @@ cmake_minimum_required(VERSION 3.5)
 add_definitions(-std=c++17)
 
 set(CMAKE_CXX_FLAGS "-w -g -Werror -Wall -O0")
-set(SIMPLE "Use simple formatting for all output to terminal" ON)
-set(USE_BOOST "Use boost libraries for asio, thread, etc" OFF)
+option(SIMPLE "Use simple formatting for all output to terminal" OFF)
+option(USE_BOOST "Use boost libraries for asio, thread, etc" OFF)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc
 ${CMAKE_CURRENT_SOURCE_DIR}/lib_h264decoder)

@@ -33,6 +33,7 @@ CommandSocket::CommandSocket(
 
   io_thread = boost::thread(boost::bind(&boost::asio::io_service::run, boost::ref(io_service_)));
   cmd_thread = boost::thread(boost::bind(&CommandSocket::sendQueueCommands, this));
+  dnal_thread = boost::thread(boost::bind(&CommandSocket::doNotAutoLandWorker, this));
 #else
   asio::ip::udp::resolver resolver(io_service_);
   asio::ip::udp::resolver::query query(asio::ip::udp::v4(), drone_ip_, drone_port_);
@@ -48,8 +49,9 @@ CommandSocket::CommandSocket(
 
     io_thread = std::thread([&]{io_service_.run();});
     cmd_thread = std::thread(&CommandSocket::sendQueueCommands, this);
+    dnal_thread = std::thread(&CommandSocket::doNotAutoLandWorker, this);
 #endif
-
+  command_sent_time_ = std::chrono::system_clock::now();
 // NOTE: Possible methods to call threads
 // io_thread(boost::bind(&boost::asio::io_service::run, boost::ref(io_service_)));
 // io_thread = std::thread([&]{io_service_.run();});
@@ -103,7 +105,7 @@ void CommandSocket::handleResponseFromDrone(const std::error_code& error, size_t
 
 void CommandSocket::sendCommand(std::string cmd){
   n_retries_ = 0;
-  LogDebug() << "Command ["<< cmd << "] ";
+  // LogDebug() << "Command ["<< cmd << "] ";
 #if USE_BOOST
   socket_.async_send_to(
     boost::asio::buffer(cmd, cmd.size()),
@@ -123,7 +125,7 @@ void CommandSocket::sendCommand(std::string cmd){
 #endif
   // TODO: Check whether this works with all the updates
   // if(n_retries_allowed_) boost::thread run_thread(boost::bind(&CommandSocket::retry, this, cmd));
-  LogDebug() << "At the end of send command. Command is ["<<cmd<<"]";
+  // LogDebug() << "At the end of send command. Command is ["<<cmd<<"]";
 }
 
 void CommandSocket::waitForResponse(){
@@ -149,15 +151,15 @@ void CommandSocket::handleSendCommand(const boost::system::error_code& error, si
 void CommandSocket::handleSendCommand(const std::error_code& error, size_t bytes_sent, std::string cmd)
 #endif
 {
- LogDebug() << "Beginning of handleSendCommand. Command is ["<<cmd<<"]";
+ // LogDebug() << "Beginning of handleSendCommand. Command is ["<<cmd<<"]";
  if(!error && bytes_sent>0){
    LogInfo() << "Successfully sent command [" << cmd << "] to address [" << drone_ip_ << ":" << drone_port_ << "]";
    last_command_ = cmd;
  }
  else{
-   LogDebug() << "Failed to send command [" << cmd <<"]";
+   // LogDebug() << "Failed to send command [" << cmd <<"]";
  }
- LogDebug() << "End of handleSendCommand. Command is ["<<cmd<<"]";
+ // LogDebug() << "End of handleSendCommand. Command is ["<<cmd<<"]";
 }
 
 void CommandSocket::retry(const std::string& cmd){
@@ -179,19 +181,22 @@ void CommandSocket::retry(const std::string& cmd){
     socket_.async_send_to(
       asio::buffer(cmd, cmd.size()),
       endpoint_,
-      [&](auto... args){return handleSendCommand(args..., cmd);});
+      [&](const std::error_code& error, size_t bytes_recvd)
+      {return handleSendCommand(error, bytes_recvd, cmd);});
+      // [&](auto... args){return handleSendCommand(args..., cmd);});
 #endif
     last_command_ = cmd;
-    command_sent_time = std::chrono::system_clock::now();
+    command_sent_time_ = std::chrono::system_clock::now();
     waitForResponse();
   }
 }
 
 void CommandSocket::addCommandToQueue(const std::string& cmd){
   queue_mutex_.lock();
+  LogInfo() << "Added command ["<< cmd<<"] to queue";
   command_queue_.push_back(cmd);
   queue_mutex_.unlock();
-  cv.notify_one();
+  cv_execute_queue_.notify_one();
 }
 
 void CommandSocket::executeQueue(){
@@ -200,27 +205,27 @@ void CommandSocket::executeQueue(){
     std::lock_guard<std::mutex> lk(m);
     execute_queue_ = true;
   }
-  cv.notify_one();
+  cv_execute_queue_.notify_one();
 }
 
 void CommandSocket::sendQueueCommands(){
   std::string cmd;
   while(true){
-    LogInfo () << "Beginning of while loop";
+    // LogDebug() << "Beginning of while loop of sendQueueCommands";
     std::unique_lock<std::mutex> lk(m);
-    cv.wait(lk, [this]{return execute_queue_ && !command_queue_.empty();});
+    cv_execute_queue_.wait(lk, [this]{return execute_queue_ && !command_queue_.empty();});
     if(!on_) break;
     while(!command_queue_.empty() && execute_queue_){
       queue_mutex_.lock();
       cmd = command_queue_.front();
-      LogDebug() << "Popped queue. Command is now ["<<cmd<<"]";
+      // LogDebug() << "Popped queue. Command is now ["<<cmd<<"]";
       command_queue_.pop_front();
       queue_mutex_.unlock();
       if(cmd.substr(0,5) == "delay"){
         usleep(1000000 * stoi(cmd.substr(5, cmd.size())));
         continue;
       }
-      if(cmd.substr(0,4) =="stop"){
+      if(cmd.substr(0,4) =="stop" || cmd.substr(0,9) =="emergency"){
         waiting_for_response_ = false; // to prevent retries of prev sent command if none received in spit of comman dbeing sent.
       }
       // Run reponse thread only after sending command rather than always
@@ -232,10 +237,10 @@ void CommandSocket::sendQueueCommands(){
       while(waiting_for_response_){
         usleep(500000);
       }
-      LogDebug() << "About to call send command with command ["<<cmd<<"]";
+      // LogDebug() << "About to call send command with command ["<<cmd<<"]";
       waiting_for_response_ = true;
       sendCommand(cmd);
-      command_sent_time = std::chrono::system_clock::now();
+      command_sent_time_ = std::chrono::system_clock::now();
     }
     lk.unlock();
   }
@@ -249,6 +254,7 @@ void CommandSocket::addCommandToFrontOfQueue(const std::string& cmd){
 
 void CommandSocket::stopQueueExecution(){
   LogInfo() << "Stopping queue execution. " << command_queue_.size() << " commands still in queue.";
+  std::lock_guard<std::mutex> lk(m);
   execute_queue_ = false;
 }
 
@@ -267,24 +273,68 @@ void CommandSocket::removeNextFromQueue(){
   LogInfo() << "Removing command [" << cmd << "] from queue.";
 }
 
+void CommandSocket::doNotAutoLand(){
+  std::lock_guard<std::mutex> lk(dnal_mutex);
+  dnal_ = true;
+  cv_dnal_.notify_one();
+}
+
+void CommandSocket::allowAutoLand(){
+  std::lock_guard<std::mutex> lk(dnal_mutex);
+  dnal_ = false;
+  cv_dnal_.notify_one();
+}
+
 // TODO: test this
-void CommandSocket::DoNotLand(){
+void CommandSocket::doNotAutoLandWorker(){
   std::chrono::system_clock::time_point start;
-  while(do_not_land){
-    if(std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - command_sent_time).count() > do_not_land_timeout){
-      sendCommand("rc 0 0 0 0");
-      last_command_ = "rc 0 0 0 0";
+  std::string cmd = "rc 0 0 0 0";
+  int dnal_timeout_in_us = dnal_timeout*1000000;
+  while(true){
+    // LogDebug() << "Beginning of while loop of do not land";
+    std::unique_lock<std::mutex> lk(dnal_mutex);
+    cv_dnal_.wait(lk, [this]{return ((!execute_queue_) || (execute_queue_ && command_queue_.empty())) &&
+                                            dnal_;});
+    // LogDebug() << "Below mutex";
+    if(!on_) break;
+    // LogDebug() << "Below on";
+    if(std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - command_sent_time_).count() > dnal_timeout){
+      sendCommand(cmd);
+      last_command_ = cmd;
       waiting_for_response_ = false;
-      command_sent_time = std::chrono::system_clock::now();
+      command_sent_time_ = std::chrono::system_clock::now();
+      // LogDebug() << "command sent";
     }
     else{
-      usleep(10000000); //10 seconds, command needs to be sent ever 15
+      // LogDebug() << "Below mutex";
+      usleep(dnal_timeout_in_us); //10 seconds, command needs to be sent ever 15
     }
   }
 }
 
+void CommandSocket::stop(){
+  {
+    std::lock_guard<std::mutex> lk(m);
+    execute_queue_ = false;
+  }
+  sendCommand("stop");
+}
+
+void CommandSocket::emergency(){
+  {
+    std::lock_guard<std::mutex> lk(m);
+    execute_queue_ = false;
+  }
+  sendCommand("emergency");
+}
+
 CommandSocket::~CommandSocket(){
-  execute_queue_ = false;
+  {
+    std::lock_guard<std::mutex> lk(m);
+    execute_queue_ = false;
+  }
+
+  dnal_ = true; // allow dnal thread to exit
   on_ = false;
   io_service_.stop();
 }

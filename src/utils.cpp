@@ -49,24 +49,26 @@ LogDetailed::~LogDetailed()
 
 			switch(_log_level){
 			case LogLevel::Debug:
-				std::cout << "|Debug ] ";
+				std::cout << "|Debug--] ";
 				break;
 			case LogLevel::Info:
-				std::cout << "|Info ] ";
+				std::cout << "|Info---] ";
 				break;
 			case LogLevel::Warn:
-				std::cout << "|Warn ] ";
+				std::cout << "|Warn---] ";
 				break;
 			case LogLevel::Err:
-				std::cout << "|Error ] ";
+				std::cout << "|Error--] ";
 				break;
 			case LogLevel::Status:
-				std::cout << "|Status ] ";
+				std::cout << "|Status-] ";
 				break;
 			}
 			set_display_colour(Colour::RESET);
 			std::cout << _s.str();
+			set_display_colour(Colour::CYAN);
 			std::cout << " |" << _caller_filename << ":" << _caller_filenumber << "|";
+			set_display_colour(Colour::RESET);
 			std::cout << std::endl;
 		}
 #else

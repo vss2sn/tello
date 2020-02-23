@@ -12,15 +12,23 @@ int main(){
 
   CommandSocket c_tello(io_service, "192.168.10.1", "8889", "8889", 3,5);
   c_tello.addCommandToQueue("command");
-  c_tello.addCommandToQueue("streamon");
+  // c_tello.addCommandToQueue("streamon");
   c_tello.addCommandToQueue("takeoff");
-  c_tello.addCommandToQueue("stop");
-  c_tello.addCommandToQueue("land");
   c_tello.executeQueue();
+  // c_tello.addCommandToQueue("rc 0 0 0 5");
+  // usleep(5000000);
+  // c_tello.addCommandToQueue("forward 200");
+  // c_tello.addCommandToQueue("back 200");
 
-  // VideoSocket v_tello(io_service, "0.0.0.0", "11111", "11111");
+  // c_tello.addCommandToQueue("delay 5");
+  // c_tello.addCommandToFrontOfQueue("stop");
+  c_tello.doNotAutoLand();
+  usleep(60000000);
+  c_tello.addCommandToQueue("land");
 
-  // StateSocket s_tello(io_service, "0.0.0.0", "8890", "8890");
+  VideoSocket v_tello(io_service, "0.0.0.0", "11111", "11111");
+
+  StateSocket s_tello(io_service, "0.0.0.0", "8890", "8890");
 
   usleep(300000000); // Ensure this is greater than timeout to prevent seg faults
   io_service.stop();
