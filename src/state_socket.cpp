@@ -38,10 +38,12 @@ StateSocket::StateSocket(
       asio::buffer(data_, max_length_),
       endpoint_,
       [&](const std::error_code& error, size_t bytes_recvd)
-{return handleResponseFromDrone(error, bytes_recvd);});
-// [&](auto... args){return handleResponseFromDrone(args...);});
+      {return handleResponseFromDrone(error, bytes_recvd);});
+      // [&](auto... args){return handleResponseFromDrone(args...);});
 
       io_thread = std::thread([&]{io_service_.run();});
+      io_thread.detach();
+
   #endif
 }
 

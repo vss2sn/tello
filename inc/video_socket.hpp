@@ -1,5 +1,5 @@
-#ifndef VIDEOSOCKET_H
-#define VIDEOSOCKET_H
+#ifndef VIDEOSOCKET_HPP
+#define VIDEOSOCKET_HPP
 
 #include <chrono>
 #include <vector>
@@ -46,4 +46,4 @@ private:
   ConverterRGB24 converter_;
 };
 
-#endif VIDEOSOCKET_H
+#endif VIDEOSOCKET_HPP

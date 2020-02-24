@@ -1,5 +1,5 @@
-#ifndef BASESOCKET_H
-#define BASESOCKET_H
+#ifndef BASESOCKET_HPP
+#define BASESOCKET_HPP
 
 #ifdef USE_BOOST
 #include <boost/asio.hpp>
@@ -49,4 +49,4 @@ private:
 #endif
 };
 
-#endif
+#endif BASESOCKET_HPP

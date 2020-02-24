@@ -1,5 +1,5 @@
-#ifndef STATESOCKET_H
-#define STATESOCKET_H
+#ifndef STATESOCKET_HPP
+#define STATESOCKET_HPP
 
 #include "base_socket.hpp"
 
@@ -28,4 +28,4 @@ private:
 
 };
 
-#endif
+#endif STATESOCKET_HPP
