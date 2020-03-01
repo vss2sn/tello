@@ -38,6 +38,8 @@ void Tello::jsToCommandThread(){
   }
 }
 
+
+// TODO: Consider setting wait for response to false when using joysticlk?
 void Tello::jsToCommand(ButtonId update){
   int value = (int)js_->getButtonState(update);
   if(value!=0){
@@ -64,19 +66,20 @@ void Tello::jsToCommand(ButtonId update){
         LogDebug() << "Button [Y]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_RIGHT_BUMPER_1:
-        cs->sendCommand("stop");
+        cs->stop();
         LogDebug() << "Button [RIGHT_BUMPER_1]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_RIGHT_BUMPER_2:
-        cs->sendCommand("emergency");
+        cs->emergency();
         LogDebug() << "Button [RIGHT_BUMPER_2]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_LEFT_BUMPER_1:
-        cs->allowAutoLand();
+        if(cs->dnal_) cs->allowAutoLand();
+        else cs->doNotAutoLand();
         LogDebug() << "Button [RIGHT_BUMPER_1]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_LEFT_BUMPER_2:
-        cs->doNotAutoLand();
+        LogDebug() << "Shift function assigned.";
         LogDebug() << "Button [RIGHT_BUMPER_2]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_START:
@@ -131,12 +134,24 @@ void Tello::jsToCommand(AxisId update){
     case AXIS_LEFT_BUMPER_2:
       break;
     case AXIS_BUTTONS_HORIZONTAL:
-      if(value > 0) cs->sendCommand("flip l");
-      else if(value < 0) cs->sendCommand("flip r");
+      if(js_->getButtonState(BUTTON_LEFT_BUMPER_2) > 0){
+        if(value > 0) cs->sendCommand("speed?");
+        else if(value < 0) cs->sendCommand("battery?");
+      }
+      else{
+        if(value > 0) cs->sendCommand("flip r");
+        else if(value < 0) cs->sendCommand("flip l");
+      }
       break;
     case AXIS_BUTTONS_VERTICAL:
-      if(value > 0) cs->sendCommand("flip b");
-      else if(value < 0) cs->sendCommand("flip f");
+      if(js_->getButtonState(BUTTON_LEFT_BUMPER_2)){
+        if(value > 0) cs->sendCommand("time?");
+        else if(value < 0) cs->sendCommand("wifi?");
+      }
+      else{
+        if(value > 0) cs->sendCommand("flip b");
+        else if(value < 0) cs->sendCommand("flip f");
+      }
       break;
     default:
         LogDebug() << "Axis: [" << update << "] Value: [" << js_->mapConstLimits(value) <<"]";

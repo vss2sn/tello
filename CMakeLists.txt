@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.5)
 add_definitions(-std=c++17)
 
 set(CMAKE_CXX_FLAGS "-w -g -Werror -Wall -O0")
-option(SIMPLE "Use simple formatting for all output to terminal" ON)
+option(SIMPLE "Use simple formatting for all output to terminal" OFF)
 option(USE_BOOST "Use boost libraries for asio, thread, etc" OFF)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc
@@ -51,8 +51,6 @@ add_library( joystick SHARED
              ${LIB_SOURCES_JOYSTICK}
              ${LIB_HEADERS_JOYSTICK}
            )
-
-# target_link_libraries(joystick utils)
 
 add_executable( ${PROJECT_NAME}
                 ${CMAKE_CURRENT_SOURCE_DIR}/main/main.cpp

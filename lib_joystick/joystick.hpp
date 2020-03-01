@@ -23,6 +23,8 @@
 #endif
 
 #include "gameSirT1s_mappings.hpp"
+// #include "360_mappings.hpp"
+// #include "ps3_mappings.hpp"
 
 struct js_event
 {

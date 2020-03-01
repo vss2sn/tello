@@ -12,10 +12,8 @@ int main(){
   asio::io_service io_service;
 #endif
 
-  // Joystick joy;
   Tello t(io_service);
 
-  // CommandSocket c_tello(io_service, "192.168.10.1", "8889", "8889", 0,5);
   t.cs->addCommandToQueue("command");
   t.cs->addCommandToQueue("streamon");
   t.cs->addCommandToQueue("takeoff");
@@ -24,17 +22,13 @@ int main(){
   t.cs->addCommandToQueue("back 20");
   t.cs->addCommandToQueue("delay 5");
   t.cs->addCommandToFrontOfQueue("stop");
-  // usleep(2000000);
-  t.cs->stopQueueExecution();
+  // t.cs->stopQueueExecution();
   t.cs->doNotAutoLand();
   t.cs->addCommandToQueue("land");
-  usleep(120000000);
-
-  // VideoSocket v_tello(io_service, "0.0.0.0", "11111", "11111");
-  //
-  // StateSocket s_tello(io_service, "0.0.0.0", "8890", "8890");
+  usleep(300000000); // 5 minute timeout
 
   LogWarn() << "-------------------Done--------------------";
+  LogWarn() << "Landing.";
   io_service.stop();
   usleep(1000000); // Ensure this is greater than timeout to prevent seg faults
   return 0;
