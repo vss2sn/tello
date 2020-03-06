@@ -58,11 +58,21 @@ void Tello::jsToCommand(ButtonId update){
         cs->sendCommand("land");
         break;
       case BUTTON_X:
-        cs->sendCommand("streamon");
+        if(js_->getButtonState(BUTTON_LEFT_BUMPER_2)){
+          cs->sendCommand("mon");
+        }
+        else{
+          cs->sendCommand("streamon");
+        }
         LogDebug() << "Button [X]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_Y:
-        cs->sendCommand("streamoff");
+        if(js_->getButtonState(BUTTON_LEFT_BUMPER_2)){
+          cs->sendCommand("moff");
+        }
+        else{
+          cs->sendCommand("streamoff");
+        }
         LogDebug() << "Button [Y]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_RIGHT_BUMPER_1:
@@ -76,11 +86,11 @@ void Tello::jsToCommand(ButtonId update){
       case BUTTON_LEFT_BUMPER_1:
         if(cs->dnal_) cs->allowAutoLand();
         else cs->doNotAutoLand();
-        LogDebug() << "Button [RIGHT_BUMPER_1]: [" << update << "] Value: [" << value <<"]";
+        LogDebug() << "Button [LEFT_BUMPER_1]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_LEFT_BUMPER_2:
         LogDebug() << "Shift function assigned.";
-        LogDebug() << "Button [RIGHT_BUMPER_2]: [" << update << "] Value: [" << value <<"]";
+        LogDebug() << "Button [LEFT_BUMPER_2]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_START:
         cs->sendCommand("command");

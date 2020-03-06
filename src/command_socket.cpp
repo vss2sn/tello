@@ -65,6 +65,7 @@ size_t bytes_recvd)
 {
  if(!error && bytes_recvd>0){
    waiting_for_response_ = false;
+   response_ = "";
    response_ = std::string(data_);
    //remove additional random characters sent over UDP
    if(response_.substr(0,2)=="ok"){
@@ -78,7 +79,6 @@ size_t bytes_recvd)
    }
    else if(response_.find_first_of('\n')!=std::string::npos){
      response_ = response_.substr(0, response_.find_first_of('\n')-1);
-     std::cout << response_ << std::endl;
    }
    // else{
    //   response_ = "UNKNOWN";
@@ -94,16 +94,6 @@ size_t bytes_recvd)
 void CommandSocket::sendCommand(const std::string& cmd){
   n_retries_ = 0;
   ASYNC_SEND;
-  // NOTE: Do not comment. Set n_retries_allowed_ to 0 if required.
-  // If the commmand is rc, do not retry/wait for a response
-  if(cmd.substr(0,2)!="rc"){
-    #ifdef USE_BOOST
-      boost::thread run_thread(boost::bind(&CommandSocket::retry, this, cmd));
-    #else
-      std::thread run_thread([&]{retry(cmd);});
-      run_thread.detach();
-    #endif
-  }
   usleep(1000);
 }
 
@@ -205,6 +195,16 @@ void CommandSocket::sendQueueCommands(){
       }
       waiting_for_response_ = true;
       sendCommand(cmd);
+      // NOTE: Do not comment. Set n_retries_allowed_ to 0 if required.
+      // If the commmand is rc, do not retry/wait for a response
+      if(cmd.substr(0,2)!="rc"){
+        #ifdef USE_BOOST
+          boost::thread run_thread(boost::bind(&CommandSocket::retry, this, cmd));
+        #else
+          std::thread run_thread([&]{retry(cmd);});
+          run_thread.detach();
+        #endif
+      }
     }
   }
 }

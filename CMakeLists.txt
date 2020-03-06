@@ -27,6 +27,12 @@ endif(SIMPLE)
 if(USE_BOOST)
   find_package(Boost COMPONENTS system thread REQUIRED)
   add_definitions(-DUSE_BOOST)
+else(USE_BOOST)
+  add_definitions(-DASIO_STANDALONE)
+  # __cplusplus macro not being set corretly in Travis CI,
+  # If __cplusplus >  2011... asio shoould be able to compile without boost.
+  # Succeeds locally but fails in travis CI.
+  # TODO: Debug this.
 endif(USE_BOOST)
 
 find_package(Threads REQUIRED)
