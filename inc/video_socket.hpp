@@ -11,7 +11,7 @@
 #include "base_socket.hpp"
 #include "h264decoder.hpp"
 
-class VideoSocket  : public BaseSocket{
+class VideoSocket : public BaseSocket{
 public:
 #ifdef USE_BOOST
   VideoSocket(boost::asio::io_service& io_service, const std::string& drone_ip, const std::string& drone_port, const std::string& local_port);

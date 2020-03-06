@@ -8,13 +8,16 @@
 int main(){
 #ifdef USE_BOOST
   boost::asio::io_service io_service;
+  boost::asio::io_service::work work(io_service);
 #else
   asio::io_service io_service;
+  asio::io_service::work work(io_service);
 #endif
 
   Tello t(io_service);
 
   t.cs->addCommandToQueue("command");
+  t.cs->addCommandToQueue("sdk?");
   t.cs->addCommandToQueue("streamon");
   t.cs->addCommandToQueue("takeoff");
   t.cs->executeQueue();
