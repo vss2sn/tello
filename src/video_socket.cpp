@@ -47,6 +47,10 @@ VideoSocket::VideoSocket(
     io_thread.detach();
 
 #endif
+
+#ifdef RECORD
+  video = std::make_unique<cv::VideoWriter>("out.mp4",cv::VideoWriter::fourcc('m','p','4','v'), 30, cv::Size(960,720));
+#endif
 }
 
 #ifdef USE_BOOST
@@ -109,6 +113,11 @@ void VideoSocket::decodeFrame()
         converter_.convert(frame, bgr24);
 
         cv::Mat mat{frame.height, frame.width, CV_8UC3, bgr24};
+
+#ifdef RECORD
+        video->write(mat);
+#endif
+
         cv::imshow("frame", mat);
         cv::waitKey(1);
       }
@@ -121,6 +130,8 @@ void VideoSocket::decodeFrame()
 }
 
 VideoSocket::~VideoSocket(){
+  video->release();
+  cv::destroyAllWindows();
   socket_.close();
 }
 

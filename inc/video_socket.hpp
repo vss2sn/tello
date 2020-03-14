@@ -44,6 +44,8 @@ private:
 
   H264Decoder decoder_;
   ConverterRGB24 converter_;
+  std::unique_ptr<cv::VideoWriter> video;
+
 };
 
 #endif VIDEOSOCKET_HPP
