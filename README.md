@@ -36,17 +36,33 @@
 2. `USE_BOOST`
     - Default `OFF`
     - For those more familiar with `BOOST`, the library can be made to use boost::threads and boost::asio. When set to `OFF` is uses `libasio` (written by the author of boost asio) and std::threads.
+3. `USE_JOYSTICK`
+    - Default `ON`
+    - When set to `ON` allows the use of a joystick to control the drone and exits if a joystick is not found at startup.
+4. `RECORD`
+    - Default `OFF`
+    - When set to `ON` records the video
+5. `RUN_SLAM`
+    - Default `OFF`
+    - When set to `ON` runs OpenVSLAM, creating a map of the area and localizing the drone
+    - Requires a configuration file for the camera as well as  ORB vocabulary file
+    - Please run the install_openvslam using `bash -i install_openvslam` to install openvslam and its dependencies
+    - Please download a sample vocabulary file [here](https://drive.google.com/open?id=1wUPb328th8bUqhOk-i8xllt5mgRW4n84) and store it in the main directory
 
 #### To build and run ####
-    # begin dependancies
-    sudo apt install libasio-dev # or sudo apt install libboost-dev
-    sudo apt install ibopencv-dev
-    # end dependancies
     git clone https://github.com/vss2sn/tello.git  
     cd tello  
+    # begin dependencies
+    sudo apt install libasio-dev # or sudo apt install libboost-dev
+    sudo apt install ibopencv-dev
+    #
+    # if running slam
+    bash -i install_openvslam
+    #
     mkdir build  
     cd build  
-    cmake .. && make -j4
+    cmake .. # or cmake -DRUN_SLAM=ON ..
+    make -j4
     ./tello
 
 #### Dependancies ####
@@ -101,3 +117,4 @@
 #### References ####
 1. Joystick library - https://github.com/Notgnoshi/joystick
 2. h264decoder library - https://github.com/DaWelter/h264decoder
+3. OpenVSLAM - https://github.com/xdspacelab/openvslam

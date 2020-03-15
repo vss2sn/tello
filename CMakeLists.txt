@@ -9,11 +9,13 @@ option(SIMPLE "Use simple formatting for all output to terminal" OFF)
 option(USE_BOOST "Use boost libraries for asio, thread, etc" OFF)
 option(USE_JOYSTICK "Use a joystick/controller to control the drone manually" ON)
 option(RECORD "Record tello video feed" OFF)
+option(RUN_SLAM "Run SLAM in real time" OFF)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc
                     ${CMAKE_CURRENT_SOURCE_DIR}/lib_h264decoder
                     ${CMAKE_CURRENT_SOURCE_DIR}/lib_joystick
                     ${CMAKE_CURRENT_SOURCE_DIR}/lib_utils
+                    ${CMAKE_CURRENT_SOURCE_DIR}/lib_openvslam/openvslam/src
                    )
 
 file( GLOB LIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
@@ -46,7 +48,7 @@ if(RECORD)
 endif(RECORD)
 
 find_package(Threads REQUIRED)
-find_package(OpenCV REQUIRED)
+find_package(OpenCV)
 
 add_library( h264decoder SHARED
             ${CMAKE_CURRENT_SOURCE_DIR}/lib_h264decoder/h264decoder.cpp
@@ -68,6 +70,16 @@ add_library( joystick SHARED
              ${LIB_HEADERS_JOYSTICK}
            )
 
+if(RUN_SLAM)
+  option(USE_DBOW2 "" ON)
+  add_definitions(-DUSE_DBOW2)
+  find_package(openvslam REQUIRED)
+  find_package(Pangolin REQUIRED)
+  set(openvslam_libs "openvslam::openvslam;openvslam::pangolin_viewer;pangolin")
+else(RUN_SLAM)
+  set(openvslam_libs "")
+endif(RUN_SLAM)
+
 add_executable( ${PROJECT_NAME}
                 ${CMAKE_CURRENT_SOURCE_DIR}/main/main.cpp
                 ${LIB_SOURCES}
@@ -79,6 +91,7 @@ target_link_libraries( ${PROJECT_NAME}
                        ${Boost_THREAD_LIBRARY} # Will be empty string if not using boost
                        Threads::Threads
                        ${OpenCV_LIBRARIES}
+                       ${openvslam_libs}
                        h264decoder
                        joystick
                        utils

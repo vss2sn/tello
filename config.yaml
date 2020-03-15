@@ -1,0 +1,41 @@
+# Sample tello camera config file
+
+#==============#
+# Camera Model #
+#==============#
+
+Camera.name: "Tello"
+Camera.setup: "monocular"
+Camera.model: "fisheye"
+
+Camera.fx: 10000
+Camera.fy: 10000
+Camera.cx: 480
+Camera.cy: 360
+
+Camera.k1: 0
+Camera.k2: 0
+Camera.k3: 0
+Camera.k4: 0
+
+Camera.fps: 30.0
+Camera.cols: 960
+Camera.rows: 720
+
+Camera.color_order: "Gray"
+
+#================#
+# orb parameters #
+#================#
+
+Feature.max_num_keypoints: 2000
+Feature.scale_factor: 1.2
+Feature.num_levels: 8
+Feature.ini_fast_threshold: 20
+Feature.min_fast_threshold: 7
+
+#========================#
+# Initializer Parameters #
+#========================#
+
+Initializer.scaling_factor: 5.0

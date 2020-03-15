@@ -12,7 +12,7 @@ io_service_(io_service),
 cv_run_(cv_run)
 {
   cs = std::make_unique<CommandSocket>(io_service, "192.168.10.1", "8889", "8889", 0,5);
-  vs = std::make_unique<VideoSocket>(io_service,  "0.0.0.0", "11111", "11111");
+  vs = std::make_unique<VideoSocket>(io_service,  "0.0.0.0", "11111", "11111", run_);
   ss = std::make_unique<StateSocket>(io_service, "0.0.0.0", "8890", "8890");
 
 #ifdef USE_JOYSTICK
@@ -200,5 +200,5 @@ void Tello::jsToCommand(AxisId update){
 
 Tello::~Tello(){
   run_ = false;
-  usleep(10000);
+  usleep(1000000);
 }
