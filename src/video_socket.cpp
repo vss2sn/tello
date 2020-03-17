@@ -41,9 +41,11 @@ VideoSocket::VideoSocket(
     {return handleResponseFromDrone(error, bytes_recvd);});
     // [&](auto... args){return handleResponseFromDrone(args...);});
 
-    io_thread = std::thread([&]{io_service_.run();});
+    io_thread = std::thread([&]{io_service_.run();
+      LogDebug() << "----------- Video socket io_service thread exits -----------";
+    });
     io_thread.detach();
-    
+
 #endif
 }
 

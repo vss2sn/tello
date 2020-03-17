@@ -44,7 +44,9 @@ CommandSocket::CommandSocket(
   cmd_thread = boost::thread(boost::bind(&CommandSocket::sendQueueCommands, this));
   dnal_thread = boost::thread(boost::bind(&CommandSocket::doNotAutoLandWorker, this));
 #else
-  io_thread = std::thread([&]{io_service_.run();});
+  io_thread = std::thread([&]{io_service_.run();
+    LogDebug() << "----------- Command socket io_service thread exits -----------";
+  });
   cmd_thread = std::thread(&CommandSocket::sendQueueCommands, this);
   dnal_thread = std::thread(&CommandSocket::doNotAutoLandWorker, this);
   io_thread.detach();
@@ -66,27 +68,16 @@ size_t bytes_recvd)
  if(!error && bytes_recvd>0){
    waiting_for_response_ = false;
    response_ = "";
-   response_ = std::string(data_);
+   const std::string response_temp = std::string(data_);
    //remove additional random characters sent over UDP
-   if(response_.substr(0,2)=="ok"){
-     response_ = "ok";
+   // TODO: Make this better
+   for(int i=0; i<bytes_recvd && isprint(response_temp[i]); ++i){
+     response_+=response_temp[i];
    }
-   else if (response_.substr(0,5)=="error"){
-     response_ = "error";
-   }
-   else if (response_.substr(0,11)=="forced stop"){
-     response_ = "forced stop";
-   }
-   else if(response_.find_first_of('\n')!=std::string::npos){
-     response_ = response_.substr(0, response_.find_first_of('\n')-1);
-   }
-   // else{
-   //   response_ = "UNKNOWN";
-   // }
    LogInfo() << "Received response [" << response_ << "] after sending command ["<< last_command_ << "] from address [" << drone_ip_ << ":" << drone_port_ << "].";
  }
  else{
-   LogWarn() << "Nothing received.";
+   LogWarn() << "Error/Nothing received.";
  }
  ASYNC_RECEIVE;
 }
@@ -94,16 +85,20 @@ size_t bytes_recvd)
 void CommandSocket::sendCommand(const std::string& cmd){
   n_retries_ = 0;
   ASYNC_SEND;
-  usleep(1000);
+  usleep(1000); //TODO: reduce this to less than amount of time joystick waits?
 }
 
 void CommandSocket::waitForResponse(){
   std::chrono::system_clock::time_point start = std::chrono::system_clock::now();
-  while(std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - start).count() < timeout_){
+  while(std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - start).count() < timeout_ && on_){
     if(!waiting_for_response_){
       break;
     }
     usleep(100000);// TODO: replace with condition variable
+  }
+  if(!on_){
+    waiting_for_response_ = false;
+    return;
   }
   if(waiting_for_response_) LogInfo() << "Timeout - Attempt #" << n_retries_ << " for command [" << last_command_ << "].";
   if(n_retries_ == n_retries_allowed_){
@@ -136,7 +131,7 @@ void CommandSocket::retry(const std::string& cmd){
   last_command_ = cmd;
   waitForResponse();
   if(!waiting_for_response_) return;
-  while(n_retries_ < n_retries_allowed_ && waiting_for_response_){
+   while(n_retries_ < n_retries_allowed_ && waiting_for_response_ && on_){
     LogInfo() << "Retrying..." ;
     n_retries_++;
     ASYNC_SEND;
@@ -207,6 +202,7 @@ void CommandSocket::sendQueueCommands(){
       }
     }
   }
+  LogDebug() << "----------- Send queue commands thread exits -----------";
 }
 
 void CommandSocket::addCommandToFrontOfQueue(const std::string& cmd){
@@ -217,7 +213,6 @@ void CommandSocket::addCommandToFrontOfQueue(const std::string& cmd){
 
 void CommandSocket::stopQueueExecution(){
   LogInfo() << "Stopping queue execution. " << command_queue_.size() << " commands still in queue.";
-  // std::lock_guard<std::mutex> lk(m);
   execute_queue_ = false;
 }
 
@@ -248,10 +243,11 @@ void CommandSocket::doNotAutoLand(){
 void CommandSocket::allowAutoLand(){
   LogDebug() << "Automatic landing enabled.";
   dnal_ = false;
-  {
-    std::lock_guard<std::mutex> lk(dnal_mutex);
-    cv_dnal_.notify_all();
-  }
+  // TODO: Check whether this is required
+  // {
+  //   std::lock_guard<std::mutex> lk(dnal_mutex);
+  //   cv_dnal_.notify_all();
+  // }
 }
 
 void CommandSocket::doNotAutoLandWorker(){
@@ -274,6 +270,7 @@ void CommandSocket::doNotAutoLandWorker(){
       usleep(dnal_timeout_in_us); //10 seconds, command needs to be sent ever 15
     }
   }
+  LogDebug() << "----------- DNAL worker thread exits -----------";
 }
 
 void CommandSocket::stop(){
@@ -288,6 +285,11 @@ void CommandSocket::emergency(){
 
 bool CommandSocket::isExecutingQueue(){
   return execute_queue_;
+}
+
+void CommandSocket::land(){
+  allowAutoLand();
+  sendCommand("land");
 }
 
 CommandSocket::~CommandSocket(){

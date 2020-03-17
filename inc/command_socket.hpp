@@ -27,6 +27,7 @@ public:
   void emergency();
   void stop();
   bool isExecutingQueue();
+  void land();
   ~CommandSocket();
 
 private:

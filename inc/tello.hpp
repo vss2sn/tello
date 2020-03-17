@@ -10,10 +10,11 @@ class Tello{
 public:
   Tello(
 #ifdef USE_BOOST
-    boost::asio::io_service& io_service
+    boost::asio::io_service& io_service,
 #else
-    asio::io_service& io_service
+    asio::io_service& io_service,
 #endif
+std::condition_variable& cv_run
 );
 ~Tello();
 std::unique_ptr<CommandSocket> cs;
@@ -28,7 +29,7 @@ private:
     asio::io_service& io_service_;
     std::thread js_thread_;
   #endif
-
+  std::condition_variable& cv_run_;
   void jsToCommandThread();
   void jsToCommand(ButtonId update);
   void jsToCommand(AxisId update);

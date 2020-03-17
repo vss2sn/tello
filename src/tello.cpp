@@ -2,23 +2,28 @@
 
 Tello::Tello(
 #ifdef USE_BOOST
-    boost::asio::io_service& io_service
+    boost::asio::io_service& io_service,
 #else
-    asio::io_service& io_service
+    asio::io_service& io_service,
 #endif
-):io_service_(io_service)
+std::condition_variable& cv_run
+):
+io_service_(io_service),
+cv_run_(cv_run)
 {
   cs = std::make_unique<CommandSocket>(io_service, "192.168.10.1", "8889", "8889", 0,5);
   vs = std::make_unique<VideoSocket>(io_service,  "0.0.0.0", "11111", "11111");
   ss = std::make_unique<StateSocket>(io_service, "0.0.0.0", "8890", "8890");
-  js_ = std::make_unique<Joystick>();
 
-  #ifdef USE_BOOST
-      js_thread_ = boost::thread(boost::bind(&Tello::jsToCommandThread, this));
-  #else
-      js_thread_ = std::thread([&]{jsToCommandThread();});
-      js_thread_.detach();
-  #endif
+#ifdef USE_JOYSTICK
+  js_ = std::make_unique<Joystick>();
+#ifdef USE_BOOST
+  js_thread_ = boost::thread(boost::bind(&Tello::jsToCommandThread, this));
+#else // USE_BOOST
+  js_thread_ = std::thread([&]{jsToCommandThread();});
+  js_thread_.detach();
+#endif // USE_BOOST
+#endif // USE_JOYSTICK
 }
 
 void Tello::jsToCommandThread(){
@@ -93,12 +98,36 @@ void Tello::jsToCommand(ButtonId update){
         LogDebug() << "Button [LEFT_BUMPER_2]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_START:
-        cs->sendCommand("command");
+        if(js_->getButtonState(BUTTON_LEFT_BUMPER_2)){
+          usleep(1000000);
+          cs->land();
+          usleep(5000000); // Block any other joystick input
+          LogWarn() << "Exit called from joystick";
+          // NOTE: Notification of calling end of code kept here* to allow expansion
+          // to swarm, where a single joystick might be used to command multiple
+          // Tellos at which point this function will be commented using a #define
+          // and a swarm joystick function would be run that sends caommands to
+          // all the Tellos in the swarm. it would be rewuired that the above
+          // function be called for all the tellos before the cv_run_.notify_all
+          // is called.
+          // *(instead of in command socket)
+          {
+            std::mutex mut;
+            std::lock_guard<std::mutex> lk(mut);
+            cv_run_.notify_all();
+          }
+        }
+        else{
+          cs->sendCommand("command");
+        }
         LogDebug() << "Button [START]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_SELECT:
         LogDebug() << "Button [SELECT]: [" << update << "] Value: [" << value <<"]";
-        if(check){
+          // NOTE: as joystick commands would immediately stop execution just
+          // pressing L2 (shift) would stop execution of the queue, but for HRI
+          // reasons using L2+Select will be used to call stop execution.
+        if(js_->getButtonState(BUTTON_LEFT_BUMPER_2)){
           LogDebug() << "Button select stop execute";
           cs->stopQueueExecution();
         }
@@ -172,5 +201,4 @@ void Tello::jsToCommand(AxisId update){
 Tello::~Tello(){
   run_ = false;
   usleep(10000);
-  cs->sendCommand("land");
 }

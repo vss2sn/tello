@@ -14,7 +14,8 @@ int main(){
   asio::io_service::work work(io_service);
 #endif
 
-  Tello t(io_service);
+  std::condition_variable cv_run;
+  Tello t(io_service, cv_run);
 
   t.cs->addCommandToQueue("command");
   t.cs->addCommandToQueue("sdk?");
@@ -28,11 +29,20 @@ int main(){
   // t.cs->stopQueueExecution();
   t.cs->doNotAutoLand();
   t.cs->addCommandToQueue("land");
-  usleep(300000000); // 5 minute timeout
 
-  LogWarn() << "-------------------Done--------------------";
+  {
+    std::mutex mtx;
+    std::unique_lock<std::mutex> lck(mtx);
+    cv_run.wait_for(lck,std::chrono::seconds(300000000));
+  }
+
+  // use cv wait for here
+
+  LogWarn() << "----------- Done -----------";
   LogWarn() << "Landing.";
+  // t.cs->exitAllThreads();
   io_service.stop();
   usleep(1000000); // Ensure this is greater than timeout to prevent seg faults
+  LogDebug() << "----------- Main thread returns -----------";
   return 0;
 }

@@ -7,6 +7,7 @@ add_definitions(-std=c++17)
 set(CMAKE_CXX_FLAGS "-w -g -Werror -Wall -O0")
 option(SIMPLE "Use simple formatting for all output to terminal" OFF)
 option(USE_BOOST "Use boost libraries for asio, thread, etc" OFF)
+option(USE_JOYSTICK "Use a joystick/controller to control the drone manually" ON)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc
                     ${CMAKE_CURRENT_SOURCE_DIR}/lib_h264decoder
@@ -34,6 +35,10 @@ else(USE_BOOST)
   # Succeeds locally but fails in travis CI.
   # TODO: Debug this.
 endif(USE_BOOST)
+
+if(USE_JOYSTICK)
+  add_definitions(-DUSE_JOYSTICK)
+endif(USE_JOYSTICK)
 
 find_package(Threads REQUIRED)
 find_package(OpenCV REQUIRED)

@@ -38,13 +38,16 @@
     - For those more familiar with `BOOST`, the library can be made to use boost::threads and boost::asio. When set to `OFF` is uses `libasio` (written by the author of boost asio) and std::threads.
 
 #### To build and run ####
-    sudo apt install libasio-dev libopencv-dev # dependancies
+    # begin dependancies
+    sudo apt install libasio-dev # or sudo apt install libboost-dev
+    sudo apt install ibopencv-dev
+    # end dependancies
     git clone https://github.com/vss2sn/tello.git  
     cd tello  
     mkdir build  
     cd build  
-    cmake .. && make -j
-    ./main  
+    cmake .. && make -j4
+    ./tello
 
 #### Dependancies ####
 1. Asio and std::threads or Boost Asio and Boost threads (CMake option provided)
@@ -63,8 +66,8 @@
 
 | Button | Function |
 |-------------|-------------|
-| A  | `takeoff` and prevent automatic landing |
-| B  | Allow autoland and `land` |
+| A  | Prevent automatic landing and control command `takeoff` |
+| B  | Allow automatic landing and control command `land` |
 | X  | Control command `streamon` |
 | Y  | Control command `streamoff` |
 | R1 | Control command `stop` |
@@ -72,7 +75,9 @@
 | L1 | Toggle autoland |
 | L2 | Shift (To be used in conjunction with other buttons/axes) |
 | START | Control command `command` |
-| SELECT | Toggle queue execution |
+| SELECT | Start queue execution |
+| START + L1 | Control command `land` and exit |
+| SELECT + L1 | Stop queue execution |
 
 | Axis | Function |
 |-------------|-------------|
