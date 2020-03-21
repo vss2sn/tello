@@ -98,18 +98,21 @@
 
 | Button | Function |
 |-------------|-------------|
-| A  | Prevent automatic landing and control command `takeoff` |
-| B  | Allow automatic landing and control command `land` |
-| X  | Control command `streamon` |
-| Y  | Control command `streamoff` |
 | R1 | Control command `stop` |
 | R2 | Control command `emergency` |
 | L1 | Toggle autoland |
 | L2 | Shift (To be used in conjunction with other buttons/axes) |
+| A  | Prevent automatic landing and control command `takeoff` |
+| B  | Allow automatic landing and control command `land` |
+| X  | Control command `streamon` |
+| Y  | Control command `streamoff` |
+| A  + L2 | Take snapshot |
+| X  + L2 | Control command `mon` |
+| Y  + L2 | Control command `moff` |
 | START | Control command `command` |
 | SELECT | Start queue execution |
-| START + L1 | Control command `land` and exit |
-| SELECT + L1 | Stop queue execution |
+| START + L2 | Control command `land` and exit |
+| SELECT + L2 | Stop queue execution |
 
 | Axis | Function |
 |-------------|-------------|
@@ -121,10 +124,10 @@
 | Left Button | Control command `flip l` |
 | Back Button | Control command `flip b` |
 | Forward Button | Control command `flip f` |
-| Right Button + L1 | Read command `speed?` |
-| Left Button + L1 | Read command: `battery?` |
-| Back Button + L1 | Read command: `time?` |
-| Forward Button + L1 | Read command: `wifi?` |
+| Right Button + L2 | Read command `speed?` |
+| Left Button + L2 | Read command: `battery?` |
+| Back Button + L2 | Read command: `time?` |
+| Forward Button + L2 | Read command: `wifi?` |
 
 #### Notes ####
 1. Due to the asynchronous nature of the communication, the responses printed to the command might not be to the command state in the statement (for example in case the joystick was moved after a land command was sent, the statement would read `received response ok to command rc a b c d` instead of `received response ok to command land`)

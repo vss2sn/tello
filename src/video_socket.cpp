@@ -62,6 +62,8 @@ VideoSocket::VideoSocket(
   video = std::make_unique<cv::VideoWriter>("out.mp4",cv::VideoWriter::fourcc('m','p','4','v'), 30, cv::Size(960,720));
 #endif
 
+  std::string create_folder = "mkdir snapshots";
+  system(create_folder.c_str());
 }
 
 #ifdef USE_BOOST
@@ -124,6 +126,8 @@ void VideoSocket::decodeFrame()
 
         cv::Mat mat{frame.height, frame.width, CV_8UC3, bgr24};
 
+        if(snap_) takeSnapshot(mat);
+
 #ifdef RECORD
         video->write(mat);
 #endif
@@ -164,4 +168,21 @@ void VideoSocket::handleSendCommand(const std::error_code& error, size_t bytes_s
 #endif
 {
   LogErr() << "VideoSocket class does not implement handleSendCommand()";
+}
+
+void VideoSocket::takeSnapshot(cv::Mat& image){
+  snap_ = false;
+
+  time_t rawtime;
+  struct tm * timeinfo;
+  char buffer [80];
+  time (&rawtime);
+  timeinfo = localtime (&rawtime);
+  strftime (buffer,80,"./snapshots/img_%C_%m_%d_%H_%M_%S.jpg",timeinfo);
+  cv::imwrite(std::string(buffer), image);
+  LogInfo() << "Picture taken. File " << buffer;
+}
+
+void VideoSocket::setSnapshot(){
+  snap_ = true;
 }

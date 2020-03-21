@@ -6,6 +6,8 @@
 #include <cstring>
 #include <queue>
 #include <mutex>
+#include <ctime>
+#include <atomic>
 
 #include <libavutil/frame.h>
 #include <opencv2/highgui.hpp>
@@ -33,6 +35,7 @@ public:
   VideoSocket(asio::io_service& io_service, const std::string& drone_ip, const std::string& drone_port, const std::string& local_port, bool& run);
 #endif // USE_BOOST
   ~VideoSocket();
+  void setSnapshot();
 
 private:
 
@@ -45,6 +48,7 @@ private:
 #endif // USE_BOOST
 
   void decodeFrame();
+  void takeSnapshot(cv::Mat& image);
 
   enum{ max_length_ =  2048 };
   enum{ max_length_large_ =  65536 };
@@ -63,6 +67,7 @@ private:
   std::unique_ptr<OpenVSLAM_API> api_;
 #endif // RUN_SLAM
   bool& run_;
+  std::atomic<bool> snap_ = false;
 };
 
 #endif // VIDEOSOCKET_HPP

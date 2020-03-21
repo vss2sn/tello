@@ -53,8 +53,13 @@ void Tello::jsToCommand(ButtonId update){
     switch (update)
     {
       case BUTTON_A:
-        cs->doNotAutoLand();
-        cs->sendCommand("takeoff");
+        if(js_->getButtonState(BUTTON_LEFT_BUMPER_2)){
+          vs->setSnapshot();
+        }
+        else{
+          cs->doNotAutoLand();
+          cs->sendCommand("takeoff");
+        }
         LogDebug() << "Button [A]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_B:
