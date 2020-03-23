@@ -47,17 +47,11 @@ VideoSocket::VideoSocket(
       LogDebug() << "----------- Video socket io_service thread exits -----------";
     });
     io_thread.detach();
+#endif
 
-    mono_thread = std::thread([&]{
-      try{
-        std::shared_ptr<openvslam::config> cfg = std::make_shared<openvslam::config>("./config.yaml");
-        mono_tracking(cfg, "./orb_vocab.dbow2", 0, "", 1, "");
-      }
-      catch(...){
-        LogDebug() << "Mono thread crashed";
-      }
-    });
-    mono_thread.detach();
+#ifdef RUN_SLAM
+    api_ = std::make_unique<OpenVSLAM_API>(run_, "./config.yaml", "./orb_vocab.dbow2");
+    api_->startMonoThread();
 #endif
 
 #ifdef RECORD
@@ -114,7 +108,6 @@ void VideoSocket::handleResponseFromDrone(const std::error_code& error, size_t b
 void VideoSocket::decodeFrame()
 {
   size_t next = 0;
-
   try {
     while (next < first_empty_index) {
       ssize_t consumed = decoder_.parse((unsigned char*)&frame_buffer_ + next, first_empty_index - next);
@@ -125,18 +118,19 @@ void VideoSocket::decodeFrame()
         converter_.convert(frame, bgr24);
 
         cv::Mat mat{frame.height, frame.width, CV_8UC3, bgr24};
+
 #ifdef RECORD
         video->write(mat);
 #endif
-        {
-          std::unique_lock<std::mutex> lk(m2);
-          cv::Mat greyMat;
-          cv::cvtColor(mat, greyMat, cv::COLOR_BGR2GRAY);
-          frame_queue.push(greyMat);
-          if(frame_queue.size() > 20) frame_queue.pop();
-        }
+
+#ifdef RUN_SLAM
+        cv::Mat greyMat;
+        cv::cvtColor(mat, greyMat, cv::COLOR_BGR2GRAY);
+        api_->addFrameToQueue(greyMat);
+#else
         cv::imshow("frame", mat);
         cv::waitKey(1);
+#endif
       }
       next += consumed;
     }
@@ -161,119 +155,4 @@ void VideoSocket::handleSendCommand(const std::error_code& error, size_t bytes_s
 #endif
 {
   LogErr() << "VideoSocket class does not implement handleSendCommand()";
-}
-
-
-void VideoSocket::mono_tracking(const std::shared_ptr<openvslam::config>& cfg,
-                   const std::string& vocab_file_path, const unsigned int cam_num, const std::string& mask_img_path,
-                   const float scale, const std::string& map_db_path) {
-    // load the mask image
-    const cv::Mat mask = mask_img_path.empty() ? cv::Mat{} : cv::imread(mask_img_path, cv::IMREAD_GRAYSCALE);
-
-    // build a SLAM system
-    openvslam::system SLAM(cfg, vocab_file_path);
-    // startup the SLAM process
-    SLAM.startup();
-
-    pangolin_viewer::viewer viewer(cfg, &SLAM, SLAM.get_frame_publisher(), SLAM.get_map_publisher());
-
-    cv::Mat frame;
-    double timestamp = 0.0;
-    std::vector<double> track_times;
-
-    unsigned int num_frame = 0;
-
-    // run the SLAM in another thread
-    std::thread thread([&]() {
-        while(run_){
-          if (SLAM.terminate_is_requested()) {
-              break;
-          }
-          if(frame_queue.empty()){
-            usleep(1.0 / cfg->camera_->fps_);
-            continue;
-          }
-
-          {
-            std::unique_lock<std::mutex> lk(m2);
-            frame = frame_queue.front();
-            frame_queue.pop();
-          }
-
-          if (frame.empty()) {
-              continue;
-          }
-
-          const auto tp_1 = std::chrono::steady_clock::now();
-
-          SLAM.feed_monocular_frame(frame, timestamp, mask);
-
-          const auto tp_2 = std::chrono::steady_clock::now();
-
-          const auto track_time = std::chrono::duration_cast<std::chrono::duration<double>>(tp_2 - tp_1).count();
-          track_times.push_back(track_time);
-
-          timestamp += 1.0 / cfg->camera_->fps_;
-          ++num_frame;
-        }
-        // SLAM.terminate_is_requested();
-        // viewer.request_terminate();
-        LogDebug() << "----------- Exiting the mono thread -----------";
-
-    });
-
-    LogDebug() << "----------- Viewer run beginning -----------";
-
-    std::unique_ptr<std::thread> view = std::make_unique<std::thread>([&]{
-      try{
-        viewer.run();
-      }
-      catch(...){
-        LogDebug() << "Viewer crashed.";
-      }
-      });
-
-    // view->detach();
-
-    thread.join();
-    LogDebug() << "----------- Viewer shutdown beginning -----------";
-
-    viewer.request_terminate();
-
-    // while(viewer)
-    // try{
-    //   LogDebug() << "Trying";
-    //
-    //   viewer.request_terminate();
-    //   // LogDebug() << "Trying";
-    //   //
-    //   // // usleep(1000000);
-    //   // LogDebug() << "Trying";
-    //   //
-    //   // viewer.~viewer();
-    //   // LogDebug() << "Trying";
-    //   //
-    //   // view.reset();
-    //   // LogDebug() << "Trying";
-    //
-    // }
-    // catch(...){
-    //   LogDebug() << "Have to find a better way.";
-    // }
-
-    view->join();
-    // shutdown the SLAM process
-    LogDebug() << "----------- SLAM shutdown end -----------";
-    SLAM.shutdown();
-
-    if (!map_db_path.empty()) {
-        // output the map database
-        SLAM.save_map_database(map_db_path);
-    }
-
-    // std::sort(track_times.begin(), track_times.end());
-    // const auto total_track_time = std::accumulate(track_times.begin(), track_times.end(), 0.0);
-    // std::cout << "median tracking time: " << track_times.at(track_times.size() / 2) << "[s]" << std::endl;
-    // std::cout << "mean tracking time: " << total_track_time / track_times.size() << "[s]" << std::endl;
-    LogDebug() << "----------- SLAM shutdown ending -----------";
 }

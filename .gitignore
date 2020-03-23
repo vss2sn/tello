@@ -1,2 +1,3 @@
 build/
-lib_openvslam/
+lib_openvslam/external_dependencies
+lib_openvslam/openvslam

@@ -5,28 +5,17 @@
 #include <vector>
 #include <cstring>
 #include <queue>
+#include <mutex>
 
 #include <libavutil/frame.h>
 #include <opencv2/highgui.hpp>
 
 #include "base_socket.hpp"
 #include "h264decoder.hpp"
-// #include "openvslam_api.hpp"
 
-#include "pangolin_viewer/viewer.h"
-#include "openvslam/system.h"
-#include "openvslam/config.h"
-#include "openvslam/util/stereo_rectifier.h"
-
-#include <iostream>
-#include <numeric>
-
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/videoio.hpp>
-#include <spdlog/spdlog.h>
-// #include <popl.hpp>
+#ifdef RUN_SLAM
+#include "openvslam_api.hpp"
+#endif
 
 class VideoSocket : public BaseSocket{
 public:
@@ -62,22 +51,9 @@ private:
   H264Decoder decoder_;
   ConverterRGB24 converter_;
   std::unique_ptr<cv::VideoWriter> video;
-
-  // For openvslam
-  // use
-  // std::atomic_flag use_frame = ATOMIC_FLAF_INIT;
-  // or
-  std::atomic<bool> frame_locked_ = false;
-  //
-  // openVSLAM_API slam_api;
-  std::queue<cv::Mat> frame_queue;
-  std::shared_ptr<openvslam::config> cfg = std::make_shared<openvslam::config>("./config.yaml");
-
-  void mono_tracking(const std::shared_ptr<openvslam::config>& cfg,
-                     const std::string& vocab_file_path, const unsigned int cam_num, const std::string& mask_img_path,
-                     const float scale, const std::string& map_db_path);
-  std::thread mono_thread;
-  std::mutex m2;
+#ifdef RUN_SLAM
+  std::unique_ptr<OpenVSLAM_API> api_;
+#endif
   bool& run_;
 };
 
