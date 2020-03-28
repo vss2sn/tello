@@ -4,14 +4,25 @@ cmake_minimum_required(VERSION 3.5)
 
 add_definitions(-std=c++17)
 
-set(CMAKE_CXX_FLAGS "-w -g -Werror -Wall -O0 -DDEBUG")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -DDEBUG")
+
+# These should be the only options the user requires
 option(SIMPLE "Use simple formatting for all output to terminal" OFF)
 option(USE_BOOST "Use boost libraries for asio, thread, etc" OFF)
 option(USE_JOYSTICK "Use a joystick/controller to control the drone manually" ON)
 option(RECORD "Record tello video feed" OFF)
-option(RUN_SLAM "Run SLAM in real time" ON)
+option(RUN_SLAM "Run SLAM in real time" OFF)
+
+message(STATUS "CMake Option `SIMPLE` - Use simple formatting for all output to terminal ${SIMPLE}")
+message(STATUS "CMake Option `USE_BOOST` - Use boost libraries for asio, thread, etc ${USE_BOOST}")
+message(STATUS "CMake Option `USE_JOYSTICK` - Use a joystick/controller to control the drone manually ${USE_JOYSTICK}")
+message(STATUS "CMake Option `RECORD` - Record tello video feed ${RECORD}")
+message(STATUS "CMake Option `RUN_SLAM` - Run SLAM in real time ${RUN_SLAM}")
+# End These should be the only options the user requires
+
+option(USE_CMAKE_NOT_SCRIPT "Use Cmake ExternalProject to get and build OpenVSLAM and its dependencies" OFF)
 option(REBUILD_OPENVSLAM "Rebuild OpenVSLAM" OFF)
-option(USE_CMAKE_NOT_SCRIPT "Use Cmake ExternalProject to get and build OpenVSLAM and its dependencies" ON)
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc
                     ${CMAKE_CURRENT_SOURCE_DIR}/lib_h264decoder
                     ${CMAKE_CURRENT_SOURCE_DIR}/lib_joystick
@@ -70,16 +81,6 @@ add_library( joystick SHARED
              ${LIB_HEADERS_JOYSTICK}
            )
 
-if(RUN_SLAM)
-  option(USE_DBOW2 "" ON)
-  add_definitions(-DUSE_DBOW2)
-  find_package(openvslam REQUIRED)
-  find_package(Pangolin REQUIRED)
-  set(openvslam_libs "openvslam::openvslam;openvslam::pangolin_viewer;pangolin")
-else(RUN_SLAM)
-  set(openvslam_libs "")
-endif(RUN_SLAM)
-
 add_executable( ${PROJECT_NAME}
                 ${CMAKE_CURRENT_SOURCE_DIR}/main/main.cpp
                 ${LIB_SOURCES}
@@ -92,16 +93,15 @@ if(RUN_SLAM)
   add_dependencies( ${PROJECT_NAME} openvslam_with_api )
   include_directories(${LIB_OPENVSLAM_WITH_API_HEADERS})
   target_link_libraries( ${PROJECT_NAME} openvslam_with_api )
+else()
+  find_package(OpenCV REQUIRED COMPONENTS core imgcodecs videoio features2d calib3d highgui)
+  target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBRARIES})
 endif()
-
-find_package(OpenCV REQUIRED COMPONENTS core imgcodecs videoio features2d calib3d highgui)
 
 target_link_libraries( ${PROJECT_NAME}
                        ${Boost_SYSTEM_LIBRARIES} # Will be empty string if not using boost
                        ${Boost_THREAD_LIBRARY} # Will be empty string if not using boost
                        Threads::Threads
-                       ${OpenCV_LIBRARIES}
-                       ${openvslam_libs}
                        h264decoder
                        joystick
                        utils

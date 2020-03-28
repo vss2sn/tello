@@ -1,3 +1,8 @@
+#ifdef RUN_SLAM
+
+#ifndef OPENVSLAM_API_HPP
+#define OPENVSLAM_API_HPP
+
 #include <memory>
 #include <string>
 #include <iostream>
@@ -15,3 +20,7 @@ private:
   class impl;
   std::unique_ptr<impl> openvslam_impl;
 };
+
+#endif
+
+#endif

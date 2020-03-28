@@ -85,11 +85,16 @@ cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=${EXT_DEP}/install/eigen-eigen-5a0156e40feb/ \
     ..
-make -j7
+make -j8 --silent
 make install
 cd ${EXT_DEP}/install/eigen-eigen-5a0156e40feb/
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
 sudo echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$(pwd)/lib" >> ~/.bashrc
+
+echo "----------------------------------------"
+echo "Sourcing bashrc"
+echo "----------------------------------------"
+source ~/.bashrc
 
 echo "----------------------------------------"
 echo "Installing OpenCV 3.4"
@@ -114,12 +119,18 @@ cmake \
     -DWITH_FFMPEG=ON \
     -DWITH_OPENMP=ON \
     -DBUILD_opencv_cudacodec=OFF \
+    -DCMAKE_CXX_FLAGS="-w" \
     ..
-make -j7
+make -j8 --silent
 make install
 cd ${EXT_DEP}/install/opencv-3.4.0
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
 sudo echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$(pwd)/lib" >> ~/.bashrc
+
+echo "----------------------------------------"
+echo "Sourcing bashrc"
+echo "----------------------------------------"
+source ~/.bashrc
 
 echo "----------------------------------------"
 echo "Installing DBoW2"
@@ -132,12 +143,18 @@ cd build
 cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=${EXT_DEP}/install/DBoW2/ \
+    -DCMAKE_CXX_FLAGS="-w" \
     ..
-make -j7
+make -j8 --silent
 make install
 cd ${EXT_DEP}/install/DBoW2/
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
 sudo echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$(pwd)/lib" >> ~/.bashrc
+
+echo "----------------------------------------"
+echo "Sourcing bashrc"
+echo "----------------------------------------"
+source ~/.bashrc
 
 echo "----------------------------------------"
 echo "Installing g2o"
@@ -160,12 +177,18 @@ cmake \
     -DG2O_USE_OPENGL=OFF \
     -DG2O_USE_OPENMP=ON \
     -DBUILD_opencv_apps=ON \
+    -DCMAKE_CXX_FLAGS="-w" \
     ..
-make -j7
+make -j8 --silent
 make install
 cd ${EXT_DEP}/install/g2o/
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
 sudo echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$(pwd)/lib" >> ~/.bashrc
+
+echo "----------------------------------------"
+echo "Sourcing bashrc"
+echo "----------------------------------------"
+source ~/.bashrc
 
 echo "----------------------------------------"
 echo "Installing Pangolin"
@@ -179,12 +202,18 @@ cd build
 cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=${EXT_DEP}/install/Pangolin/ \
+    -DCMAKE_CXX_FLAGS="-w" \
     ..
-make -j7
+make -j8 --silent
 make install
 cd ${EXT_DEP}/install/Pangolin/
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
 sudo echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$(pwd)/lib" >> ~/.bashrc
+
+echo "----------------------------------------"
+echo "Sourcing bashrc"
+echo "----------------------------------------"
+source ~/.bashrc
 
 echo "----------------------------------------"
 echo "Installing socket.io-client-cpp"
@@ -200,8 +229,9 @@ cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=${EXT_DEP}/install/socket.io-client-cpp/ \
     -DBUILD_UNIT_TESTS=OFF \
+    -DCMAKE_CXX_FLAGS="-w" \
     ..
-make -j7
+make -j8 --silent
 make install
 cd ${EXT_DEP}/install/socket.io-client-cpp/
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
@@ -231,8 +261,9 @@ cmake \
     -DBOW_FRAMEWORK=DBoW2 \
     -DBUILD_TESTS=ON \
     -DCMAKE_INSTALL_PREFIX=$(pwd)/../install/ \
+    -DCMAKE_CXX_FLAGS="-w" \
     ..
-make -j7
+make -j8 --silent
 make install
 cd ../install
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc

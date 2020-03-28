@@ -13,9 +13,11 @@ addons:
 
 before_script:
   - sudo apt install libopencv-dev libasio-dev
+  - bash -i install_openvslam.sh
+  - source ~/.bashrc
   - mkdir build
   - cd build
-  - cmake ..
+  - cmake -DRUN_SLAM=ON ..
 
 script:
   - make -j

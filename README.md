@@ -17,6 +17,7 @@
     - using the joystick while the queue is executing pauses the queue, which will need to be restarted even when there is no longer additional input from the joystick
     - Queue execution can be safely paused and resumed
     - This mode enables (optional) command retries when a command does not receive any response from the drone
+5. SLAM integration has been provided using the OpenVSLAM library.
 
 #### File Structure ####
 
@@ -46,28 +47,43 @@
     - Default `OFF`
     - When set to `ON` runs OpenVSLAM, creating a map of the area and localizing the drone
     - Requires a configuration file for the camera as well as  ORB vocabulary file
-    - Please run the install_openvslam using `bash -i install_openvslam` to install openvslam and its dependencies
+    - Please run the install_openvslam using `bash -i install_openvslam` to install OpenVSLAM and its dependencies
     - Please download a sample vocabulary file [here](https://drive.google.com/open?id=1wUPb328th8bUqhOk-i8xllt5mgRW4n84) and store it in the main directory
+    - Please copy the sample config.yaml file into the build directory
 
 #### To build and run ####
     git clone https://github.com/vss2sn/tello.git  
     cd tello  
-    # begin dependencies
-    sudo apt install libasio-dev # or sudo apt install libboost-dev
-    sudo apt install ibopencv-dev
-    #
-    # if running slam
-    bash -i install_openvslam
-    #
-    mkdir build  
-    cd build  
-    cmake .. # or cmake -DRUN_SLAM=ON ..
+    sudo apt install libasio-dev libopencv-dev
+    mkdir -p build && cd build  
+    cmake ..
     make -j4
     ./tello
 
-#### Dependancies ####
+#### To build and run with SLAM ####
+    git clone https://github.com/vss2sn/tello.git  
+    cd tello  
+    sudo apt install libasio-dev libopencv-dev
+    bash -i install_openvslam
+    # OR skip the above step and
+    # run cmake with the option -DUSE_CMAKE_NOT_SCRIPT=ON
+    mkdir -p build && cd build  
+    cmake -DRUN_SLAM=ON ..
+    make -j4
+    ./tello
+
+
+#### Required Dependencies ####
 1. Asio and std::threads or Boost Asio and Boost threads (CMake option provided)
 2. OpenCV (for video socket)
+
+#### Optional Dependencies for SLAM ####
+1. OpenVSLAM
+2. Eigen3
+3. g2o
+4. DBoW2
+5. OpenCV >= 3.4
+6. Pangolin
 
 #### Code overview #####
 1. `BaseSocket` is an abstract class providing the framework for the other sockets
@@ -113,8 +129,20 @@
 #### Notes ####
 1. Due to the asynchronous nature of the communication, the responses printed to the command might not be to the command state in the statement (for example in case the joystick was moved after a land command was sent, the statement would read `received response ok to command rc a b c d` instead of `received response ok to command land`)
 2. More detailed documentation on the queue execution and its related functions, preventing auto land, threads, etc will be added in upcoming commits
+3. The SLAM integration is a WIP; the API is being refactored and expanded to allow more options. There are 2 options to install and use OpenVSLAM and its dependencies with this code.
+  - Running the install script will get, build and install the required packages into the lib_openvslam directory, and add the necessary paths to ~/.bashrc for compile time and runtime linking
+  - Run cmake with the option `USE_CMAKE_NOT_SCRIPT` set to `ON` which will get, build and install the required packages into the lib_openvslam directory without modifying the ~/.bashrc file
 
 #### References ####
 1. Joystick library - https://github.com/Notgnoshi/joystick
 2. h264decoder library - https://github.com/DaWelter/h264decoder
 3. OpenVSLAM - https://github.com/xdspacelab/openvslam
+
+#### Project paths (current & projected) ####
+1. Refactor OpenVSLAM API
+2. Create documentation and site
+3. Add in other SLAM options
+4. Clean up includes
+5. Add script for camera configuration from video recorded on Tello
+6. Add watchdog to check for state data
+7. Integrate SLAM data into command structure to allow waypoints

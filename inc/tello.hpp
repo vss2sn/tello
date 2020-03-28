@@ -11,9 +11,9 @@ public:
   Tello(
 #ifdef USE_BOOST
     boost::asio::io_service& io_service,
-#else
+#else // USE_BOOST
     asio::io_service& io_service,
-#endif
+#endif // USE_BOOST
 std::condition_variable& cv_run
 );
 ~Tello();
@@ -25,10 +25,10 @@ private:
   #ifdef USE_BOOST
     boost::asio::io_service& io_service_;
     boost::thread js_thread_;
-  #else
+  #else // USE_BOOST
     asio::io_service& io_service_;
     std::thread js_thread_;
-  #endif
+  #endif // USE_BOOST
   std::condition_variable& cv_run_;
   void jsToCommandThread();
   void jsToCommand(ButtonId update);

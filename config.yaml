@@ -8,21 +8,22 @@ Camera.name: "Tello"
 Camera.setup: "monocular"
 Camera.model: "fisheye"
 
-Camera.fx: 10000
-Camera.fy: 10000
-Camera.cx: 480
-Camera.cy: 360
+Camera.fx: 1843.37401
+Camera.fy: 1858.58782
+Camera.cx: 545.155626
+Camera.cy: 445.740028
 
-Camera.k1: 0
-Camera.k2: 0
-Camera.k3: 0
-Camera.k4: 0
+Camera.k1: 0.561939658
+Camera.k2: -5.76385255
+Camera.k3: 0.0356825441
+Camera.k4: 0.0108696501
+Camera.k5: 32.9089203
 
 Camera.fps: 30.0
 Camera.cols: 960
 Camera.rows: 720
 
-Camera.color_order: "Gray"
+Camera.color_order: "BGR"
 
 #================#
 # orb parameters #

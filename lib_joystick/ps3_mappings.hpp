@@ -79,4 +79,4 @@ enum ButtonId
 // if you add or remove items from the above enum, update this value
 #define BUTTON_COUNT 17
 
-#endif PS3MAPPINGS_HPP
+#endif // PS3MAPPINGS_HPP

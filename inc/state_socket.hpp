@@ -28,4 +28,4 @@ private:
 
 };
 
-#endif STATESOCKET_HPP
+#endif // STATESOCKET_HPP

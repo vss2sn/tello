@@ -1,5 +1,7 @@
+// To prevent linker language error
 #include <queue>
 
+#ifdef RUN_SLAM
 #include "openvslam_api.hpp"
 
 #include "pangolin_viewer/viewer.h"
@@ -45,7 +47,7 @@ OpenVSLAM_API::~OpenVSLAM_API(){};
 void OpenVSLAM_API::impl::addFrameToQueue(cv::Mat new_frame){
   if(frame_queue.size() < 5){
     std::unique_lock<std::mutex> lk(frame_m);
-    frame_queue.push(new_frame);
+    frame_queue.push(new_frame.clone());
   }
 }
 
@@ -101,25 +103,27 @@ void OpenVSLAM_API::impl::mono_tracking(
 
           track_times.push_back(track_time);
 
+
           timestamp += 1.0 / cfg->camera_->fps_;
           ++num_frame;
         }
-        std::cout  << "----------- Exiting the mono thread -----------"<< std::endl;
+         spdlog::info( "----------- Exiting the mono thread -----------");
     });
 
     std::unique_ptr<std::thread> view = std::make_unique<std::thread>([&]{
       try{
+        spdlog::info( "----------- Viewer thread started -----------" );
         viewer.run();
       }
       catch(...){
-        std::cout << "Viewer crashed." << std::endl;
+         spdlog::info( "----------- Viewer thread crashed -----------" );
       }
       });
 
     slam_thread.join();
     viewer.request_terminate();
     view->join();
-    std::cout  << "----------- Viewer shutdown -----------" << std::endl;
+     spdlog::info( "----------- Viewer thread joined -----------" );
 
     // shutdown the SLAM process
     SLAM.shutdown();
@@ -128,17 +132,20 @@ void OpenVSLAM_API::impl::mono_tracking(
         // output the map database
         SLAM.save_map_database(map_db_path);
     }
-    std::cout  << "----------- SLAM shutdown -----------" << std::endl;
+     // spdlog::info( "SLAM shutdown" );
 }
 
 void OpenVSLAM_API::impl::startMonoThread(){
   mono_thread = std::thread([&]{
     try{
+      spdlog::info( "----------- Mono thread started -----------" );
       std::shared_ptr<openvslam::config> cfg = std::make_shared<openvslam::config>(config_file_path_);
       mono_tracking(cfg, "", 1, "");
     }
     catch(...){
-      std::cout << "Mono thread crashed" << std::endl;
+       spdlog::info( "----------- Mono thread crashed -----------" );
+       spdlog::info( "Please check whether the config.yaml file is in the build directory" );
+       spdlog::info( "Please check whether the ORB vocabulary is in the build directory" );
     }
   });
   mono_thread.detach();
@@ -147,3 +154,5 @@ void OpenVSLAM_API::impl::startMonoThread(){
 void OpenVSLAM_API::startMonoThread(){
   openvslam_impl->startMonoThread();
 }
+
+#endif

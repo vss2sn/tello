@@ -31,8 +31,8 @@ CommandSocket::CommandSocket(
   int timeout
 ):
   BaseSocket(io_service, drone_ip, drone_port, local_port),
-  n_retries_allowed_(n_retries_allowed),
-  timeout_(timeout)
+  timeout_(timeout),
+  n_retries_allowed_(n_retries_allowed)
 {
   // NOTE: Used #define UDP to handle namespace
   UDP::resolver resolver(io_service_);

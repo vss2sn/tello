@@ -49,4 +49,4 @@ enum ButtonId
 
 #define BUTTON_COUNT 11
 
-#endif 360MAPPINGS_HPP
+#endif // 360MAPPINGS_HPP

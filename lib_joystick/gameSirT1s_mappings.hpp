@@ -58,4 +58,4 @@ enum ButtonId
 #define BUTTON_COUNT 15
 // Update max button count
 
-#endif GAMESIRT1SMAPPINGS_HPP
+#endif // GAMESIRT1SMAPPINGS_HPP

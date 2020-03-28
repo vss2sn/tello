@@ -15,12 +15,12 @@
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
 
-#else
+#else // USE_BOOST
 
 #include <thread>
 #include "asio.hpp"
 
-#endif
+#endif // USE_BOOST
 
 #include "gameSirT1s_mappings.hpp"
 // #include "360_mappings.hpp"
@@ -81,9 +81,9 @@ private:
 
 #ifdef USE_BOOST
     boost::thread js_thread_;
-#else
+#else // USE_BOOST
     std::thread js_thread_;
-#endif
+#endif //USE_BOOST
 };
 
-#endif JOYSTICK_HPP
+#endif // JOYSTICK_HPP
