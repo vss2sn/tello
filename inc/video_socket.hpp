@@ -12,6 +12,26 @@
 
 #include "base_socket.hpp"
 #include "h264decoder.hpp"
+// #include "openvslam_api.hpp"
+
+#include "pangolin_viewer/viewer.h"
+#include "openvslam/system.h"
+#include "openvslam/config.h"
+#include "openvslam/util/stereo_rectifier.h"
+
+#include <iostream>
+#include <numeric>
+
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/videoio.hpp>
+#include <spdlog/spdlog.h>
+// #include <popl.hpp>
+
+#ifdef RUN_SLAM
+#include "openvslam_api.hpp"
+#endif
 
 #ifdef RUN_SLAM
 #include "openvslam_api.hpp"
