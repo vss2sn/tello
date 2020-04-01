@@ -149,11 +149,11 @@ void CommandSocket::addCommandToQueue(const std::string& cmd){
 
 void CommandSocket::executeQueue(){
   utils_log::LogInfo() << "Executing queue commands.";
-  execute_queue_ = true;
   {
     std::lock_guard<std::mutex> lk(m);
-    cv_execute_queue_.notify_all();
+    execute_queue_ = true;
   }
+  cv_execute_queue_.notify_all();
 }
 
 void CommandSocket::sendQueueCommands(){
@@ -213,6 +213,7 @@ void CommandSocket::addCommandToFrontOfQueue(const std::string& cmd){
 
 void CommandSocket::stopQueueExecution(){
   utils_log::LogInfo() << "Stopping queue execution. " << command_queue_.size() << " commands still in queue.";
+  std::lock_guard<std::mutex> lk(m);
   execute_queue_ = false;
 }
 
@@ -233,21 +234,20 @@ void CommandSocket::removeNextFromQueue(){
 
 void CommandSocket::doNotAutoLand(){
   utils_log::LogDebug() << "Automatic landing disabled.";
-  dnal_ = true;
   {
     std::lock_guard<std::mutex> lk(dnal_mutex);
-    cv_dnal_.notify_all();
+    dnal_ = true;
   }
+  cv_dnal_.notify_all();
 }
 
 void CommandSocket::allowAutoLand(){
   utils_log::LogDebug() << "Automatic landing enabled.";
-  dnal_ = false;
-  // TODO: Check whether this is required
-  // {
-  //   std::lock_guard<std::mutex> lk(dnal_mutex);
-  //   cv_dnal_.notify_all();
-  // }
+  {
+    std::lock_guard<std::mutex> lk(dnal_mutex);
+    dnal_ = false;
+  }
+  cv_dnal_.notify_all();
 }
 
 void CommandSocket::doNotAutoLandWorker(){
@@ -274,11 +274,13 @@ void CommandSocket::doNotAutoLandWorker(){
 }
 
 void CommandSocket::stop(){
+  std::lock_guard<std::mutex> lk(m);
   execute_queue_ = false;
   sendCommand("stop");
 }
 
 void CommandSocket::emergency(){
+  std::lock_guard<std::mutex> lk(m);
   execute_queue_ = false;
   sendCommand("emergency");
 }
@@ -292,18 +294,21 @@ void CommandSocket::land(){
   sendCommand("land");
 }
 
+// TODO: Refactor exit of dnal worker thread
 CommandSocket::~CommandSocket(){
-  dnal_ = true; // allow dnal thread to exit
-  execute_queue_ = false; // also allow dnal thread to exit
-  on_ = false;
   {
     std::lock_guard<std::mutex> lk(dnal_mutex);
-    cv_dnal_.notify_all();
-    usleep(1000); // allow dnal thread to exit before setting execute_queue_ to true.
+    dnal_ = true; // allow dnal thread to exit
+    std::lock_guard<std::mutex> lk_2(m);
+    execute_queue_ = false; // also allow dnal thread to exit
+    on_ = false;
   }
-  execute_queue_ = true;
+  cv_dnal_.notify_all();
+  usleep(1000); // allow dnal thread to exit before setting execute_queue_ to true.
   {
     std::lock_guard<std::mutex> lk(m);
-    cv_execute_queue_.notify_all();
+    execute_queue_ = true;
   }
+  cv_execute_queue_.notify_all();
+
 }
