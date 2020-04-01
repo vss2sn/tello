@@ -6,7 +6,7 @@
 
 Camera.name: "Tello"
 Camera.setup: "monocular"
-Camera.model: "fisheye"
+Camera.model: "perspective"
 
 Camera.fx: 1843.37401
 Camera.fy: 1858.58782
@@ -15,9 +15,9 @@ Camera.cy: 445.740028
 
 Camera.k1: 0.561939658
 Camera.k2: -5.76385255
-Camera.k3: 0.0356825441
-Camera.k4: 0.0108696501
-Camera.k5: 32.9089203
+Camera.p1: 0.0356825441
+Camera.p2: 0.0108696501
+Camera.k3: 32.9089203
 
 Camera.fps: 30.0
 Camera.cols: 960
