@@ -38,11 +38,11 @@ int main(){
 
   // use cv wait for here
 
-  LogWarn() << "----------- Done -----------";
-  LogWarn() << "Landing.";
+  utils_log::LogWarn() << "----------- Done -----------";
+  utils_log::LogWarn() << "Landing.";
   // t.cs->exitAllThreads();
   io_service.stop();
   usleep(1000000); // Ensure this is greater than timeout to prevent seg faults
-  LogDebug() << "----------- Main thread returns -----------";
+  utils_log::LogDebug() << "----------- Main thread returns -----------";
   return 0;
 }

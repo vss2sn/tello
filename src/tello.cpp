@@ -60,11 +60,11 @@ void Tello::jsToCommand(ButtonId update){
           cs->doNotAutoLand();
           cs->sendCommand("takeoff");
         }
-        LogDebug() << "Button [A]: [" << update << "] Value: [" << value <<"]";
+        utils_log::LogDebug() << "Button [A]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_B:
         cs->allowAutoLand();
-        LogDebug() << "Button [B]: [" << update << "] Value: [" << value <<"]";
+        utils_log::LogDebug() << "Button [B]: [" << update << "] Value: [" << value <<"]";
         cs->sendCommand("land");
         break;
       case BUTTON_X:
@@ -74,7 +74,7 @@ void Tello::jsToCommand(ButtonId update){
         else{
           cs->sendCommand("streamon");
         }
-        LogDebug() << "Button [X]: [" << update << "] Value: [" << value <<"]";
+        utils_log::LogDebug() << "Button [X]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_Y:
         if(js_->getButtonState(BUTTON_LEFT_BUMPER_2)){
@@ -83,31 +83,31 @@ void Tello::jsToCommand(ButtonId update){
         else{
           cs->sendCommand("streamoff");
         }
-        LogDebug() << "Button [Y]: [" << update << "] Value: [" << value <<"]";
+        utils_log::LogDebug() << "Button [Y]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_RIGHT_BUMPER_1:
         cs->stop();
-        LogDebug() << "Button [RIGHT_BUMPER_1]: [" << update << "] Value: [" << value <<"]";
+        utils_log::LogDebug() << "Button [RIGHT_BUMPER_1]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_RIGHT_BUMPER_2:
         cs->emergency();
-        LogDebug() << "Button [RIGHT_BUMPER_2]: [" << update << "] Value: [" << value <<"]";
+        utils_log::LogDebug() << "Button [RIGHT_BUMPER_2]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_LEFT_BUMPER_1:
         if(cs->dnal_) cs->allowAutoLand();
         else cs->doNotAutoLand();
-        LogDebug() << "Button [LEFT_BUMPER_1]: [" << update << "] Value: [" << value <<"]";
+        utils_log::LogDebug() << "Button [LEFT_BUMPER_1]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_LEFT_BUMPER_2:
-        LogDebug() << "Shift function assigned.";
-        LogDebug() << "Button [LEFT_BUMPER_2]: [" << update << "] Value: [" << value <<"]";
+        utils_log::LogDebug() << "Shift function assigned.";
+        utils_log::LogDebug() << "Button [LEFT_BUMPER_2]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_START:
         if(js_->getButtonState(BUTTON_LEFT_BUMPER_2)){
           usleep(1000000);
           cs->land();
           usleep(5000000); // Block any other joystick input
-          LogWarn() << "Exit called from joystick";
+          utils_log::LogWarn() << "Exit called from joystick";
           // NOTE: Notification of calling end of code kept here* to allow expansion
           // to swarm, where a single joystick might be used to command multiple
           // Tellos at which point this function will be commented using a #define
@@ -125,25 +125,25 @@ void Tello::jsToCommand(ButtonId update){
         else{
           cs->sendCommand("command");
         }
-        LogDebug() << "Button [START]: [" << update << "] Value: [" << value <<"]";
+        utils_log::LogDebug() << "Button [START]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_SELECT:
-        LogDebug() << "Button [SELECT]: [" << update << "] Value: [" << value <<"]";
+        utils_log::LogDebug() << "Button [SELECT]: [" << update << "] Value: [" << value <<"]";
           // NOTE: as joystick commands would immediately stop execution just
           // pressing L2 (shift) would stop execution of the queue, but for HRI
           // reasons using L2+Select will be used to call stop execution.
         if(js_->getButtonState(BUTTON_LEFT_BUMPER_2)){
-          LogDebug() << "Button select stop execute";
+          utils_log::LogDebug() << "Button select stop execute";
           cs->stopQueueExecution();
         }
         else{
-          LogDebug() << "Button select execute";
+          utils_log::LogDebug() << "Button select execute";
           cs->executeQueue();
         }
         break;
       default:
-        LogDebug() << "Unknown button command";
-        LogDebug() << "Button: [" << update << "] Value: [" << value <<"]";
+        utils_log::LogDebug() << "Unknown button command";
+        utils_log::LogDebug() << "Button: [" << update << "] Value: [" << value <<"]";
         break;
     }
   }
@@ -151,7 +151,7 @@ void Tello::jsToCommand(ButtonId update){
 
 void Tello::jsToCommand(AxisId update){
   int16_t value = js_->getAxisState(update);
-  LogDebug() << "Axis: [" << update << "] Value: [" << js_->mapConstLimits(value) <<"]";
+  utils_log::LogDebug() << "Axis: [" << update << "] Value: [" << js_->mapConstLimits(value) <<"]";
   std::string cmd = "rc "
   + std::to_string(js_->mapConstLimits(js_->getValueAxis(2))) + " "
   + std::to_string(js_->mapConstLimits(js_->getValueAxis(3))*-1) + " "
@@ -198,7 +198,7 @@ void Tello::jsToCommand(AxisId update){
       }
       break;
     default:
-        LogDebug() << "Axis: [" << update << "] Value: [" << js_->mapConstLimits(value) <<"]";
+        utils_log::LogDebug() << "Axis: [" << update << "] Value: [" << js_->mapConstLimits(value) <<"]";
         break;
   }
 }

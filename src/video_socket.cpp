@@ -48,7 +48,7 @@ VideoSocket::VideoSocket(
     // [&](auto... args){return handleResponseFromDrone(args...);});
 
     io_thread = std::thread([&]{io_service_.run();
-      LogDebug() << "----------- Video socket io_service thread exits -----------";
+      utils_log::LogDebug() << "----------- Video socket io_service thread exits -----------";
     });
     io_thread.detach();
 #endif
@@ -78,7 +78,7 @@ void VideoSocket::handleResponseFromDrone(const std::error_code& error, size_t b
   }
 
   if (first_empty_index + bytes_recvd >= max_length_large_) {
-    LogInfo() << "Frame buffer overflow. Dropping frame";
+    utils_log::LogInfo() << "Frame buffer overflow. Dropping frame";
     first_empty_index = 0;
     frame_buffer_n_packets_ = 0;
     return;
@@ -149,7 +149,7 @@ void VideoSocket::decodeFrame()
     }
   }
   catch (...) {
-    LogErr() << "Error in decoding frame";
+    utils_log::LogErr() << "Error in decoding frame";
   }
 }
 
@@ -167,7 +167,7 @@ void VideoSocket::handleSendCommand(const boost::system::error_code& error, size
 void VideoSocket::handleSendCommand(const std::error_code& error, size_t bytes_sent, std::string cmd)
 #endif
 {
-  LogErr() << "VideoSocket class does not implement handleSendCommand()";
+  utils_log::LogErr() << "VideoSocket class does not implement handleSendCommand()";
 }
 
 void VideoSocket::takeSnapshot(cv::Mat& image){
@@ -178,9 +178,9 @@ void VideoSocket::takeSnapshot(cv::Mat& image){
   char buffer [80];
   time (&rawtime);
   timeinfo = localtime (&rawtime);
-  strftime (buffer,80,"./snapshots/img_%C_%m_%d_%H_%M_%S.jpg",timeinfo);
+  strftime (buffer,80,"./snapshots/img_%Y_%m_%d_%H_%M_%S.jpg",timeinfo);
   cv::imwrite(std::string(buffer), image);
-  LogInfo() << "Picture taken. File " << buffer;
+  utils_log::LogInfo() << "Picture taken. File " << buffer;
 }
 
 void VideoSocket::setSnapshot(){

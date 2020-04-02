@@ -7,14 +7,16 @@
 
 #define __FILENAME__ (__builtin_strrchr(__FILE__, '/') ? __builtin_strrchr(__FILE__, '/') + 1 : __FILE__)
 
-#define LogDebug() LogDebugDetailed(__FILENAME__, __LINE__)
-#define LogInfo() LogInfoDetailed(__FILENAME__, __LINE__)
-#define LogStatus() LogStatusDetailed(__FILENAME__, __LINE__)
-#define LogWarn() LogWarnDetailed(__FILENAME__, __LINE__)
-#define LogErr() LogErrorDetailed(__FILENAME__, __LINE__)
+namespace utils_log{
+
+	#define LogDebug() LogDebugDetailed(__FILENAME__, __LINE__)
+	#define LogInfo() LogInfoDetailed(__FILENAME__, __LINE__)
+	#define LogStatus() LogStatusDetailed(__FILENAME__, __LINE__)
+	#define LogWarn() LogWarnDetailed(__FILENAME__, __LINE__)
+	#define LogErr() LogErrorDetailed(__FILENAME__, __LINE__)
 
 enum class Colour { BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, RESET };
-
+enum  LogLevel {Debug, Info, Warn, Err, Status};
 void set_display_colour(Colour colour);
 
 class LogDetailed{
@@ -27,15 +29,18 @@ public:
 		return *this;
 	}
 
+	static void setLogLevel(LogLevel level);
+
 	virtual ~LogDetailed();
 
 protected:
-	enum  LogLevel {Debug, Info, Warn, Err, Status} _log_level;
+	LogLevel _log_level;
 
 private:
 	std::stringstream _s;
 	const char *_caller_filename;
 	int _caller_filenumber;
+	static LogLevel _min_level;
 };
 
 class LogDebugDetailed : public LogDetailed{
@@ -72,5 +77,7 @@ public:
 		_log_level = LogLevel::Status;
 	}
 };
+
+}; // namespace
 
 #endif // UTILS_HPP

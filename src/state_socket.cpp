@@ -59,7 +59,7 @@ void StateSocket::handleResponseFromDrone(const std::error_code& error, size_t b
     // std::cout << "Status: \n" << response_ << std::endl;
   }
   else{
-    // LogDebug() << "Error/Nothing received" ;
+    // utils_log::LogDebug() << "Error/Nothing received" ;
   }
 
 #if USE_BOOST

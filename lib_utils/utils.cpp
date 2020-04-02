@@ -1,7 +1,5 @@
 #include "utils.hpp"
 
-std::mutex display_mutex;
-
 // For Debugging
 #define ANSI_COLOUR_BLACK "\x1b[1;30m"
 #define ANSI_COLOUR_RED "\x1b[1;31m"
@@ -12,8 +10,12 @@ std::mutex display_mutex;
 #define ANSI_COLOUR_CYAN "\x1b[1;36m"
 #define ANSI_COLOUR_WHITE "\x1b[1;37m"
 #define ANSI_COLOUR_RESET "\x1b[1;0m"
-LogDetailed::~LogDetailed()
+
+std::mutex display_mutex;
+
+utils_log::LogDetailed::~LogDetailed()
 {
+	if(_log_level >= _min_level){
 		std::lock_guard<std::mutex> lock(display_mutex);
 #ifndef SIMPLE
 		switch (_log_level){
@@ -43,25 +45,25 @@ LogDetailed::~LogDetailed()
 			time_t rawtime;
 			time(&rawtime);
 			struct tm *timeinfo = localtime(&rawtime);
-			char time_buffer[10]{};
-			strftime(time_buffer, sizeof(time_buffer), "%I:%M:%S", timeinfo);
+			char time_buffer[25]{};
+			strftime(time_buffer, sizeof(time_buffer), "%Y-%m-%d | %H:%M:%S ", timeinfo);
 			std::cout << "[" << time_buffer;
 
 			switch(_log_level){
 			case LogLevel::Debug:
-				std::cout << "|Debug--] ";
+				std::cout << "| Debug--] ";
 				break;
 			case LogLevel::Info:
-				std::cout << "|Info---] ";
+				std::cout << "| Info---] ";
 				break;
 			case LogLevel::Warn:
-				std::cout << "|Warn---] ";
+				std::cout << "| Warn---] ";
 				break;
 			case LogLevel::Err:
-				std::cout << "|Error--] ";
+				std::cout << "| Error--] ";
 				break;
 			case LogLevel::Status:
-				std::cout << "|Status-] ";
+				std::cout << "| Status-] ";
 				break;
 			}
 			set_display_colour(Colour::RESET);
@@ -72,38 +74,45 @@ LogDetailed::~LogDetailed()
 			std::cout << std::endl;
 		}
 #else
-		std::cout << _s.str() << std::endl;
+	std::cout << _s.str() << std::endl;
 #endif
 	}
+}
 
-  void set_display_colour(Colour colour){
-  	switch (colour){
-  	case Colour::BLACK:
-  		std::cout << ANSI_COLOUR_BLACK;
-  		break;
-  	case Colour::RED:
-  		std::cout << ANSI_COLOUR_RED;
-  		break;
-  	case Colour::GREEN:
-  		std::cout << ANSI_COLOUR_GREEN;
-  		break;
-  	case Colour::YELLOW:
-  		std::cout << ANSI_COLOUR_YELLOW;
-  		break;
-  	case Colour::BLUE:
-  		std::cout << ANSI_COLOUR_BLUE;
-  		break;
-  	case Colour::MAGENTA:
-  		std::cout << ANSI_COLOUR_MAGENTA;
-  		break;
-  	case Colour::CYAN:
-  		std::cout << ANSI_COLOUR_CYAN;
-  		break;
-  	case Colour::WHITE:
-  		std::cout << ANSI_COLOUR_WHITE;
-  		break;
-  	case Colour::RESET:
-  		std::cout << ANSI_COLOUR_RESET;
-  		break;
-  	}
-  }
+void utils_log::set_display_colour(utils_log::Colour colour){
+	switch (colour){
+	case Colour::BLACK:
+		std::cout << ANSI_COLOUR_BLACK;
+		break;
+	case Colour::RED:
+		std::cout << ANSI_COLOUR_RED;
+		break;
+	case Colour::GREEN:
+		std::cout << ANSI_COLOUR_GREEN;
+		break;
+	case Colour::YELLOW:
+		std::cout << ANSI_COLOUR_YELLOW;
+		break;
+	case Colour::BLUE:
+		std::cout << ANSI_COLOUR_BLUE;
+		break;
+	case Colour::MAGENTA:
+		std::cout << ANSI_COLOUR_MAGENTA;
+		break;
+	case Colour::CYAN:
+		std::cout << ANSI_COLOUR_CYAN;
+		break;
+	case Colour::WHITE:
+		std::cout << ANSI_COLOUR_WHITE;
+		break;
+	case Colour::RESET:
+		std::cout << ANSI_COLOUR_RESET;
+		break;
+	}
+}
+
+utils_log::LogLevel utils_log::LogDetailed::_min_level = utils_log::LogLevel::Debug;
+
+void utils_log::LogDetailed::setLogLevel(LogLevel level){
+	_min_level = level;
+}
