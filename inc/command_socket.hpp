@@ -11,11 +11,7 @@
 class CommandSocket : public BaseSocket {
 public:
 
-#ifdef USE_BOOST
-  CommandSocket(boost::asio::io_service& io_service, const std::string& drone_ip, const std::string& drone_port, const std::string& local_port, int n_retries_allowed = 0, int timeout = 7);
-#else // USE_BOOST
   CommandSocket(asio::io_service& io_service, const std::string& drone_ip, const std::string& drone_port, const std::string& local_port, int n_retries_allowed = 1, int timeout = 7);
-#endif // USE_BOOST
   void executeQueue();
   void addCommandToQueue(const std::string& cmd);
   void addCommandToFrontOfQueue(const std::string& cmd);
@@ -32,13 +28,8 @@ public:
 
 private:
 
-#ifdef USE_BOOST
-  void handleResponseFromDrone(const boost::system::error_code& error, size_t bytes_recvd) override;
-  void handleSendCommand(const boost::system::error_code& error, size_t bytes_sent, std::string cmd) override;
-#else // USE_BOOST
   void handleResponseFromDrone(const std::error_code& error, size_t bytes_recvd) override;
   void handleSendCommand(const std::error_code& error, size_t bytes_sent, std::string cmd) override;
-#endif // USE_BOOST
 
   void waitForResponse();
   void retry(const std::string& cmd);
@@ -56,11 +47,7 @@ private:
   std::condition_variable cv_execute_queue_, cv_dnal_;
   std::chrono::system_clock::time_point command_sent_time_;
 
-#ifdef USE_BOOST
-  boost::thread cmd_thread, dnal_thread;
-#else // USE_BOOST
   std::thread cmd_thread, dnal_thread;
-#endif // USE_BOOST
 
   friend class Tello;
 };

@@ -8,13 +8,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -DDEBUG")
 
 # These should be the only options the user requires
 option(SIMPLE "Use simple formatting for all output to terminal" OFF)
-option(USE_BOOST "Use boost libraries for asio, thread, etc" OFF)
 option(USE_JOYSTICK "Use a joystick/controller to control the drone manually" ON)
 option(RECORD "Record tello video feed" OFF)
 option(RUN_SLAM "Run SLAM in real time" OFF)
 
 message(STATUS "CMake Option `SIMPLE` - Use simple formatting for all output to terminal ${SIMPLE}")
-message(STATUS "CMake Option `USE_BOOST` - Use boost libraries for asio, thread, etc ${USE_BOOST}")
 message(STATUS "CMake Option `USE_JOYSTICK` - Use a joystick/controller to control the drone manually ${USE_JOYSTICK}")
 message(STATUS "CMake Option `RECORD` - Record tello video feed ${RECORD}")
 message(STATUS "CMake Option `RUN_SLAM` - Run SLAM in real time ${RUN_SLAM}")
@@ -40,16 +38,11 @@ if(SIMPLE)
   add_definitions(-DSIMPLE)
 endif(SIMPLE)
 
-if(USE_BOOST)
-  find_package(Boost COMPONENTS system thread REQUIRED)
-  add_definitions(-DUSE_BOOST)
-else(USE_BOOST)
-  add_definitions(-DASIO_STANDALONE)
-  # __cplusplus macro not being set corretly in Travis CI,
-  # If __cplusplus >  2011... asio shoould be able to compile without boost.
-  # Succeeds locally but fails in travis CI.
-  # TODO: Debug this.
-endif(USE_BOOST)
+add_definitions(-DASIO_STANDALONE)
+# __cplusplus macro not being set corretly in Travis CI,
+# If __cplusplus >  2011... asio shoould be able to compile without boost.
+# Succeeds locally but fails in travis CI.
+# TODO: Debug this.
 
 if(USE_JOYSTICK)
   add_definitions(-DUSE_JOYSTICK)
@@ -99,8 +92,6 @@ else()
 endif()
 
 target_link_libraries( ${PROJECT_NAME}
-                       ${Boost_SYSTEM_LIBRARIES} # Will be empty string if not using boost
-                       ${Boost_THREAD_LIBRARY} # Will be empty string if not using boost
                        Threads::Threads
                        h264decoder
                        joystick

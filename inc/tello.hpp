@@ -8,30 +8,22 @@
 
 class Tello{
 public:
-  Tello(
-#ifdef USE_BOOST
-    boost::asio::io_service& io_service,
-#else // USE_BOOST
-    asio::io_service& io_service,
-#endif // USE_BOOST
-std::condition_variable& cv_run
-);
-~Tello();
-std::unique_ptr<CommandSocket> cs;
-std::unique_ptr<Joystick> js_;
-std::unique_ptr<VideoSocket> vs;
-std::unique_ptr<StateSocket> ss;
+
+  Tello(asio::io_service& io_service, std::condition_variable& cv_run);
+  ~Tello();
+  std::unique_ptr<CommandSocket> cs;
+  std::unique_ptr<Joystick> js_;
+  std::unique_ptr<VideoSocket> vs;
+  std::unique_ptr<StateSocket> ss;
+
 private:
-  #ifdef USE_BOOST
-    boost::asio::io_service& io_service_;
-    boost::thread js_thread_;
-  #else // USE_BOOST
-    asio::io_service& io_service_;
-    std::thread js_thread_;
-  #endif // USE_BOOST
+
+  asio::io_service& io_service_;
+  std::thread js_thread_;
   std::condition_variable& cv_run_;
   void jsToCommandThread();
   void jsToCommand(ButtonId update);
   void jsToCommand(AxisId update);
   bool run_ = true;
+  
 };

@@ -29,23 +29,14 @@
 
 class VideoSocket : public BaseSocket{
 public:
-#ifdef USE_BOOST
-  VideoSocket(boost::asio::io_service& io_service, const std::string& drone_ip, const std::string& drone_port, const std::string& local_port,  bool& run);
-#else // USE_BOOST
   VideoSocket(asio::io_service& io_service, const std::string& drone_ip, const std::string& drone_port, const std::string& local_port, bool& run);
-#endif // USE_BOOST
   ~VideoSocket();
   void setSnapshot();
 
 private:
 
-#ifdef USE_BOOST
-  void handleResponseFromDrone(const boost::system::error_code& error, size_t r) override;
-  void handleSendCommand(const boost::system::error_code& error, size_t bytes_sent, std::string cmd) override;
-#else // USE_BOOST
   void handleResponseFromDrone(const std::error_code& error, size_t r) override;
   void handleSendCommand(const std::error_code& error, size_t bytes_sent, std::string cmd) override;
-#endif // USE_BOOST
 
   void decodeFrame();
   void takeSnapshot(cv::Mat& image);

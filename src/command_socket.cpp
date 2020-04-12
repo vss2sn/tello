@@ -1,15 +1,9 @@
 #include "command_socket.hpp"
 #include "utils.hpp"
 
-#ifdef USE_BOOST
-#define UDP boost::asio::ip::udp
-#define ASYNC_RECEIVE socket_.async_receive_from( boost::asio::buffer(data_, max_length_), endpoint_, boost::bind(&CommandSocket::handleResponseFromDrone, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
-#define ASYNC_SEND socket_.async_send_to( boost::asio::buffer(cmd, cmd.size()),endpoint_, boost::bind(&CommandSocket::handleSendCommand,this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred,cmd));
-#else
 #define UDP asio::ip::udp
 #define ASYNC_RECEIVE socket_.async_receive_from( asio::buffer(data_, max_length_), endpoint_, [&](const std::error_code& error, size_t bytes_recvd) {return handleResponseFromDrone(error, bytes_recvd);}); // [&](auto... args){return handleResponseFromDrone(args...);});
 #define ASYNC_SEND socket_.async_send_to( asio::buffer(cmd, cmd.size()), endpoint_, [&](const std::error_code& error, size_t bytes_recvd) {return handleSendCommand(error, bytes_recvd, cmd);}); // [&](auto... args){return handleSendCommand(args..., cmd);});
-#endif
 
 // NOTE: Possible methods to call threads
 // io_thread(boost::bind(&boost::asio::io_service::run, boost::ref(io_service_)));
@@ -19,11 +13,7 @@
 // cmd_thread = std::thread([&](void){sendQueueCommands();});
 
 CommandSocket::CommandSocket(
-#ifdef USE_BOOST
-  boost::asio::io_service& io_service,
-#else
   asio::io_service& io_service,
-#endif
   const std::string& drone_ip,
   const std::string& drone_port,
   const std::string& local_port,
@@ -39,11 +29,6 @@ CommandSocket::CommandSocket(
   UDP::resolver::query query(UDP::v4(), drone_ip_, drone_port_);
   UDP::resolver::iterator iter = resolver.resolve(query);
   endpoint_ = *iter;
-#ifdef USE_BOOST
-  io_thread = boost::thread(boost::bind(&boost::asio::io_service::run, boost::ref(io_service_)));
-  cmd_thread = boost::thread(boost::bind(&CommandSocket::sendQueueCommands, this));
-  dnal_thread = boost::thread(boost::bind(&CommandSocket::doNotAutoLandWorker, this));
-#else
   io_thread = std::thread([&]{io_service_.run();
     utils_log::LogDebug() << "----------- Command socket io_service thread exits -----------";
   });
@@ -52,18 +37,11 @@ CommandSocket::CommandSocket(
   io_thread.detach();
   cmd_thread.detach();
   dnal_thread.detach();
-#endif
   command_sent_time_ = std::chrono::system_clock::now();
   ASYNC_RECEIVE;
 }
 
-void CommandSocket::handleResponseFromDrone(
-#ifdef USE_BOOST
-const boost::system::error_code& error,
-#else
-const std::error_code& error,
-#endif
-size_t bytes_recvd)
+void CommandSocket::handleResponseFromDrone(const std::error_code& error, size_t bytes_recvd)
 {
  if(!error && bytes_recvd>0){
    waiting_for_response_ = false;
@@ -109,13 +87,7 @@ void CommandSocket::waitForResponse(){
   }
 }
 
-void CommandSocket::handleSendCommand(
-#ifdef USE_BOOST
-const boost::system::error_code& error,
-#else
-const std::error_code& error,
-#endif
-size_t bytes_sent, std::string cmd)
+void CommandSocket::handleSendCommand(const std::error_code& error, size_t bytes_sent, std::string cmd)
 {
  if(!error && bytes_sent>0){
    utils_log::LogInfo() << "Successfully sent command [" << cmd << "] to address [" << drone_ip_ << ":" << drone_port_ << "].";
@@ -193,12 +165,8 @@ void CommandSocket::sendQueueCommands(){
       // NOTE: Do not comment. Set n_retries_allowed_ to 0 if required.
       // If the commmand is rc, do not retry/wait for a response
       if(cmd.substr(0,2)!="rc"){
-        #ifdef USE_BOOST
-          boost::thread run_thread(boost::bind(&CommandSocket::retry, this, cmd));
-        #else
-          std::thread run_thread([&]{retry(cmd);});
-          run_thread.detach();
-        #endif
+        std::thread run_thread([&]{retry(cmd);});
+        run_thread.detach();
       }
     }
   }

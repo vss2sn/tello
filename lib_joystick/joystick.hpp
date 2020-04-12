@@ -8,19 +8,8 @@
 #include <cstring>
 #include <climits>
 
-#ifdef USE_BOOST
-
-#include <boost/asio.hpp>
-#include <boost/array.hpp>
-#include <boost/bind.hpp>
-#include <boost/thread.hpp>
-
-#else // USE_BOOST
-
 #include <thread>
 #include "asio.hpp"
-
-#endif // USE_BOOST
 
 #include "gameSirT1s_mappings.hpp"
 // #include "360_mappings.hpp"
@@ -79,11 +68,7 @@ private:
 
     bool accept_js_input_ = true;
 
-#ifdef USE_BOOST
-    boost::thread js_thread_;
-#else // USE_BOOST
     std::thread js_thread_;
-#endif //USE_BOOST
 };
 
 #endif // JOYSTICK_HPP

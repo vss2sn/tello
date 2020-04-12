@@ -1,13 +1,6 @@
 #include "tello.hpp"
 
-Tello::Tello(
-#ifdef USE_BOOST
-    boost::asio::io_service& io_service,
-#else
-    asio::io_service& io_service,
-#endif
-std::condition_variable& cv_run
-):
+Tello::Tello(asio::io_service& io_service, std::condition_variable& cv_run):
 io_service_(io_service),
 cv_run_(cv_run)
 {
@@ -17,12 +10,8 @@ cv_run_(cv_run)
 
 #ifdef USE_JOYSTICK
   js_ = std::make_unique<Joystick>();
-#ifdef USE_BOOST
-  js_thread_ = boost::thread(boost::bind(&Tello::jsToCommandThread, this));
-#else // USE_BOOST
   js_thread_ = std::thread([&]{jsToCommandThread();});
   js_thread_.detach();
-#endif // USE_BOOST
 #endif // USE_JOYSTICK
 }
 

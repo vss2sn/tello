@@ -6,13 +6,8 @@
 #include "tello.hpp"
 
 int main(){
-#ifdef USE_BOOST
-  boost::asio::io_service io_service;
-  boost::asio::io_service::work work(io_service);
-#else
   asio::io_service io_service;
   asio::io_service::work work(io_service);
-#endif
 
   std::condition_variable cv_run;
   Tello t(io_service, cv_run);

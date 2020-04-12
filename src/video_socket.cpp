@@ -2,11 +2,7 @@
 #include "utils.hpp"
 
 VideoSocket::VideoSocket(
-#ifdef USE_BOOST
-  boost::asio::io_service& io_service,
-#else
   asio::io_service& io_service,
-#endif
   const std::string& drone_ip,
   const std::string& drone_port,
   const std::string& local_port,
@@ -18,23 +14,8 @@ VideoSocket::VideoSocket(
   // cv::namedWindow("frame", CV_WINDOW_NORMAL);
   // cv::moveWindow("frame",960,0);
   // cv::resizeWindow("frame",920,500);
-  cv::namedWindow("Pilot view");
-#ifdef USE_BOOST
-  boost::asio::ip::udp::resolver resolver(io_service_);
-  boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), drone_ip_, drone_port_);
-  boost::asio::ip::udp::resolver::iterator iter = resolver.resolve(query);
-  endpoint_ = *iter;
 
-  socket_.async_receive_from(
-    boost::asio::buffer(data_, max_length_),
-    endpoint_,
-    boost::bind(&VideoSocket::handleResponseFromDrone,
-                this,
-                boost::asio::placeholders::error,
-                boost::asio::placeholders::bytes_transferred));
-
-  io_thread = boost::thread(boost::bind(&boost::asio::io_service::run, boost::ref(io_service_)));
-#else
+  cv::namedWindow("frame");
   asio::ip::udp::resolver resolver(io_service_);
   asio::ip::udp::resolver::query query(asio::ip::udp::v4(), drone_ip_, drone_port_);
   asio::ip::udp::resolver::iterator iter = resolver.resolve(query);
@@ -47,11 +28,10 @@ VideoSocket::VideoSocket(
     {return handleResponseFromDrone(error, bytes_recvd);});
     // [&](auto... args){return handleResponseFromDrone(args...);});
 
-    io_thread = std::thread([&]{io_service_.run();
-      utils_log::LogDebug() << "----------- Video socket io_service thread exits -----------";
-    });
-    io_thread.detach();
-#endif
+  io_thread = std::thread([&]{io_service_.run();
+    utils_log::LogDebug() << "----------- Video socket io_service thread exits -----------";
+  });
+  io_thread.detach();
 
 #ifdef RUN_SLAM
     api_ = std::make_unique<OpenVSLAM_API>(run_, "./config.yaml", "./orb_vocab.dbow2");
@@ -66,11 +46,7 @@ VideoSocket::VideoSocket(
   system(create_folder.c_str());
 }
 
-#ifdef USE_BOOST
-void VideoSocket::handleResponseFromDrone(const boost::system::error_code& error, size_t bytes_recvd)
-#else
 void VideoSocket::handleResponseFromDrone(const std::error_code& error, size_t bytes_recvd)
-#endif
 {
   if(first_empty_index == 0){
     first_empty_index = 0;
@@ -94,22 +70,12 @@ void VideoSocket::handleResponseFromDrone(const std::error_code& error, size_t b
     frame_buffer_n_packets_ = 0;
   }
 
-#if USE_BOOST
- socket_.async_receive_from(
-   boost::asio::buffer(data_, max_length_),
-   endpoint_,
-   boost::bind(&VideoSocket::handleResponseFromDrone,
-     this,
-     boost::asio::placeholders::error,
-     boost::asio::placeholders::bytes_transferred));
-#else
   socket_.async_receive_from(
     asio::buffer(data_, max_length_),
     endpoint_,
     [&](const std::error_code& error, size_t bytes_recvd)
     {return handleResponseFromDrone(error, bytes_recvd);});
     // [&](auto... args){return handleResponseFromDrone(args...);});
-#endif
 }
 
 void VideoSocket::decodeFrame()
@@ -167,11 +133,7 @@ VideoSocket::~VideoSocket(){
   socket_.close();
 }
 
-#ifdef USE_BOOST
-void VideoSocket::handleSendCommand(const boost::system::error_code& error, size_t bytes_sent, std::string cmd)
-#else
 void VideoSocket::handleSendCommand(const std::error_code& error, size_t bytes_sent, std::string cmd)
-#endif
 {
   utils_log::LogErr() << "VideoSocket class does not implement handleSendCommand()";
 }

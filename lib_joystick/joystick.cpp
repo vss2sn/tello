@@ -9,12 +9,6 @@ Joystick::Joystick(std::string port)
         exit(0);
     }
     this->port_ = fd;
-
-// #ifdef USE_BOOST
-//     js_thread_ = boost::thread(boost::bind(&Joystick::worker, this));
-// #else
-//     js_thread_ = std::thread([&]{worker();});
-// #endif
 }
 
 Joystick::~Joystick()
