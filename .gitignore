@@ -11,3 +11,7 @@ docssrc/*
 !docssrc/commandcontrolmethods.rst
 !docssrc/cmakeoptions.rst
 !docssrc/SLAMnotes.rst
+!docssrc/code_overview.md
+!docssrc/joystick_mapping.md
+!docssrc/ongoing.md
+orb_vocab.dbow2

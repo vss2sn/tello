@@ -39,7 +39,7 @@ public:
   * @param [in] run reference to a bool that is set to off when the Tello object destructor is called
   * @return none
   */
-  VideoSocket(asio::io_service& io_service, const std::string& drone_ip, const std::string& drone_port, const std::string& local_port, bool& run);
+  VideoSocket(asio::io_service& io_service, const std::string& drone_ip, const std::string& drone_port, const std::string& local_port, bool& run, std::string camera_config_file, std::string vocabulary_file);
 
   /**
   * @brief Destructor

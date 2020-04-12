@@ -1,12 +1,25 @@
 #include "tello.hpp"
 
-Tello::Tello(asio::io_service& io_service, std::condition_variable& cv_run):
+Tello::Tello(
+#ifdef USE_BOOST
+    boost::asio::io_service& io_service,
+#else
+    asio::io_service& io_service,
+#endif
+std::condition_variable& cv_run,
+const std::string drone_ip,
+const std::string local_drone_port,
+const std::string local_video_port,
+const std::string local_state_port,
+const std::string camera_config_file,
+const std::string vocabulary_file
+):
 io_service_(io_service),
 cv_run_(cv_run)
 {
-  cs = std::make_unique<CommandSocket>(io_service, "192.168.10.1", "8889", "8889", 0,5);
-  vs = std::make_unique<VideoSocket>(io_service,  "0.0.0.0", "11111", "11111", run_);
-  ss = std::make_unique<StateSocket>(io_service, "0.0.0.0", "8890", "8890");
+  cs = std::make_unique<CommandSocket>(io_service, drone_ip, "8889", local_drone_port, 0, 5);
+  vs = std::make_unique<VideoSocket>(io_service,  "0.0.0.0", "11111", local_video_port, run_, camera_config_file, vocabulary_file);
+  ss = std::make_unique<StateSocket>(io_service, "0.0.0.0", "8890", local_state_port);
 
 #ifdef USE_JOYSTICK
   js_ = std::make_unique<Joystick>();

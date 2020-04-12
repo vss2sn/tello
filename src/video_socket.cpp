@@ -6,7 +6,9 @@ VideoSocket::VideoSocket(
   const std::string& drone_ip,
   const std::string& drone_port,
   const std::string& local_port,
-  bool& run
+  bool& run,
+  std::string camera_config_file,
+  std::string vocabulary_file
 ):
   BaseSocket(io_service, drone_ip, drone_port, local_port),
   run_(run)
@@ -34,7 +36,7 @@ VideoSocket::VideoSocket(
   io_thread.detach();
 
 #ifdef RUN_SLAM
-    api_ = std::make_unique<OpenVSLAM_API>(run_, "./config.yaml", "./orb_vocab.dbow2");
+    api_ = std::make_unique<OpenVSLAM_API>(run_, camera_config_file, vocabulary_file);
     api_->startMonoThread();
 #endif
 
