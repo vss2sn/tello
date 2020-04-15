@@ -1,0 +1,27 @@
+.. _exhale_class_classBaseSocket:
+
+Class BaseSocket
+================
+
+- Defined in :ref:`file_inc_base_socket.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Derived Types
+*************
+
+- ``public CommandSocket`` (:ref:`exhale_class_classCommandSocket`)
+- ``public StateSocket`` (:ref:`exhale_class_classStateSocket`)
+- ``public VideoSocket`` (:ref:`exhale_class_classVideoSocket`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: BaseSocket
+   :members:
+   :protected-members:
+   :undoc-members:

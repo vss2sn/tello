@@ -1,0 +1,54 @@
+
+.. _file_inc_tello.hpp:
+
+File tello.hpp
+==============
+
+|exhale_lsh| :ref:`Parent directory <dir_inc>` (``inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``inc/tello.hpp``)
+------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_inc_tello.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``command_socket.hpp`` (:ref:`file_inc_command_socket.hpp`)
+
+- ``joystick.hpp``
+
+- ``memory``
+
+- ``state_socket.hpp`` (:ref:`file_inc_state_socket.hpp`)
+
+- ``utils.hpp``
+
+- ``video_socket.hpp`` (:ref:`file_inc_video_socket.hpp`)
+
+
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classTello`
+

@@ -1,3 +1,13 @@
 build/
 lib_openvslam/external_dependencies
 lib_openvslam/openvslam
+docssrc/*
+!docssrc/conf.py
+!docssrc/Doxyfile
+!docssrc/index.rst
+!docssrc/overview.rst
+!docssrc/building.rst
+!docssrc/Makefile
+!docssrc/commandcontrolmethods.rst
+!docssrc/cmakeoptions.rst
+!docssrc/SLAMnotes.rst

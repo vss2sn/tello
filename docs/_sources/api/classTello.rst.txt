@@ -1,0 +1,16 @@
+.. _exhale_class_classTello:
+
+Class Tello
+===========
+
+- Defined in :ref:`file_inc_tello.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: Tello
+   :members:
+   :protected-members:
+   :undoc-members:

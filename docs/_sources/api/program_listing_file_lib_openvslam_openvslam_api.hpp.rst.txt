@@ -1,0 +1,48 @@
+
+.. _program_listing_file_lib_openvslam_openvslam_api.hpp:
+
+Program Listing for File openvslam_api.hpp
+==========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_openvslam_openvslam_api.hpp>` (``lib_openvslam/openvslam_api.hpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   #ifdef RUN_SLAM
+   
+   #ifndef OPENVSLAM_API_HPP
+   #define OPENVSLAM_API_HPP
+   
+   #include <memory>
+   #include <string>
+   #include <iostream>
+   #include <mutex>
+   
+   #include <opencv2/highgui.hpp>
+   #include <opencv2/imgproc/imgproc.hpp>
+   
+   class OpenVSLAM_API{
+   public:
+   
+     OpenVSLAM_API(bool& run, std::string config_file_path, std::string vocab_file_path);
+   
+     ~OpenVSLAM_API();
+   
+     void addFrameToQueue(cv::Mat new_frame);
+   
+     void startMonoThread();
+   
+     std::mutex& getMutex();
+   
+   private:
+   
+     class impl;
+     std::unique_ptr<impl> openvslam_impl;
+   
+   };
+   
+   #endif
+   
+   #endif

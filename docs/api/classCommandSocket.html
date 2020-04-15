@@ -1,0 +1,563 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Class CommandSocket &mdash; tello  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script type="text/javascript" src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script type="text/javascript" src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class StateSocket" href="classStateSocket.html" />
+    <link rel="prev" title="Class BaseSocket" href="classBaseSocket.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> tello
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../overview.html#quick-start">Quick start</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../commandcontrolmethods.html">Command/control methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../commandcontrolmethods.html#joystick-mode">Joystick mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commandcontrolmethods.html#autonomous-mode">Autonomous mode</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../building.html">Building the code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../building.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../building.html#installing-dependencies">Installing dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../building.html#installing-openvslam-and-its-dependencies-optional">Installing OpenVSLAM and its dependencies (optional)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../building.html#id1">Building the code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cmakeoptions.html">CMake Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SLAMnotes.html">Notes on running with SLAM</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../SLAMnotes.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../SLAMnotes.html#calibrating-the-tello-camera">Calibrating the tello camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="library_root.html">Library API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="library_root.html#class-hierarchy">Class Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="library_root.html#file-hierarchy">File Hierarchy</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="library_root.html#full-api">Full API</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="library_root.html#classes-and-structs">Classes and Structs</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="classBaseSocket.html">Class BaseSocket</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="classBaseSocket.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="classBaseSocket.html#derived-types">Derived Types</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="classBaseSocket.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Class CommandSocket</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="classStateSocket.html">Class StateSocket</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="classStateSocket.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="classStateSocket.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="classStateSocket.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="classTello.html">Class Tello</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="classTello.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="classVideoSocket.html">Class VideoSocket</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="classVideoSocket.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="classVideoSocket.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="classVideoSocket.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#directories">Directories</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dir_inc.html">Directory inc</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="dir_inc.html#files">Files</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="dir_lib_openvslam.html">Directory openvslam</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="dir_lib_openvslam.html#files">Files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#files">Files</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="file_inc_base_socket.hpp.html">File base_socket.hpp</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_base_socket.hpp.html#definition-inc-base-socket-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">inc/base_socket.hpp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="program_listing_file_inc_base_socket.hpp.html">Program Listing for File base_socket.hpp</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_base_socket.hpp.html#includes">Includes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_base_socket.hpp.html#included-by">Included By</a></li>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_base_socket.hpp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="file_inc_command_socket.hpp.html">File command_socket.hpp</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_command_socket.hpp.html#definition-inc-command-socket-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">inc/command_socket.hpp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="program_listing_file_inc_command_socket.hpp.html">Program Listing for File command_socket.hpp</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_command_socket.hpp.html#includes">Includes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_command_socket.hpp.html#included-by">Included By</a></li>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_command_socket.hpp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="file_lib_openvslam_openvslam_api.cpp.html">File openvslam_api.cpp</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="file_lib_openvslam_openvslam_api.cpp.html#definition-lib-openvslam-openvslam-api-cpp">Definition (<code class="docutils literal notranslate"><span class="pre">lib_openvslam/openvslam_api.cpp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="program_listing_file_lib_openvslam_openvslam_api.cpp.html">Program Listing for File openvslam_api.cpp</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="file_lib_openvslam_openvslam_api.cpp.html#includes">Includes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="file_lib_openvslam_openvslam_api.hpp.html">File openvslam_api.hpp</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="file_lib_openvslam_openvslam_api.hpp.html#definition-lib-openvslam-openvslam-api-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">lib_openvslam/openvslam_api.hpp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="program_listing_file_lib_openvslam_openvslam_api.hpp.html">Program Listing for File openvslam_api.hpp</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="file_README.md.html">File README.md</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="file_README.md.html#definition-readme-md">Definition (<code class="docutils literal notranslate"><span class="pre">README.md</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="program_listing_file_README.md.html">Program Listing for File README.md</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="file_inc_state_socket.hpp.html">File state_socket.hpp</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_state_socket.hpp.html#definition-inc-state-socket-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">inc/state_socket.hpp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="program_listing_file_inc_state_socket.hpp.html">Program Listing for File state_socket.hpp</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_state_socket.hpp.html#includes">Includes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_state_socket.hpp.html#included-by">Included By</a></li>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_state_socket.hpp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="file_inc_tello.hpp.html">File tello.hpp</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_tello.hpp.html#definition-inc-tello-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">inc/tello.hpp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="program_listing_file_inc_tello.hpp.html">Program Listing for File tello.hpp</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_tello.hpp.html#includes">Includes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_tello.hpp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="file_inc_video_socket.hpp.html">File video_socket.hpp</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_video_socket.hpp.html#definition-inc-video-socket-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">inc/video_socket.hpp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="program_listing_file_inc_video_socket.hpp.html">Program Listing for File video_socket.hpp</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_video_socket.hpp.html#includes">Includes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_video_socket.hpp.html#included-by">Included By</a></li>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_video_socket.hpp.html#classes">Classes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">tello</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="library_root.html">Library API</a> &raquo;</li>
+        
+      <li>Class CommandSocket</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/vss2sn/tello/blob/master/docs/api/classCommandSocket.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="class-commandsocket">
+<span id="exhale-class-classcommandsocket"></span><h1>Class CommandSocket<a class="headerlink" href="#class-commandsocket" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li>Defined in <a class="reference internal" href="file_inc_command_socket.hpp.html#file-inc-command-socket-hpp"><span class="std std-ref">File command_socket.hpp</span></a></li>
+</ul>
+<div class="section" id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="base-type">
+<h3>Base Type<a class="headerlink" href="#base-type" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">BaseSocket</span></code> (<a class="reference internal" href="classBaseSocket.html#exhale-class-classbasesocket"><span class="std std-ref">Class BaseSocket</span></a>)</li>
+</ul>
+</div>
+</div>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="_CPPv313CommandSocket">
+<span id="_CPPv213CommandSocket"></span><span id="CommandSocket"></span><span class="target" id="classCommandSocket"></span><em class="property">class </em><code class="descname">CommandSocket</code> : <em class="property">public</em> <a class="reference internal" href="classBaseSocket.html#_CPPv310BaseSocket" title="BaseSocket">BaseSocket</a><a class="headerlink" href="#_CPPv313CommandSocket" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv3N13CommandSocket13CommandSocketERN4asio10io_serviceERKNSt6stringERKNSt6stringERKNSt6stringEii">
+<span id="_CPPv2N13CommandSocket13CommandSocketERN4asio10io_serviceERKNSt6stringERKNSt6stringERKNSt6stringEii"></span><span id="CommandSocket::CommandSocket__asio::io_serviceR.ssCR.ssCR.ssCR.i.i"></span><span class="target" id="classCommandSocket_1a0e4057906312dea978455e68df1f9e2c"></span><code class="descname">CommandSocket</code><span class="sig-paren">(</span>asio::io_service &amp;<em>io_service</em>, <em class="property">const</em> std::string &amp;<em>drone_ip</em>, <em class="property">const</em> std::string &amp;<em>drone_port</em>, <em class="property">const</em> std::string &amp;<em>local_port</em>, int <em>n_retries_allowed</em> = 1, int <em>timeout</em> = 7<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N13CommandSocket13CommandSocketERN4asio10io_serviceERKNSt6stringERKNSt6stringERKNSt6stringEii" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Constructor. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>none </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">io_service</span></code>: io_service object used to handle all socket communication </li>
+<li><code class="docutils literal notranslate"><span class="pre">drone_ip</span></code>: ip address of drone </li>
+<li><code class="docutils literal notranslate"><span class="pre">drone_port</span></code>: port number on the drone </li>
+<li><code class="docutils literal notranslate"><span class="pre">local_port</span></code>: port on the local machine used to communicate with the drone </li>
+<li><code class="docutils literal notranslate"><span class="pre">n_retries_allowed</span></code>: numebr of retries allowed if a response is not received from the drone before sending the next command in the execution queue </li>
+<li><code class="docutils literal notranslate"><span class="pre">timeout</span></code>: = number of seconds after which a command is said to have failed to be sent </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N13CommandSocket12executeQueueEv">
+<span id="_CPPv2N13CommandSocket12executeQueueEv"></span><span id="CommandSocket::executeQueue"></span><span class="target" id="classCommandSocket_1af42400d30d9fc7b70d57960048f8895f"></span>void <code class="descname">executeQueue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N13CommandSocket12executeQueueEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Starts execution of the command queue. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>void </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N13CommandSocket17addCommandToQueueERKNSt6stringE">
+<span id="_CPPv2N13CommandSocket17addCommandToQueueERKNSt6stringE"></span><span id="CommandSocket::addCommandToQueue__ssCR"></span><span class="target" id="classCommandSocket_1a86b9381e9192afa4238671af86b811b8"></span>void <code class="descname">addCommandToQueue</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>cmd</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N13CommandSocket17addCommandToQueueERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Adds the command to the execution queue. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>void </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">cmd</span></code>: command to be added to the end of the execution queue </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N13CommandSocket24addCommandToFrontOfQueueERKNSt6stringE">
+<span id="_CPPv2N13CommandSocket24addCommandToFrontOfQueueERKNSt6stringE"></span><span id="CommandSocket::addCommandToFrontOfQueue__ssCR"></span><span class="target" id="classCommandSocket_1a504f9d439c99ae662c41f612a4c35082"></span>void <code class="descname">addCommandToFrontOfQueue</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>cmd</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N13CommandSocket24addCommandToFrontOfQueueERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Adds the command to the front of the execution queue. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>void </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">cmd</span></code>: command to be added to the end of the execution queue </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N13CommandSocket10clearQueueEv">
+<span id="_CPPv2N13CommandSocket10clearQueueEv"></span><span id="CommandSocket::clearQueue"></span><span class="target" id="classCommandSocket_1aba27cfea4d8961285b5416874d0b3ecd"></span>void <code class="descname">clearQueue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N13CommandSocket10clearQueueEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>clears the execution queue </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>void </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N13CommandSocket18stopQueueExecutionEv">
+<span id="_CPPv2N13CommandSocket18stopQueueExecutionEv"></span><span id="CommandSocket::stopQueueExecution"></span><span class="target" id="classCommandSocket_1ae5eb5012850a94fdfe581168bc6616af"></span>void <code class="descname">stopQueueExecution</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N13CommandSocket18stopQueueExecutionEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>stop the queue execution </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>void </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N13CommandSocket19removeNextFromQueueEv">
+<span id="_CPPv2N13CommandSocket19removeNextFromQueueEv"></span><span id="CommandSocket::removeNextFromQueue"></span><span class="target" id="classCommandSocket_1ab1c223e52165cc2e83f95505872f5b0d"></span>void <code class="descname">removeNextFromQueue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N13CommandSocket19removeNextFromQueueEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>remove the command at the front of the execution queue </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>void </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N13CommandSocket13doNotAutoLandEv">
+<span id="_CPPv2N13CommandSocket13doNotAutoLandEv"></span><span id="CommandSocket::doNotAutoLand"></span><span class="target" id="classCommandSocket_1ac3a95da1611f4f4efc9624d3a7a5d5ca"></span>void <code class="descname">doNotAutoLand</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N13CommandSocket13doNotAutoLandEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>will set the bool value that prevents automatic landing due to no commands sent timeout </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>void </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N13CommandSocket13allowAutoLandEv">
+<span id="_CPPv2N13CommandSocket13allowAutoLandEv"></span><span id="CommandSocket::allowAutoLand"></span><span class="target" id="classCommandSocket_1a36b5b319e40ee256bcd2077eacac79bf"></span>void <code class="descname">allowAutoLand</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N13CommandSocket13allowAutoLandEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>will unset the bool value that prevents automatic landing due to no commands sent timeout </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>void </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N13CommandSocket9emergencyEv">
+<span id="_CPPv2N13CommandSocket9emergencyEv"></span><span id="CommandSocket::emergency"></span><span class="target" id="classCommandSocket_1abd3d9331b0ac2234d5e37e75b1497907"></span>void <code class="descname">emergency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N13CommandSocket9emergencyEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>sends the “emergency” command to the drone that will cause the motors to stop immediately and stops queue exection as well </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>void </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N13CommandSocket4stopEv">
+<span id="_CPPv2N13CommandSocket4stopEv"></span><span id="CommandSocket::stop"></span><span class="target" id="classCommandSocket_1a8ae9f4c6c0f74465aa96afbf524f58df"></span>void <code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N13CommandSocket4stopEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>sends the “stop” command to the drone ad stops queue execution </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>void </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N13CommandSocket16isExecutingQueueEv">
+<span id="_CPPv2N13CommandSocket16isExecutingQueueEv"></span><span id="CommandSocket::isExecutingQueue"></span><span class="target" id="classCommandSocket_1a178ffd421cdfc0b014c773e56389f250"></span>bool <code class="descname">isExecutingQueue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N13CommandSocket16isExecutingQueueEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>queries whether queue execution is enabled. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>bool whether queue execution is enabled </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N13CommandSocket4landEv">
+<span id="_CPPv2N13CommandSocket4landEv"></span><span id="CommandSocket::land"></span><span class="target" id="classCommandSocket_1a69ddd75b162bf0b6fe5199f5ad1d1270"></span>void <code class="descname">land</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N13CommandSocket4landEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Enables autoland and sends the command “land” to the drone. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>void </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N13CommandSocketD0Ev">
+<span id="_CPPv2N13CommandSocketD0Ev"></span><span id="CommandSocket::~CommandSocket"></span><span class="target" id="classCommandSocket_1a507c934a729250e954c48af5ad39465a"></span><code class="descname">~CommandSocket</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N13CommandSocketD0Ev" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Destructor. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>none </dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classStateSocket.html" class="btn btn-neutral float-right" title="Class StateSocket" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classBaseSocket.html" class="btn btn-neutral float-left" title="Class BaseSocket" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, vss2sn
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

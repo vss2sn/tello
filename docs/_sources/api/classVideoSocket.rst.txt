@@ -1,0 +1,25 @@
+.. _exhale_class_classVideoSocket:
+
+Class VideoSocket
+=================
+
+- Defined in :ref:`file_inc_video_socket.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public BaseSocket`` (:ref:`exhale_class_classBaseSocket`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: VideoSocket
+   :members:
+   :protected-members:
+   :undoc-members:

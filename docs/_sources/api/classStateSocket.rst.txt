@@ -1,0 +1,25 @@
+.. _exhale_class_classStateSocket:
+
+Class StateSocket
+=================
+
+- Defined in :ref:`file_inc_state_socket.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public BaseSocket`` (:ref:`exhale_class_classBaseSocket`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: StateSocket
+   :members:
+   :protected-members:
+   :undoc-members:

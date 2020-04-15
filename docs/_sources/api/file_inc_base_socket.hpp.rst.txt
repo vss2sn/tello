@@ -1,0 +1,56 @@
+
+.. _file_inc_base_socket.hpp:
+
+File base_socket.hpp
+====================
+
+|exhale_lsh| :ref:`Parent directory <dir_inc>` (``inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``inc/base_socket.hpp``)
+------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_inc_base_socket.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``asio.hpp``
+
+- ``thread``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_inc_command_socket.hpp`
+
+- :ref:`file_inc_state_socket.hpp`
+
+- :ref:`file_inc_video_socket.hpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classBaseSocket`
+

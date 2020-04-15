@@ -1,0 +1,25 @@
+.. _exhale_class_classCommandSocket:
+
+Class CommandSocket
+===================
+
+- Defined in :ref:`file_inc_command_socket.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public BaseSocket`` (:ref:`exhale_class_classBaseSocket`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: CommandSocket
+   :members:
+   :protected-members:
+   :undoc-members:

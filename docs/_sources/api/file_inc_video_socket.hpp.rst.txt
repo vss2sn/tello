@@ -1,0 +1,82 @@
+
+.. _file_inc_video_socket.hpp:
+
+File video_socket.hpp
+=====================
+
+|exhale_lsh| :ref:`Parent directory <dir_inc>` (``inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``inc/video_socket.hpp``)
+-------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_inc_video_socket.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``atomic``
+
+- ``base_socket.hpp`` (:ref:`file_inc_base_socket.hpp`)
+
+- ``chrono``
+
+- ``cstring``
+
+- ``ctime``
+
+- ``h264decoder.hpp``
+
+- ``iostream``
+
+- ``libavutil/frame.h``
+
+- ``mutex``
+
+- ``numeric``
+
+- ``opencv2/core/core.hpp``
+
+- ``opencv2/highgui.hpp``
+
+- ``opencv2/imgcodecs.hpp``
+
+- ``opencv2/imgproc.hpp``
+
+- ``opencv2/videoio.hpp``
+
+- ``queue``
+
+- ``vector``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_inc_tello.hpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classVideoSocket`
+

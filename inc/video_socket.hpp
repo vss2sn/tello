@@ -29,8 +29,28 @@
 
 class VideoSocket : public BaseSocket{
 public:
+
+  /**
+  * @brief Constructor
+  * @param [in] io_service io_service object used to handle all socket communication
+  * @param [in] drone_ip ip address of drone
+  * @param [in] drone_port port number on the drone
+  * @param [in] local_port port on the local machine used to communicate with the drone
+  * @param [in] run reference to a bool that is set to off when the Tello object destructor is called
+  * @return none
+  */
   VideoSocket(asio::io_service& io_service, const std::string& drone_ip, const std::string& drone_port, const std::string& local_port, bool& run);
+
+  /**
+  * @brief Destructor
+  * @return none
+  */
   ~VideoSocket();
+
+  /**
+  * @brief take a snapshot of the next frame
+  * @return void
+  */
   void setSnapshot();
 
 private:
