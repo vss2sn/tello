@@ -16,6 +16,7 @@ public:
   ~OpenVSLAM_API();
   void addFrameToQueue(cv::Mat new_frame);
   void startMonoThread();
+  std::mutex& getMutex();
 private:
   class impl;
   std::unique_ptr<impl> openvslam_impl;

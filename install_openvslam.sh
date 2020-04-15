@@ -31,6 +31,8 @@ echo "It also makes managing different versions of these libraries easier."
 echo "----------------------------------------"
 echo ""
 
+export MAIN_DIR=$(pwd)
+
 #Begin openvslam dependencies
 mkdir lib_openvslam
 cd lib_openvslam
@@ -249,6 +251,9 @@ echo "Installing OpenVSLAM"
 echo "----------------------------------------"
 
 cd ${EXT_DEP}/../openvslam
+
+git apply ${MAIN_DIR}/patches/pangolin_viewer.diff
+
 mkdir build
 cd build
 

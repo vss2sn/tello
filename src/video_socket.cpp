@@ -18,7 +18,7 @@ VideoSocket::VideoSocket(
   // cv::namedWindow("frame", CV_WINDOW_NORMAL);
   // cv::moveWindow("frame",960,0);
   // cv::resizeWindow("frame",920,500);
-  cv::namedWindow("frame");
+  cv::namedWindow("Pilot view");
 #ifdef USE_BOOST
   boost::asio::ip::udp::resolver resolver(io_service_);
   boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), drone_ip_, drone_port_);
@@ -136,14 +136,20 @@ void VideoSocket::decodeFrame()
         cv::Mat greyMat;
         cv::cvtColor(mat, greyMat, cv::COLOR_BGR2GRAY);
         api_->addFrameToQueue(greyMat);
-#endif
         // NOTE: In case there are some gdk/pangolin crashes
-        // 1. comment out the line below and display only the frame displayed
+        // 1. comment out the 3 lines below and display only the frame displayed
         // with keypoints on L92 of pangolin_viewer/viewer.cc
-        // 2. Comment out L92-93 of pangolin_viewer/viewer.cc and uncomment the
-        // cv::waitKey(1) below
-        cv::imshow("frame", mat.clone());
-        // cv::waitKey(1);
+        // OR
+        // 2. Comment out L96-99 of pangolin_viewer/viewer.cc
+        {
+          std::unique_lock<std::mutex> lk(api_->getMutex());
+          cv::imshow("Pilot view", mat.clone());
+          cv::waitKey(1);
+        }
+#else
+        cv::imshow("Pilot view", mat.clone());
+        cv::waitKey(1);
+#endif
       }
       next += consumed;
     }

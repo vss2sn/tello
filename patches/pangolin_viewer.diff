@@ -1,0 +1,52 @@
+diff -u ./lib_openvslam/openvslam/src/pangolin_viewer/viewer.cc "./lib_openvslam/openvslam/src/pangolin_viewer/viewer.cc"
+--- ./lib_openvslam/openvslam/src/pangolin_viewer/viewer.cc
++++ "./lib_openvslam/openvslam/src/pangolin_viewer/viewer.cc"
+@@ -9,6 +9,8 @@
+
+ #include <opencv2/highgui.hpp>
+
++#include <X11/Xlib.h>
++
+ namespace pangolin_viewer {
+
+ viewer::viewer(const std::shared_ptr<openvslam::config>& cfg, openvslam::system* system,
+@@ -33,6 +35,8 @@
+ void viewer::run() {
+     is_terminated_ = false;
+
++    XInitThreads();
++
+     pangolin::CreateWindowAndBind(map_viewer_name_, 1024, 768);
+
+     glEnable(GL_BLEND);
+@@ -88,9 +92,12 @@
+         pangolin::FinishFrame();
+
+         // 2. draw the current frame image
+-
+-        cv::imshow(frame_viewer_name_, frame_publisher_->draw_frame());
+-        cv::waitKey(interval_ms_);
++        {
++          // std::mutex m;
++          std::unique_lock<std::mutex> lk(frame_display_sync);
++          cv::imshow(frame_viewer_name_, frame_publisher_->draw_frame());
++          cv::waitKey(1);
++        }
+
+         // 3. state transition
+
+diff -u ./lib_openvslam/openvslam/src/pangolin_viewer/viewer.h "./lib_openvslam/openvslam/src/pangolin_viewer/viewer.h"
+--- ./lib_openvslam/openvslam/src/pangolin_viewer/viewer.h
++++ "./lib_openvslam/openvslam/src/pangolin_viewer/viewer.h"
+@@ -24,8 +24,11 @@
+
+ namespace pangolin_viewer {
+
++std::mutex frame_display_sync;
++
+ class viewer {
+ public:
++
+     /**
+      * Constructor
+      * @param cfg
