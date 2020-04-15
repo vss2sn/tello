@@ -11,11 +11,13 @@ option(SIMPLE "Use simple formatting for all output to terminal" OFF)
 option(USE_JOYSTICK "Use a joystick/controller to control the drone manually" ON)
 option(RECORD "Record tello video feed" OFF)
 option(RUN_SLAM "Run SLAM in real time" OFF)
+option(USE_TERMINAL "Run with terminal for CLI" OFF)
 
 message(STATUS "CMake Option `SIMPLE` - Use simple formatting for all output to terminal ${SIMPLE}")
 message(STATUS "CMake Option `USE_JOYSTICK` - Use a joystick/controller to control the drone manually ${USE_JOYSTICK}")
 message(STATUS "CMake Option `RECORD` - Record tello video feed ${RECORD}")
 message(STATUS "CMake Option `RUN_SLAM` - Run SLAM in real time ${RUN_SLAM}")
+message(STATUS "CMake Option `USE_TERMINAL` - `Run with terminal for CLI` ${USE_TERMINAL}")
 # End These should be the only options the user requires
 
 option(USE_CMAKE_NOT_SCRIPT "Use Cmake ExternalProject to get and build OpenVSLAM and its dependencies" OFF)
@@ -51,6 +53,10 @@ endif(USE_JOYSTICK)
 if(RECORD)
   add_definitions(-DRECORD)
 endif(RECORD)
+
+if(USE_TERMINAL)
+  add_definitions(-DUSE_TERMINAL)
+endif(USE_TERMINAL)
 
 find_package(Threads REQUIRED)
 

@@ -6,6 +6,10 @@
 #include "joystick.hpp"
 #include "utils.hpp"
 
+#ifdef USE_TERMINAL
+#include "command_terminal.hpp"
+#endif
+
 class Tello{
 public:
 
@@ -23,7 +27,7 @@ public:
   */
   ~Tello();
 
-  // TODO: Move to private 
+  // TODO: Move to private
   std::unique_ptr<CommandSocket> cs;
   std::unique_ptr<Joystick> js_;
   std::unique_ptr<VideoSocket> vs;
@@ -39,4 +43,9 @@ private:
   void jsToCommand(AxisId update);
   bool run_ = true;
 
+#ifdef USE_TERMINAL
+  std::unique_ptr<Terminal> term_;
+  std::thread term_thread_worker_, term_thread_fetch_;
+  void terminalToCommandThread();
+#endif // TERMINAL
 };

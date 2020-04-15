@@ -1,9 +1,12 @@
-#include "command_socket.hpp"
-#include "video_socket.hpp"
-#include "state_socket.hpp"
+#include <mutex>
+#include <condition_variable>
+
 #include "utils.hpp"
-#include "joystick.hpp"
 #include "tello.hpp"
+
+#ifdef USE_TERMINAL
+#include "command_terminal.hpp"
+#endif
 
 int main(){
   asio::io_service io_service;

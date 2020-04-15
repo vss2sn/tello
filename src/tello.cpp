@@ -13,7 +13,30 @@ cv_run_(cv_run)
   js_thread_ = std::thread([&]{jsToCommandThread();});
   js_thread_.detach();
 #endif // USE_JOYSTICK
+
+#ifdef USE_TERMINAL
+  term_ = std::make_unique<Terminal>(run_);
+  term_thread_worker_ = std::thread([&]{term_->terminalWorker();});
+  term_thread_fetch_ = std::thread([&]{terminalToCommandThread();});
+  term_thread_worker_.detach();
+  term_thread_fetch_.detach();
+#endif // TERMINAL
 }
+
+#ifdef USE_TERMINAL
+void Tello::terminalToCommandThread(){
+  while(run_)
+  {
+    usleep(1000);
+    if(term_->hasCommnad()){
+      std::mutex m;
+      std::lock_guard<std::mutex> lk(m);
+      cs->sendCommand(term_->getCommand());
+    }
+  }
+  std::cout << "----------- Terminal to command thread exits -----------" << std::endl;
+}
+#endif // TERMINAL
 
 void Tello::jsToCommandThread(){
   while(run_)
