@@ -10,6 +10,10 @@
 #include "base_socket.hpp"
 #include "joystick.hpp"
 
+/**
+* @class CommandSocket
+* @brief Socket class that handles the communication of commands to the tello
+*/
 class CommandSocket : public BaseSocket {
 public:
   /**
@@ -17,9 +21,9 @@ public:
   * @param [in] io_service io_service object used to handle all socket communication
   * @param [in] drone_ip ip address of drone
   * @param [in] drone_port port number on the drone
-  * @param [in] local_port port on the local machine used to communicate with the drone
+  * @param [in] local_port port on the local machine used to communicate with the drone port mentioned above
   * @param [in] n_retries_allowed numebr of retries allowed if a response is not received from the drone before sending the next command in the execution queue
-  * @param [in] timeout = number of seconds after which a command is said to have failed to be sent
+  * @param [in] timeout number of seconds after which a command is said to have failed to be sent
   * @return none
   */
   CommandSocket(asio::io_service& io_service, const std::string& drone_ip, const std::string& drone_port, const std::string& local_port, int n_retries_allowed = 1, int timeout = 7);

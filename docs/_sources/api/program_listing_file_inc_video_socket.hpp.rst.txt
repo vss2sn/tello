@@ -13,27 +13,14 @@ Program Listing for File video_socket.hpp
    #ifndef VIDEOSOCKET_HPP
    #define VIDEOSOCKET_HPP
    
-   #include <chrono>
-   #include <vector>
-   #include <cstring>
-   #include <queue>
-   #include <mutex>
-   #include <ctime>
    #include <atomic>
    
    #include <libavutil/frame.h>
-   #include <opencv2/highgui.hpp>
+   #include <opencv2/core/core.hpp>
+   #include <opencv2/videoio.hpp>
    
    #include "base_socket.hpp"
    #include "h264decoder.hpp"
-   
-   #include <iostream>
-   #include <numeric>
-   
-   #include <opencv2/core/core.hpp>
-   #include <opencv2/imgcodecs.hpp>
-   #include <opencv2/imgproc.hpp>
-   #include <opencv2/videoio.hpp>
    
    #ifdef RUN_SLAM
    #include "openvslam_api.hpp"
@@ -42,7 +29,21 @@ Program Listing for File video_socket.hpp
    class VideoSocket : public BaseSocket{
    public:
    
-     VideoSocket(asio::io_service& io_service, const std::string& drone_ip, const std::string& drone_port, const std::string& local_port, bool& run);
+     VideoSocket(
+       asio::io_service& io_service,
+       const std::string& drone_ip,
+       const std::string& drone_port,
+       const std::string& local_port,
+       bool& run,
+       const std::string camera_config_file,
+       const std::string vocabulary_file,
+       const std::string load_map_db_path,
+       const std::string save_map_db_path,
+       const std::string mask_img_path,
+       bool load_map,
+       bool continue_mapping,
+       float scale
+     );
    
      ~VideoSocket();
    
@@ -68,7 +69,10 @@ Program Listing for File video_socket.hpp
    
      H264Decoder decoder_;
      ConverterRGB24 converter_;
+   #ifdef RECORD
      std::unique_ptr<cv::VideoWriter> video;
+   #endif
+   
    #ifdef RUN_SLAM
      std::unique_ptr<OpenVSLAM_API> api_;
    #endif // RUN_SLAM

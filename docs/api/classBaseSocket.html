@@ -95,6 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../commandcontrolmethods.html">Command/control methods</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../commandcontrolmethods.html#joystick-mode">Joystick mode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commandcontrolmethods.html#autonomous-mode">Autonomous mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commandcontrolmethods.html#command-line-interface">Command line interface</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../building.html">Building the code</a><ul>
@@ -105,9 +106,21 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../cmakeoptions.html">CMake Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code_overview.html">Code overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../code_overview.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../joystick_mapping.html">Default joystick mappings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cmd_terminal.html">Command Terminal</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../SLAMnotes.html">Notes on running with SLAM</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../SLAMnotes.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../SLAMnotes.html#calibrating-the-tello-camera">Calibrating the tello camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ongoing.html">Project paths (current &amp; projected)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#for-issues-with-x11-gdk-pangolin-crashes">For issues with X11/gdk/pangolin crashes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#response-does-not-match-command">Response does not match command</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="library_root.html">Library API</a><ul class="current">
@@ -183,6 +196,20 @@
 <li class="toctree-l5"><a class="reference internal" href="file_inc_command_socket.hpp.html#includes">Includes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="file_inc_command_socket.hpp.html#included-by">Included By</a></li>
 <li class="toctree-l5"><a class="reference internal" href="file_inc_command_socket.hpp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="file_inc_command_terminal.hpp.html">File command_terminal.hpp</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_command_terminal.hpp.html#definition-inc-command-terminal-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">inc/command_terminal.hpp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="program_listing_file_inc_command_terminal.hpp.html">Program Listing for File command_terminal.hpp</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="file_inc_config_handler.hpp.html">File config_handler.hpp</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_config_handler.hpp.html#definition-inc-config-handler-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">inc/config_handler.hpp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="program_listing_file_inc_config_handler.hpp.html">Program Listing for File config_handler.hpp</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="file_lib_openvslam_openvslam_api.cpp.html">File openvslam_api.cpp</a><ul>
@@ -331,7 +358,8 @@
 <dl class="class">
 <dt id="_CPPv310BaseSocket">
 <span id="_CPPv210BaseSocket"></span><span id="BaseSocket"></span><span class="target" id="classBaseSocket"></span><em class="property">class </em><code class="descname">BaseSocket</code><a class="headerlink" href="#_CPPv310BaseSocket" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Subclassed by <a class="reference internal" href="classCommandSocket.html#classCommandSocket"><span class="std std-ref">CommandSocket</span></a>, <a class="reference internal" href="classStateSocket.html#classStateSocket"><span class="std std-ref">StateSocket</span></a>, <a class="reference internal" href="classVideoSocket.html#classVideoSocket"><span class="std std-ref">VideoSocket</span></a></p>
+<dd><p>Abstract class inhereted by the other socket classes. </p>
+<p>Subclassed by <a class="reference internal" href="classCommandSocket.html#classCommandSocket"><span class="std std-ref">CommandSocket</span></a>, <a class="reference internal" href="classStateSocket.html#classStateSocket"><span class="std std-ref">StateSocket</span></a>, <a class="reference internal" href="classVideoSocket.html#classVideoSocket"><span class="std std-ref">VideoSocket</span></a></p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Functions</p>
 <dl class="function">
@@ -341,6 +369,14 @@
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd>no return </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">io_service</span></code>: io_service object used to handle all socket communication </li>
+<li><code class="docutils literal notranslate"><span class="pre">drone_ip</span></code>: ip address of drone </li>
+<li><code class="docutils literal notranslate"><span class="pre">drone_port</span></code>: port number on the drone </li>
+<li><code class="docutils literal notranslate"><span class="pre">local_port</span></code>: port on the local machine used to communicate with the drone port mentioned above </li>
+</ul>
+</dd>
 </dl>
 </p>
 </dd></dl>

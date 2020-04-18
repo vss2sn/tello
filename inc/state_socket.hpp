@@ -3,6 +3,10 @@
 
 #include "base_socket.hpp"
 
+/**
+* @class StateSocket
+* @brief Prints the state of the tello
+*/
 class StateSocket : public BaseSocket{
 public:
 
@@ -11,7 +15,7 @@ public:
   * @param [in] io_service io_service object used to handle all socket communication
   * @param [in] drone_ip ip address of drone
   * @param [in] drone_port port number on the drone
-  * @param [in] local_port port on the local machine used to communicate with the drone
+  * @param [in] local_port port on the local machine used to communicate with the drone port mentioned above
   * @return none
   */
   StateSocket(asio::io_service& io_service, const std::string& drone_ip, const std::string& drone_port, const std::string& local_port);

@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-This is the Tello documentation.
+Welcome to the Tello documentation!
 
 Contents:
 ---------
@@ -15,7 +15,12 @@ Contents:
    ./commandcontrolmethods
    ./building
    ./cmakeoptions
+   ./code_overview
+   ./joystick_mapping
+   ./cmd_terminal
    ./SLAMnotes
+   ./ongoing
+   ./troubleshooting
    api/library_root
 
 

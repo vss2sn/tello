@@ -9,10 +9,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -DDEBUG")
 # These should be the only options the user requires
 
 option(SIMPLE "Use simple formatting for all output to terminal" OFF)
-option(USE_JOYSTICK "Use a joystick/controller to control the drone manually" OFF)
-option(RECORD "Record tello video feed" OFF)
-option(RUN_SLAM "Run SLAM in real time" OFF)
-option(USE_TERMINAL "Run with terminal for CLI" OFF)
+option(USE_JOYSTICK "Use a joystick/controller to control the drone manually" ON)
+option(RECORD "Record tello video feed" ON)
+option(RUN_SLAM "Run SLAM in real time" ON)
+option(USE_TERMINAL "Run with terminal for CLI" ON)
 option(USE_CONFIG "Use configuration file to set up tello(s)" ON)
 
 message(STATUS "CMake Option `SIMPLE` - Use simple formatting for all output to terminal ${SIMPLE}")
@@ -21,6 +21,7 @@ message(STATUS "CMake Option `RECORD` - Record tello video feed ${RECORD}")
 message(STATUS "CMake Option `RUN_SLAM` - Run SLAM in real time ${RUN_SLAM}")
 message(STATUS "CMake Option `USE_TERMINAL` - `Run with terminal for CLI` ${USE_TERMINAL}")
 message(STATUS "CMake_Option `USE_CONFIG` - Use configuration file to set up tello(s) ${USE_CONFIG}")
+
 # End These should be the only options the user requires
 
 option(USE_CMAKE_NOT_SCRIPT "Use Cmake ExternalProject to get and build OpenVSLAM and its dependencies" OFF)

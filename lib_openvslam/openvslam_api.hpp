@@ -4,13 +4,15 @@
 #define OPENVSLAM_API_HPP
 
 #include <memory>
-#include <string>
-#include <iostream>
 #include <mutex>
 
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
+/**
+* @class OpenVSLAM_API
+* @brief API for OpenVSLAM 
+*/
 class OpenVSLAM_API{
 public:
 
@@ -19,9 +21,23 @@ public:
   * @param [in] run reference to a bool that is set to off when the Tello object destructor is called
   * @param [in] config_file_path path to camera configuration file
   * @param [in] vocab_file_path path to vocabulary file
+  * @param [in] load_map_db_path path and file name from which the map must be loaded
+  * @param [in] save_map_db_path path and file name to which the map must be saved
+  * @param [in] mask_img_path path to pattern mask input images
+  * @param [in] load_map bool for whether the map should be loaded
+  * @param [in] continue_mapping continue adding to the map even when a map has been loaded
+  * @param [in] scale scale for SLAM
   * @return none
   */
-  OpenVSLAM_API(bool& run, std::string config_file_path, std::string vocab_file_path);
+  OpenVSLAM_API(bool& run,
+  const std::string config_file_path,
+  const std::string vocab_file_path,
+  const std::string load_map_db_path,
+  const std::string save_map_db_path,
+  const std::string mask_img_path,
+  bool load_map,
+  bool continue_mapping,
+  float scale);
 
   /**
   * @brief Destructor

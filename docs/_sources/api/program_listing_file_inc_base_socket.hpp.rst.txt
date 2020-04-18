@@ -19,6 +19,7 @@ Program Listing for File base_socket.hpp
    class BaseSocket{
    public:
      BaseSocket(asio::io_service& io_service, const std::string& drone_ip, const std::string& drone_port, const std::string& local_port);
+   
      virtual ~BaseSocket();
    
    protected:

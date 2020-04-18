@@ -14,4 +14,8 @@ docssrc/*
 !docssrc/code_overview.md
 !docssrc/joystick_mapping.md
 !docssrc/ongoing.md
+!docssrc/cmd_terminal.rst
+!docssrc/troubleshooting.rst
 orb_vocab.dbow2
+videos/
+snapshots/

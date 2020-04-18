@@ -63,9 +63,9 @@ void Terminal::terminalWorker(){
         dup2(xterm_fd_, 1);
         printf(">> \n");
         dup2(saved_stdout_, 1);
-        usleep(1000);
         received_cmd_ = true;
        }
+       usleep(1000);
      }
   }
   dup2(saved_stdout_, 0);
@@ -92,7 +92,7 @@ std::mutex& Terminal::getMutex(){
   return terminal_mutex_;
 }
 
-std::string timedRead(int timeout_s){
+std::string Terminal::timedRead(int timeout_s, int timeout_ms){
 
    fd_set fdset;
    struct timeval timeout;
@@ -100,7 +100,7 @@ std::string timedRead(int timeout_s){
    std::string command;
 
    timeout.tv_sec = timeout_s;   /* wait for 6 seconds for data */
-   timeout.tv_usec = 0;
+   timeout.tv_usec = timeout_ms;
 
    FD_ZERO(&fdset);
 
@@ -124,6 +124,36 @@ std::string timedRead(int timeout_s){
    return command;
 }
 
+// TODO: replace by unordered_map?
+TERMINAL_CMD_TYPE Terminal::convertToEnum(const std::string& cmd_type){
+  if(cmd_type == "add"){
+    return ADD;
+  }
+  else if(cmd_type == "start"){
+    return START;
+  }
+  else if(cmd_type == "stop"){
+    return STOP;
+  }
+  else if(cmd_type == "addfront"){
+    return ADD_FRONT;
+  }
+  else if(cmd_type == "clear"){
+    return CLEAR;
+  }
+  else if(cmd_type == "removenext"){
+    return REMOVE_NEXT;
+  }
+  else if(cmd_type == "allowautoland"){
+    return ALLOW_AUTO_LAND;
+  }
+  else if(cmd_type == "donotautoland"){
+    return DO_NOT_AUTO_LAND;
+  }
+  else{
+    return UNKNOWN;
+  }
+}
 
 // int main()
 // {

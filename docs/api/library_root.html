@@ -39,7 +39,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Class BaseSocket" href="classBaseSocket.html" />
-    <link rel="prev" title="Notes on running with SLAM" href="../SLAMnotes.html" /> 
+    <link rel="prev" title="Troubleshooting" href="../troubleshooting.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -95,6 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../commandcontrolmethods.html">Command/control methods</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../commandcontrolmethods.html#joystick-mode">Joystick mode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commandcontrolmethods.html#autonomous-mode">Autonomous mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commandcontrolmethods.html#command-line-interface">Command line interface</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../building.html">Building the code</a><ul>
@@ -105,9 +106,21 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../cmakeoptions.html">CMake Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code_overview.html">Code overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../code_overview.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../joystick_mapping.html">Default joystick mappings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cmd_terminal.html">Command Terminal</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../SLAMnotes.html">Notes on running with SLAM</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../SLAMnotes.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../SLAMnotes.html#calibrating-the-tello-camera">Calibrating the tello camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ongoing.html">Project paths (current &amp; projected)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#for-issues-with-x11-gdk-pangolin-crashes">For issues with X11/gdk/pangolin crashes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#response-does-not-match-command">Response does not match command</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Library API</a><ul>
@@ -183,6 +196,20 @@
 <li class="toctree-l5"><a class="reference internal" href="file_inc_command_socket.hpp.html#includes">Includes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="file_inc_command_socket.hpp.html#included-by">Included By</a></li>
 <li class="toctree-l5"><a class="reference internal" href="file_inc_command_socket.hpp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="file_inc_command_terminal.hpp.html">File command_terminal.hpp</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_command_terminal.hpp.html#definition-inc-command-terminal-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">inc/command_terminal.hpp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="program_listing_file_inc_command_terminal.hpp.html">Program Listing for File command_terminal.hpp</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="file_inc_config_handler.hpp.html">File config_handler.hpp</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_config_handler.hpp.html#definition-inc-config-handler-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">inc/config_handler.hpp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="program_listing_file_inc_config_handler.hpp.html">Program Listing for File config_handler.hpp</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="file_lib_openvslam_openvslam_api.cpp.html">File openvslam_api.cpp</a><ul>
@@ -324,7 +351,7 @@
 <ul class="treeView" id="file-treeView">
   <li>
     <ul class="collapsibleList">
-      <li>Directory <a href="dir_inc.html#dir-inc">inc</a><ul><li>File <a href="file_inc_base_socket.hpp.html#file-inc-base-socket.hpp">base_socket.hpp</a></li><li>File <a href="file_inc_command_socket.hpp.html#file-inc-command-socket.hpp">command_socket.hpp</a></li><li>File <a href="file_inc_state_socket.hpp.html#file-inc-state-socket.hpp">state_socket.hpp</a></li><li>File <a href="file_inc_tello.hpp.html#file-inc-tello.hpp">tello.hpp</a></li><li class="lastChild">File <a href="file_inc_video_socket.hpp.html#file-inc-video-socket.hpp">video_socket.hpp</a></li></ul></li><li>Directory <a href="dir_lib_openvslam.html#dir-lib-openvslam">openvslam</a><ul><li>File <a href="file_lib_openvslam_openvslam_api.cpp.html#file-lib-openvslam-openvslam-api.cpp">openvslam_api.cpp</a></li><li class="lastChild">File <a href="file_lib_openvslam_openvslam_api.hpp.html#file-lib-openvslam-openvslam-api.hpp">openvslam_api.hpp</a></li></ul></li><li class="lastChild">File <a href="file_README.md.html#file-README.md">README.md</a></li>
+      <li>Directory <a href="dir_inc.html#dir-inc">inc</a><ul><li>File <a href="file_inc_base_socket.hpp.html#file-inc-base-socket.hpp">base_socket.hpp</a></li><li>File <a href="file_inc_command_socket.hpp.html#file-inc-command-socket.hpp">command_socket.hpp</a></li><li>File <a href="file_inc_command_terminal.hpp.html#file-inc-command-terminal.hpp">command_terminal.hpp</a></li><li>File <a href="file_inc_config_handler.hpp.html#file-inc-config-handler.hpp">config_handler.hpp</a></li><li>File <a href="file_inc_state_socket.hpp.html#file-inc-state-socket.hpp">state_socket.hpp</a></li><li>File <a href="file_inc_tello.hpp.html#file-inc-tello.hpp">tello.hpp</a></li><li class="lastChild">File <a href="file_inc_video_socket.hpp.html#file-inc-video-socket.hpp">video_socket.hpp</a></li></ul></li><li>Directory <a href="dir_lib_openvslam.html#dir-lib-openvslam">openvslam</a><ul><li>File <a href="file_lib_openvslam_openvslam_api.cpp.html#file-lib-openvslam-openvslam-api.cpp">openvslam_api.cpp</a></li><li class="lastChild">File <a href="file_lib_openvslam_openvslam_api.hpp.html#file-lib-openvslam-openvslam-api.hpp">openvslam_api.hpp</a></li></ul></li><li class="lastChild">File <a href="file_README.md.html#file-README.md">README.md</a></li>
     </ul>
   </li><!-- only tree view element -->
 </ul><!-- /treeView file-treeView --></div>
@@ -440,6 +467,28 @@
 </div>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="file_inc_command_terminal.hpp.html">File command_terminal.hpp</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="file_inc_command_terminal.hpp.html#definition-inc-command-terminal-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">inc/command_terminal.hpp</span></code>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="program_listing_file_inc_command_terminal.hpp.html">Program Listing for File command_terminal.hpp</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="file_inc_config_handler.hpp.html">File config_handler.hpp</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="file_inc_config_handler.hpp.html#definition-inc-config-handler-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">inc/config_handler.hpp</span></code>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="program_listing_file_inc_config_handler.hpp.html">Program Listing for File config_handler.hpp</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="file_lib_openvslam_openvslam_api.cpp.html">File openvslam_api.cpp</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="file_lib_openvslam_openvslam_api.cpp.html#definition-lib-openvslam-openvslam-api-cpp">Definition (<code class="docutils literal notranslate"><span class="pre">lib_openvslam/openvslam_api.cpp</span></code>)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="program_listing_file_lib_openvslam_openvslam_api.cpp.html">Program Listing for File openvslam_api.cpp</a></li>
@@ -528,7 +577,7 @@
         <a href="classBaseSocket.html" class="btn btn-neutral float-right" title="Class BaseSocket" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../SLAMnotes.html" class="btn btn-neutral float-left" title="Notes on running with SLAM" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../troubleshooting.html" class="btn btn-neutral float-left" title="Troubleshooting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

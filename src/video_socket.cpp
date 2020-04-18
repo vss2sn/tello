@@ -1,3 +1,13 @@
+#include <queue>
+#include <mutex>
+#include <iostream>
+
+#include <libavutil/frame.h>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/videoio.hpp>
+
 #include "video_socket.hpp"
 #include "utils.hpp"
 
@@ -7,8 +17,14 @@ VideoSocket::VideoSocket(
   const std::string& drone_port,
   const std::string& local_port,
   bool& run,
-  std::string camera_config_file,
-  std::string vocabulary_file
+  const std::string camera_config_file,
+  const std::string vocabulary_file,
+  const std::string load_map_db_path_,
+  const std::string save_map_db_path_,
+  const std::string mask_img_path_,
+  bool load_map_,
+  bool continue_mapping,
+  float scale
 ):
   BaseSocket(io_service, drone_ip, drone_port, local_port),
   run_(run)
@@ -17,7 +33,7 @@ VideoSocket::VideoSocket(
   // cv::moveWindow("frame",960,0);
   // cv::resizeWindow("frame",920,500);
 
-  cv::namedWindow("frame");
+  cv::namedWindow("Pilot view");
   asio::ip::udp::resolver resolver(io_service_);
   asio::ip::udp::resolver::query query(asio::ip::udp::v4(), drone_ip_, drone_port_);
   asio::ip::udp::resolver::iterator iter = resolver.resolve(query);
@@ -36,15 +52,23 @@ VideoSocket::VideoSocket(
   io_thread.detach();
 
 #ifdef RUN_SLAM
-    api_ = std::make_unique<OpenVSLAM_API>(run_, camera_config_file, vocabulary_file);
+    api_ = std::make_unique<OpenVSLAM_API>(run_, camera_config_file, vocabulary_file, load_map_db_path_, save_map_db_path_, mask_img_path_, load_map_, continue_mapping, scale);
     api_->startMonoThread();
 #endif
 
 #ifdef RECORD
-  video = std::make_unique<cv::VideoWriter>("out.mp4",cv::VideoWriter::fourcc('m','p','4','v'), 30, cv::Size(960,720));
+  std::string create_video_folder = "mkdir ../videos";
+  system(create_video_folder.c_str());
+  time_t rawtime;
+  struct tm * timeinfo;
+  char buffer [80];
+  time (&rawtime);
+  timeinfo = localtime (&rawtime);
+  strftime (buffer,80,"../videos/tello_video_%Y_%m_%d_%H_%M_%S.mp4",timeinfo);
+  video = std::make_unique<cv::VideoWriter>(buffer, cv::VideoWriter::fourcc('m','p','4','v'), 30, cv::Size(960,720));
 #endif
 
-  std::string create_folder = "mkdir snapshots";
+  std::string create_folder = "mkdir ../snapshots";
   system(create_folder.c_str());
 }
 
@@ -97,7 +121,7 @@ void VideoSocket::decodeFrame()
         if(snap_) takeSnapshot(mat);
 
 #ifdef RECORD
-        video->write(mat);
+        video->write(mat.clone());
 #endif
 
 #ifdef RUN_SLAM
@@ -106,9 +130,11 @@ void VideoSocket::decodeFrame()
         api_->addFrameToQueue(greyMat);
         // NOTE: In case there are some gdk/pangolin crashes
         // 1. comment out the 3 lines below and display only the frame displayed
-        // with keypoints on L92 of pangolin_viewer/viewer.cc
+        //    with keypoints on L92 of pangolin_viewer/viewer.cc
         // OR
-        // 2. Comment out L96-99 of pangolin_viewer/viewer.cc
+        // 2. Comment out L96-99 of pangolin_viewer/viewer.cc and amke install
+        //    OpenVSLAM
+        // and then rebuild the code
         {
           std::unique_lock<std::mutex> lk(api_->getMutex());
           cv::imshow("Pilot view", mat.clone());
@@ -148,7 +174,7 @@ void VideoSocket::takeSnapshot(cv::Mat& image){
   char buffer [80];
   time (&rawtime);
   timeinfo = localtime (&rawtime);
-  strftime (buffer,80,"./snapshots/img_%Y_%m_%d_%H_%M_%S.jpg",timeinfo);
+  strftime (buffer,80,"../snapshots/tello_img_%Y_%m_%d_%H_%M_%S.jpg",timeinfo);
   cv::imwrite(std::string(buffer), image);
   utils_log::LogInfo() << "Picture taken. File " << buffer;
 }

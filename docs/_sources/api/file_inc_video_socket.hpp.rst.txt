@@ -33,35 +33,13 @@ Includes
 
 - ``base_socket.hpp`` (:ref:`file_inc_base_socket.hpp`)
 
-- ``chrono``
-
-- ``cstring``
-
-- ``ctime``
-
 - ``h264decoder.hpp``
-
-- ``iostream``
 
 - ``libavutil/frame.h``
 
-- ``mutex``
-
-- ``numeric``
-
 - ``opencv2/core/core.hpp``
 
-- ``opencv2/highgui.hpp``
-
-- ``opencv2/imgcodecs.hpp``
-
-- ``opencv2/imgproc.hpp``
-
 - ``opencv2/videoio.hpp``
-
-- ``queue``
-
-- ``vector``
 
 
 

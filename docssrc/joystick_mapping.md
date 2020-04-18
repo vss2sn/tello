@@ -1,0 +1,38 @@
+.. joystick_map:
+
+The default mapping is for the gameSirT1s. Mappings have been provided for PS3 and Xbox360 controllers as well, but they might require some tweaking.
+
+####Default joystick mappings####
+
+| Button | Function |
+|-------------|-------------|
+| R1 | Control command `stop` |
+| R2 | Control command `emergency` |
+| L1 | Toggle autoland |
+| L2 | Shift (To be used in conjunction with other buttons/axes) |
+| A  | Prevent automatic landing and control command `takeoff` |
+| B  | Allow automatic landing and control command `land` |
+| X  | Control command `streamon` |
+| Y  | Control command `streamoff` |
+| A  + L2 | Take snapshot |
+| X  + L2 | Control command `mon` |
+| Y  + L2 | Control command `moff` |
+| START | Control command `command` |
+| SELECT | Start queue execution |
+| START + L2 | Control command `land` and exit |
+| SELECT + L2 | Stop queue execution |
+
+| Axis | Function |
+|-------------|-------------|
+| Right Stick Horizontal | Set command: Leftward/Rightward velocity `a` in `rc a b c d` |
+| Right Stick Vertical | Set command: Forward/Backward velocity `b` in `rc a b c d` |
+| Left Stick Horizontal | Set command: Angular velocity (Yaw) `d` in `rc a b c d` |
+| Left Stick Vertical | Set command: Vertical velocity `c` in `rc a b c d` |
+| Right Button | Control command `flip r`  |
+| Left Button | Control command `flip l` |
+| Back Button | Control command `flip b` |
+| Forward Button | Control command `flip f` |
+| Right Button + L2 | Read command `speed?` |
+| Left Button + L2 | Read command: `battery?` |
+| Back Button + L2 | Read command: `time?` |
+| Forward Button + L2 | Read command: `wifi?` |

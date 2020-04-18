@@ -46,7 +46,6 @@ std::map<std::string, std::unique_ptr<Tello>> handleConfig(
       for(auto member_n = 0; member_n < n_members; member_n++){
 
         std::string identifier = std::to_string(group_n) + "." + type_id + "." + std::to_string(member_n);
-        std::cout << identifier << std::endl;
 
         auto a = std::make_unique<Tello>(io_service,
           cv_run,
@@ -55,14 +54,16 @@ std::map<std::string, std::unique_ptr<Tello>> handleConfig(
           config[type_id]["video_port"].as<std::string>(),
           config[type_id]["state_port"].as<std::string>(),
           config[type_id]["camera_config_file"].as<std::string>(),
-          config[type_id]["vocabulary_file"].as<std::string>() //,
-          // TODO:
-          // config[type_id]["retries"].as<int>(),
-          // config[type_id]["timeout"].as<int>()
-          // savemap
-          // load map
-          // scale for slam
-          // Config object?
+          config[type_id]["vocabulary_file"].as<std::string>(),
+          config[type_id]["retries"].as<int>(),
+          config[type_id]["timeout"].as<int>(),
+          config[type_id]["load_map_db_path"].as<std::string>(),
+          config[type_id]["save_map_db_path"].as<std::string>(),
+          config[type_id]["mask_img_path"].as<std::string>(),
+          config[type_id]["load_map"].as<bool>(),
+          config[type_id]["continue_mapping"].as<bool>(),
+          config[type_id]["scale"].as<double>() // NOTE: double to float implicit conversion
+          // TODO: Config object?
         );
         m.insert(
           std::pair<std::string, std::unique_ptr<Tello>>(

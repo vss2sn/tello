@@ -15,8 +15,16 @@ prime:
   timeout: 5
   slam: "openvslam"
   camera_config_file: "../camera_config.yaml"
-  vocabulary_file: "../../orb_vocab.dbow2"
-  command_sequence: "../sequence.txt"
+  vocabulary_file: "../orb_vocab.dbow2"
+  sequence_file: "../sequence.txt"
+  retries: 0
+  timeout: 5
+  load_map_db_path: ""
+  save_map_db_path: ""
+  mask_img_path: ""
+  load_map: false
+  continue_mapping: false
+  scale: 1
 
 # wifi
 # joystick

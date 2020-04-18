@@ -62,7 +62,7 @@ if(NOT Eigen3_FOUND)
       -DCMAKE_CXX_FLAGS="-w"
       -DCMAKE_BUILD_TYPE:STRING=Release
       -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-    BUILD_COMMAND make -j
+    BUILD_COMMAND make --silent
     INSTALL_COMMAND make install
   )
   ExternalProject_Get_Property(EXTP_EIGEN install_dir)
@@ -113,7 +113,7 @@ if(NOT OpenCV_FOUND)
           -DBUILD_opencv_cudacodec:BOOL=OFF
           -DBUILD_opencv_apps:BOOL=ON
           -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-        BUILD_COMMAND make -j
+        BUILD_COMMAND make --silent
         INSTALL_COMMAND make install
       )
       ExternalProject_Get_Property(EXTP_OPENCV install_dir)
@@ -147,7 +147,7 @@ if(NOT DBoW2_FOUND)
       -DCMAKE_CXX_FLAGS="-w"
       -DCMAKE_BUILD_TYPE:STRING=Release
       -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-    BUILD_COMMAND make -j
+    BUILD_COMMAND make --silent
     INSTALL_COMMAND make install
   )
   ExternalProject_Get_Property(EXTP_DBOW2 install_dir)
@@ -185,7 +185,7 @@ if(NOT g2o_FOUND)
       -DG2O_USE_OPENGL:BOOL=OFF
       -DG2O_USE_OPENMP:BOOL=ON
       -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-    BUILD_COMMAND make -j
+    BUILD_COMMAND make --silent
     INSTALL_COMMAND make install
   )
   ExternalProject_Get_Property(EXTP_G2O install_dir)
@@ -211,7 +211,7 @@ if(NOT Pangolin_FOUND)
       -DCMAKE_CXX_FLAGS="-w"
       -DCMAKE_BUILD_TYPE:STRING=Release
       -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-    BUILD_COMMAND make -j
+    BUILD_COMMAND make --silent
     INSTALL_COMMAND make install
   )
   ExternalProject_Get_Property(EXTP_PANGOLIN install_dir)
@@ -237,7 +237,7 @@ if(NOT sioclient_FOUND)
       -DCMAKE_BUILD_TYPE:STRING=Release
       -DBUILD_UNIT_TESTS:BOOL=OFF
       -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-    BUILD_COMMAND make -j
+      BUILD_COMMAND make --silent
     INSTALL_COMMAND make install
   )
   ExternalProject_Get_Property(EXTP_SOCKET install_dir)
@@ -273,7 +273,7 @@ if(NOT "${EXTP_EIGEN}" STREQUAL "" OR NOT "${EXTP_DBOW2}" STREQUAL "" OR NOT "${
       -DBOW_FRAMEWORK:STRING=DBoW2
       -DBUILD_TESTS:BOOL=ON
       -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-    BUILD_COMMAND make -j
+    BUILD_COMMAND make --silent
     INSTALL_COMMAND make install
   )
   add_dependencies(${PROJECT_NAME} EXTP_OPENVSLAM)

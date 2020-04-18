@@ -63,6 +63,16 @@ Files
 .. toctree::
    :maxdepth: 5
 
+   file_inc_command_terminal.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_inc_config_handler.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
    file_lib_openvslam_openvslam_api.cpp.rst
 
 .. toctree::

@@ -95,6 +95,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Command/control methods</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#joystick-mode">Joystick mode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#autonomous-mode">Autonomous mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-interface">Command line interface</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="building.html">Building the code</a><ul>
@@ -105,9 +106,21 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cmakeoptions.html">CMake Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_overview.html">Code overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="code_overview.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="joystick_mapping.html">Default joystick mappings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cmd_terminal.html">Command Terminal</a></li>
 <li class="toctree-l1"><a class="reference internal" href="SLAMnotes.html">Notes on running with SLAM</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="SLAMnotes.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SLAMnotes.html#calibrating-the-tello-camera">Calibrating the tello camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ongoing.html">Project paths (current &amp; projected)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#for-issues-with-x11-gdk-pangolin-crashes">For issues with X11/gdk/pangolin crashes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#response-does-not-match-command">Response does not match command</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/library_root.html">Library API</a><ul>
@@ -183,6 +196,20 @@
 <li class="toctree-l5"><a class="reference internal" href="api/file_inc_command_socket.hpp.html#includes">Includes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api/file_inc_command_socket.hpp.html#included-by">Included By</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api/file_inc_command_socket.hpp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_inc_command_terminal.hpp.html">File command_terminal.hpp</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="api/file_inc_command_terminal.hpp.html#definition-inc-command-terminal-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">inc/command_terminal.hpp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="api/program_listing_file_inc_command_terminal.hpp.html">Program Listing for File command_terminal.hpp</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_inc_config_handler.hpp.html">File config_handler.hpp</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="api/file_inc_config_handler.hpp.html#definition-inc-config-handler-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">inc/config_handler.hpp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="api/program_listing_file_inc_config_handler.hpp.html">Program Listing for File config_handler.hpp</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="api/file_lib_openvslam_openvslam_api.cpp.html">File openvslam_api.cpp</a><ul>
@@ -314,6 +341,7 @@
 <div><ul class="simple">
 <li>Using a joystick</li>
 <li>Autonomously using a command queue</li>
+<li>Command line interface</li>
 </ul>
 </div></blockquote>
 <div class="section" id="joystick-mode">
@@ -338,8 +366,16 @@
 <li>This mode enables (optional) command retries when a command does not receive any response from the drone</li>
 </ul>
 </div></blockquote>
-<p>SLAM integration has been provided using the OpenVSLAM library.
-This code does not depend on ROS/ROS2 for flying using a joystick/sending commands listed in the SDK</p>
+</div>
+<div class="section" id="command-line-interface">
+<h2>Command line interface<a class="headerlink" href="#command-line-interface" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li>A command line interface can be brought up by setting the CMake option <code class="docutils literal notranslate"><span class="pre">USE_TERMINAL</span></code> to <code class="docutils literal notranslate"><span class="pre">ON</span></code></li>
+<li>Like the joystick, the CLI will pause command queue execution</li>
+</ul>
+</div></blockquote>
+<p>SLAM integration has been provided using the OpenVSLAM library.</p>
 </div>
 </div>
 

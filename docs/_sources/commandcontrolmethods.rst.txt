@@ -5,6 +5,7 @@ Command/control methods
 ================================================================================
   * Using a joystick
   * Autonomously using a command queue
+  * Command line interface
 
 Joystick mode
 ^^^^^^^^^^^^^
@@ -21,5 +22,9 @@ Autonomous mode
   * Commands can be dynamically added
   * This mode enables (optional) command retries when a command does not receive any response from the drone
 
+Command line interface
+^^^^^^^^^^^^^^^^^^^^^^
+  * A command line interface can be brought up by setting the CMake option ``USE_TERMINAL`` to ``ON``
+  * Like the joystick, the CLI will pause command queue execution
+
 SLAM integration has been provided using the OpenVSLAM library.
-This code does not depend on ROS/ROS2 for flying using a joystick/sending commands listed in the SDK

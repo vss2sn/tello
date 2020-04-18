@@ -25,6 +25,7 @@ void Joystick::update()
     ssize_t tmp = 0;
 
     // Blocking read
+    // TODO: convert to non blocking?
     while (bytes_read < JS_EVENT_SIZE)
     {
         tmp = read(port_, &event_ + bytes_read, JS_EVENT_SIZE - bytes_read);

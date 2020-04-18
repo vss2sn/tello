@@ -4,13 +4,22 @@
 #include <thread>
 #include "asio.hpp"
 
+/**
+* @class BaseSocket
+* @brief Abstract class inhereted by the other socket classes
+*/
 class BaseSocket{
 public:
   /**
   * @brief Constructor of base socket
+  * @param [in] io_service io_service object used to handle all socket communication
+  * @param [in] drone_ip ip address of drone
+  * @param [in] drone_port port number on the drone
+  * @param [in] local_port port on the local machine used to communicate with the drone port mentioned above
   * @return no return
   */
   BaseSocket(asio::io_service& io_service, const std::string& drone_ip, const std::string& drone_port, const std::string& local_port);
+
   virtual ~BaseSocket();
 
 protected:
@@ -36,7 +45,7 @@ private:
   /**
   * @brief function called to send command to drone
   * @param [in] error error thrown by socket when sending a command to the drone
-  * @param [in] bytes_recvd number of bytes received
+  * @param [in] bytes_sent number of bytes sent
   * @param [in] cmd command to be sent to drone
   * @return void
   * @details Pure virtual function overridden in implementation classes

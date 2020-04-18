@@ -12,13 +12,23 @@ const std::string local_drone_port,
 const std::string local_video_port,
 const std::string local_state_port,
 const std::string camera_config_file,
-const std::string vocabulary_file
+const std::string vocabulary_file,
+const int n_retries,
+const int timeout,
+const std::string load_map_db_path,
+const std::string save_map_db_path,
+const std::string mask_img_path,
+bool load_map,
+bool continue_mapping,
+float scale
 ):
 io_service_(io_service),
 cv_run_(cv_run)
 {
-  cs = std::make_unique<CommandSocket>(io_service, drone_ip, "8889", local_drone_port, 0, 5);
-  vs = std::make_unique<VideoSocket>(io_service,  "0.0.0.0", "11111", local_video_port, run_, camera_config_file, vocabulary_file);
+  cs = std::make_unique<CommandSocket>(io_service, drone_ip, "8889", local_drone_port, n_retries, timeout);
+  vs = std::make_unique<VideoSocket>(io_service,  "0.0.0.0", "11111", local_video_port,
+    run_, camera_config_file, vocabulary_file, load_map_db_path, save_map_db_path,
+    mask_img_path, load_map, continue_mapping, scale);
   ss = std::make_unique<StateSocket>(io_service, "0.0.0.0", "8890", local_state_port);
 
 #ifdef USE_JOYSTICK
@@ -42,21 +52,83 @@ void Tello::terminalToCommandThread(){
   {
     usleep(1000);
     if(term_->hasCommnad()){
-      std::mutex m;
-      std::lock_guard<std::mutex> lk(m);
-      cs->sendCommand(term_->getCommand());
+      terminalToCommand(term_->getCommand());
     }
   }
   std::cout << "----------- Terminal to command thread exits -----------" << std::endl;
 }
+
+void Tello::terminalToCommand(const std::string& cmd){
+
+  // TODO: check split string and queue execution logic
+  std::string parse_cmd = "";
+  std::vector<std::string> cmd_v;
+  for (auto& x : cmd)
+  {
+     if (x == ' ')
+     {
+         cmd_v.push_back(parse_cmd);
+         parse_cmd = "";
+     }
+     else
+     {
+         parse_cmd = parse_cmd + x;
+     }
+  }
+  cmd_v.push_back(parse_cmd);
+
+  if(cmd_v[0] == "queue"){
+    switch(term_->convertToEnum(cmd_v[1])){
+      case ADD:
+        cs->addCommandToQueue(cmd_v[2]);
+        break;
+      case START:
+        cs->executeQueue();
+        break;
+      case STOP:
+        cs->stopQueueExecution();
+        break;
+      case ADD_FRONT:
+        cs->addCommandToFrontOfQueue(cmd_v[2]);
+        break;
+      case CLEAR:
+        cs->clearQueue();
+        break;
+      case REMOVE_NEXT:
+        cs->removeNextFromQueue();
+        break;
+      case ALLOW_AUTO_LAND:
+        cs->doNotAutoLand();
+        break;
+      case DO_NOT_AUTO_LAND:
+        cs->allowAutoLand();
+        break;
+      case UNKNOWN:
+        utils_log::LogErr() << "Unknown queue command from terminal CLI";
+        break;
+      default:
+        utils_log::LogErr() << "Unknown queue command from terminal CLI";
+        break;
+    }
+  }
+  else{
+    bool check = cs->isExecutingQueue();
+    if(check) cs->stopQueueExecution();
+    std::mutex m;
+    std::lock_guard<std::mutex> lk(m);
+    cs->sendCommand(cmd);
+  }
+}
 #endif // TERMINAL
 
+
+// Refactor this with a nonbloacking read?
 void Tello::jsToCommandThread(){
   while(run_)
   {
       usleep(1000);
       js_->update();
-      if(!run_) break;
+      if(!run_) break; // Is this necessary?
       if (js_->hasButtonUpdate())
       {
           jsToCommand(js_->getUpdatedButton());

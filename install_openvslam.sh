@@ -87,7 +87,7 @@ cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=${EXT_DEP}/install/eigen-eigen-5a0156e40feb/ \
     ..
-make -j8 --silent
+make -j2 --silent
 make install
 cd ${EXT_DEP}/install/eigen-eigen-5a0156e40feb/
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
@@ -123,7 +123,7 @@ cmake \
     -DBUILD_opencv_cudacodec=OFF \
     -DCMAKE_CXX_FLAGS="-w" \
     ..
-make -j8 --silent
+make -j2 --silent
 make install
 cd ${EXT_DEP}/install/opencv-3.4.0
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
@@ -147,7 +147,7 @@ cmake \
     -DCMAKE_INSTALL_PREFIX=${EXT_DEP}/install/DBoW2/ \
     -DCMAKE_CXX_FLAGS="-w" \
     ..
-make -j8 --silent
+make -j2 --silent
 make install
 cd ${EXT_DEP}/install/DBoW2/
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
@@ -181,7 +181,7 @@ cmake \
     -DBUILD_opencv_apps=ON \
     -DCMAKE_CXX_FLAGS="-w" \
     ..
-make -j8 --silent
+make -j2 --silent
 make install
 cd ${EXT_DEP}/install/g2o/
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
@@ -206,7 +206,7 @@ cmake \
     -DCMAKE_INSTALL_PREFIX=${EXT_DEP}/install/Pangolin/ \
     -DCMAKE_CXX_FLAGS="-w" \
     ..
-make -j8 --silent
+make -j2 --silent
 make install
 cd ${EXT_DEP}/install/Pangolin/
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
@@ -233,7 +233,7 @@ cmake \
     -DBUILD_UNIT_TESTS=OFF \
     -DCMAKE_CXX_FLAGS="-w" \
     ..
-make -j8 --silent
+make -j2 --silent
 make install
 cd ${EXT_DEP}/install/socket.io-client-cpp/
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
@@ -250,9 +250,10 @@ echo "----------------------------------------"
 echo "Installing OpenVSLAM"
 echo "----------------------------------------"
 
-cd ${EXT_DEP}/../openvslam
-
+cd ${MAIN_DIR}
 git apply ${MAIN_DIR}/patches/pangolin_viewer.diff
+
+cd ${EXT_DEP}/../openvslam
 
 mkdir build
 cd build
@@ -268,7 +269,7 @@ cmake \
     -DCMAKE_INSTALL_PREFIX=$(pwd)/../install/ \
     -DCMAKE_CXX_FLAGS="-w" \
     ..
-make -j8 --silent
+make -j2 --silent
 make install
 cd ../install
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc

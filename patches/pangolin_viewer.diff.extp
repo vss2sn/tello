@@ -1,24 +1,6 @@
 diff -u ./src/pangolin_viewer/viewer.cc "./src/pangolin_viewer/viewer.cc"
 --- ./src/pangolin_viewer/viewer.cc
 +++ "./src/pangolin_viewer/viewer.cc"
-@@ -9,6 +9,8 @@
-
- #include <opencv2/highgui.hpp>
-
-+#include <X11/Xlib.h>
-+
- namespace pangolin_viewer {
-
- viewer::viewer(const std::shared_ptr<openvslam::config>& cfg, openvslam::system* system,
-@@ -33,6 +35,8 @@
- void viewer::run() {
-     is_terminated_ = false;
-
-+    XInitThreads();
-+
-     pangolin::CreateWindowAndBind(map_viewer_name_, 1024, 768);
-
-     glEnable(GL_BLEND);
 @@ -88,9 +92,12 @@
          pangolin::FinishFrame();
 

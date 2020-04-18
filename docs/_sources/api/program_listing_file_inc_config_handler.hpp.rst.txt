@@ -1,0 +1,31 @@
+
+.. _program_listing_file_inc_config_handler.hpp:
+
+Program Listing for File config_handler.hpp
+===========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_inc_config_handler.hpp>` (``inc/config_handler.hpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   #ifdef USE_CONFIG
+   
+   #ifndef CONFIG_HANDLER_HPP
+   #define CONFIG_HANDLER_HPP
+   
+   #include <condition_variable>
+   #include <map>
+   
+   #include "asio.hpp"
+   #include "tello.hpp"
+   
+   std::map<std::string, std::unique_ptr<Tello>> handleConfig(
+     const std::string& config_file,
+     asio::io_service& io_service,
+     std::condition_variable& cv_run
+   );
+   
+   #endif // CONFIG_HANDLER_HPP
+   #endif // USE_CONFIG

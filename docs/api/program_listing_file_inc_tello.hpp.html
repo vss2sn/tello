@@ -95,6 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../commandcontrolmethods.html">Command/control methods</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../commandcontrolmethods.html#joystick-mode">Joystick mode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commandcontrolmethods.html#autonomous-mode">Autonomous mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commandcontrolmethods.html#command-line-interface">Command line interface</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../building.html">Building the code</a><ul>
@@ -105,9 +106,21 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../cmakeoptions.html">CMake Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code_overview.html">Code overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../code_overview.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../joystick_mapping.html">Default joystick mappings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cmd_terminal.html">Command Terminal</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../SLAMnotes.html">Notes on running with SLAM</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../SLAMnotes.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../SLAMnotes.html#calibrating-the-tello-camera">Calibrating the tello camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ongoing.html">Project paths (current &amp; projected)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#for-issues-with-x11-gdk-pangolin-crashes">For issues with X11/gdk/pangolin crashes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#response-does-not-match-command">Response does not match command</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="library_root.html">Library API</a><ul class="current">
@@ -183,6 +196,20 @@
 <li class="toctree-l5"><a class="reference internal" href="file_inc_command_socket.hpp.html#includes">Includes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="file_inc_command_socket.hpp.html#included-by">Included By</a></li>
 <li class="toctree-l5"><a class="reference internal" href="file_inc_command_socket.hpp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="file_inc_command_terminal.hpp.html">File command_terminal.hpp</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_command_terminal.hpp.html#definition-inc-command-terminal-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">inc/command_terminal.hpp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="program_listing_file_inc_command_terminal.hpp.html">Program Listing for File command_terminal.hpp</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="file_inc_config_handler.hpp.html">File config_handler.hpp</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_config_handler.hpp.html#definition-inc-config-handler-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">inc/config_handler.hpp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="program_listing_file_inc_config_handler.hpp.html">Program Listing for File config_handler.hpp</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="file_lib_openvslam_openvslam_api.cpp.html">File openvslam_api.cpp</a><ul>
@@ -315,7 +342,10 @@
   <div class="section" id="program-listing-for-file-tello-hpp">
 <span id="program-listing-file-inc-tello-hpp"></span><h1>Program Listing for File tello.hpp<a class="headerlink" href="#program-listing-for-file-tello-hpp" title="Permalink to this headline">¶</a></h1>
 <p>↰ <a class="reference internal" href="file_inc_tello.hpp.html#file-inc-tello-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">inc/tello.hpp</span></code>)</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span>  <span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifndef TELLO_HPP</span>
+<span class="cp">#define TELLO_HPP</span>
+
+<span class="cp">#include</span>  <span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
 
 <span class="cp">#include</span> <span class="cpf">&quot;command_socket.hpp&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;video_socket.hpp&quot;</span><span class="cp"></span>
@@ -323,17 +353,40 @@
 <span class="cp">#include</span> <span class="cpf">&quot;joystick.hpp&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;utils.hpp&quot;</span><span class="cp"></span>
 
+<span class="cp">#ifdef USE_TERMINAL</span>
+<span class="cp">#include</span> <span class="cpf">&quot;command_terminal.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#endif</span>
+
 <span class="k">class</span> <span class="nc">Tello</span><span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-
-  <span class="n">Tello</span><span class="p">(</span><span class="n">asio</span><span class="o">::</span><span class="n">io_service</span><span class="o">&amp;</span> <span class="n">io_service</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">condition_variable</span><span class="o">&amp;</span> <span class="n">cv_run</span><span class="p">);</span>
+  <span class="n">Tello</span><span class="p">(</span><span class="n">asio</span><span class="o">::</span><span class="n">io_service</span><span class="o">&amp;</span> <span class="n">io_service</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">condition_variable</span><span class="o">&amp;</span> <span class="n">cv_run</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">drone_ip</span> <span class="o">=</span> <span class="s">&quot;192.168.10.1&quot;</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">local_drone_port</span> <span class="o">=</span> <span class="s">&quot;8889&quot;</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">local_video_port</span> <span class="o">=</span> <span class="s">&quot;11111&quot;</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">local_state_port</span> <span class="o">=</span> <span class="s">&quot;8890&quot;</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">camera_config_file</span> <span class="o">=</span> <span class="s">&quot;../camera_config.yaml&quot;</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">vocabulary_file</span> <span class="o">=</span> <span class="s">&quot;../orb_vocab.dbow2&quot;</span><span class="p">,</span>
+        <span class="k">const</span> <span class="kt">int</span> <span class="n">n_retries</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="k">const</span> <span class="kt">int</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">load_map_db_path</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">save_map_db_path</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">mask_img_path</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+        <span class="kt">bool</span> <span class="n">load_map</span> <span class="o">=</span> <span class="nb">false</span><span class="p">,</span>
+        <span class="kt">bool</span> <span class="n">continue_mapping</span> <span class="o">=</span> <span class="nb">false</span><span class="p">,</span>
+        <span class="kt">float</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span>
+      <span class="p">);</span>
 
   <span class="o">~</span><span class="n">Tello</span><span class="p">();</span>
 
   <span class="c1">// TODO: Move to private</span>
+
   <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">CommandSocket</span><span class="o">&gt;</span> <span class="n">cs</span><span class="p">;</span>
+
   <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Joystick</span><span class="o">&gt;</span> <span class="n">js_</span><span class="p">;</span>
+
   <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">VideoSocket</span><span class="o">&gt;</span> <span class="n">vs</span><span class="p">;</span>
+
   <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">StateSocket</span><span class="o">&gt;</span> <span class="n">ss</span><span class="p">;</span>
 
 <span class="k">private</span><span class="o">:</span>
@@ -346,7 +399,15 @@
   <span class="kt">void</span> <span class="nf">jsToCommand</span><span class="p">(</span><span class="n">AxisId</span> <span class="n">update</span><span class="p">);</span>
   <span class="kt">bool</span> <span class="n">run_</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
 
+<span class="cp">#ifdef USE_TERMINAL</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Terminal</span><span class="o">&gt;</span> <span class="n">term_</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">term_thread_worker_</span><span class="p">,</span> <span class="n">term_thread_fetch_</span><span class="p">;</span>
+  <span class="kt">void</span> <span class="nf">terminalToCommandThread</span><span class="p">();</span>
+  <span class="kt">void</span> <span class="nf">terminalToCommand</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">cmd</span><span class="p">);</span>
+<span class="cp">#endif </span><span class="c1">// TERMINAL</span>
 <span class="p">};</span>
+
+<span class="cp">#endif </span><span class="c1">// TELLO_HPP</span>
 </pre></div>
 </div>
 </div>

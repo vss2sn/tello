@@ -6,7 +6,7 @@ Overview
 
 This repository contains a C++ library that enables interaction with DJI/RYZE Tello and Tello Edu drones.
 
-It features joystick control, autonomous command queue execution with joystick safety override and real time SLAM (using OpenVSLAM)
+It features joystick control, autonomous command queue execution with joystick safety override, command line control input and real time SLAM (using OpenVSLAM)
 
 This repository does not depend on ROS.
 
@@ -21,3 +21,4 @@ Quick start
   cmake ..
   make -j4
   ./tello
+  

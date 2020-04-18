@@ -95,6 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="commandcontrolmethods.html">Command/control methods</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="commandcontrolmethods.html#joystick-mode">Joystick mode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commandcontrolmethods.html#autonomous-mode">Autonomous mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commandcontrolmethods.html#command-line-interface">Command line interface</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Building the code</a><ul>
@@ -105,9 +106,21 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cmakeoptions.html">CMake Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_overview.html">Code overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="code_overview.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="joystick_mapping.html">Default joystick mappings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cmd_terminal.html">Command Terminal</a></li>
 <li class="toctree-l1"><a class="reference internal" href="SLAMnotes.html">Notes on running with SLAM</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="SLAMnotes.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SLAMnotes.html#calibrating-the-tello-camera">Calibrating the tello camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ongoing.html">Project paths (current &amp; projected)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#for-issues-with-x11-gdk-pangolin-crashes">For issues with X11/gdk/pangolin crashes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#response-does-not-match-command">Response does not match command</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/library_root.html">Library API</a><ul>
@@ -183,6 +196,20 @@
 <li class="toctree-l5"><a class="reference internal" href="api/file_inc_command_socket.hpp.html#includes">Includes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api/file_inc_command_socket.hpp.html#included-by">Included By</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api/file_inc_command_socket.hpp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_inc_command_terminal.hpp.html">File command_terminal.hpp</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="api/file_inc_command_terminal.hpp.html#definition-inc-command-terminal-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">inc/command_terminal.hpp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="api/program_listing_file_inc_command_terminal.hpp.html">Program Listing for File command_terminal.hpp</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_inc_config_handler.hpp.html">File config_handler.hpp</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="api/file_inc_config_handler.hpp.html#definition-inc-config-handler-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">inc/config_handler.hpp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="api/program_listing_file_inc_config_handler.hpp.html">Program Listing for File config_handler.hpp</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="api/file_lib_openvslam_openvslam_api.cpp.html">File openvslam_api.cpp</a><ul>
@@ -331,16 +358,17 @@
 </dd>
 <dt>Other Optional Dependencies:</dt>
 <dd><ul class="first last simple">
-<li>yaml-cpp</li>
+<li>yaml-cpp # For a creating drone from a config file</li>
+<li>xterm # For opening an xterm for command line input</li>
 </ul>
 </dd>
 </dl>
 </div>
 <div class="section" id="installing-dependencies">
 <h2>Installing dependencies<a class="headerlink" href="#installing-dependencies" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt install asio libopencv-dev <span class="c1"># Required dependencies</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt install libasio-dev libopencv-dev <span class="c1"># Required dependencies</span>
 bash -i install_openvslam.sh <span class="c1"># optional dependencies for OpenVSLAM, which can also be installed using CMake option as well</span>
-sudo apt install yaml-cpp <span class="c1"># other optional dependencies</span>
+sudo apt install yaml-cpp xterm <span class="c1"># other optional dependencies</span>
 </pre></div>
 </div>
 </div>
@@ -365,14 +393,28 @@ sudo apt install yaml-cpp <span class="c1"># other optional dependencies</span>
 <p class="first admonition-title">Note</p>
 <p class="last">This option will make OpenVSLAM and its dependencies available to all other projects, which can be prevented by commenting out the lines between <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">Begin</span> <span class="pre">paths</span> <span class="pre">added</span> <span class="pre">for</span> <span class="pre">openvslam</span></code> and <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">End</span> <span class="pre">paths</span> <span class="pre">added</span> <span class="pre">for</span> <span class="pre">openvslam</span></code> when compiling other code</p>
 </div>
-<dl class="docutils">
-<dt>Option 2: CMake option</dt>
-<dd><ul class="first last simple">
+<p>Option 2: CMake option</p>
+<blockquote>
+<div><ul class="simple">
+<li>Install dependencies</li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt update -y
+sudo apt install -y build-essential pkg-config cmake git wget curl unzip
+sudo apt install -y libatlas-base-dev libsuitesparse-dev
+sudo apt install -y libgtk-3-dev
+sudo apt install -y ffmpeg
+sudo apt install -y libavcodec-dev libavformat-dev libavutil-dev libswscale-dev libavresample-dev
+sudo apt install -y gfortran
+sudo apt install -y libyaml-cpp-dev libgoogle-glog-dev libgflags-dev
+sudo apt install -y libglew-dev
+</pre></div>
+</div>
+<ul class="simple">
 <li>Run <code class="docutils literal notranslate"><span class="pre">cmake</span></code> with the options <code class="docutils literal notranslate"><span class="pre">RUN_SLAM</span></code> and <code class="docutils literal notranslate"><span class="pre">USE_CMAKE_NOT_SCRIPT</span></code> set to <code class="docutils literal notranslate"><span class="pre">ON</span></code> (<code class="docutils literal notranslate"><span class="pre">cmake</span> <span class="pre">-DRUN_SLAM=ON</span> <span class="pre">-DUSE_CMAKE_NOT_SCRIPT=ON</span> <span class="pre">..</span></code>)</li>
 <li>This will fetch and install all the relevant packages</li>
+<li>Please make sure you install all the apt packages that are dependencies of OpenVSLAM (refer to L51-L64 of <code class="docutils literal notranslate"><span class="pre">install_openvslam.sh</span></code>)</li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">This will only allow the libraries build to be accessible by this project and by no other. This can be changed by adding the appropriate paths to ~/.bashrc</p>
@@ -396,6 +438,7 @@ make -j4
 </div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/vss2sn/tello.git
 <span class="nb">cd</span> tello
+<span class="c1"># Install SLAM here using ``bash -i install_openvslam`` OR run the cmake command below with -DUSE_CMAKE_NOT_SCRIPT</span>
 mkdir -p build <span class="o">&amp;&amp;</span> <span class="nb">cd</span> build
 cmake -DRUN_SLAM ..
 make -j4

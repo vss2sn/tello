@@ -20,15 +20,16 @@ Optional Dependencies for SLAM:
   - Pangolin
 
 Other Optional Dependencies:
-  - yaml-cpp
+  - yaml-cpp # For a creating drone from a config file
+  - xterm # For opening an xterm for command line input
 
 Installing dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^
 .. code-block:: bash
 
-  sudo apt install asio libopencv-dev # Required dependencies
+  sudo apt install libasio-dev libopencv-dev # Required dependencies
   bash -i install_openvslam.sh # optional dependencies for OpenVSLAM, which can also be installed using CMake option as well
-  sudo apt install yaml-cpp # other optional dependencies
+  sudo apt install yaml-cpp xterm # other optional dependencies
 
 Installing OpenVSLAM and its dependencies (optional)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -49,8 +50,23 @@ Option 1: Install script
   This option will make OpenVSLAM and its dependencies available to all other projects, which can be prevented by commenting out the lines between ``# Begin paths added for openvslam`` and ``# End paths added for openvslam`` when compiling other code
 
 Option 2: CMake option
+
+  - Install dependencies
+  .. code-block:: bash
+
+    sudo apt update -y
+    sudo apt install -y build-essential pkg-config cmake git wget curl unzip
+    sudo apt install -y libatlas-base-dev libsuitesparse-dev
+    sudo apt install -y libgtk-3-dev
+    sudo apt install -y ffmpeg
+    sudo apt install -y libavcodec-dev libavformat-dev libavutil-dev libswscale-dev libavresample-dev
+    sudo apt install -y gfortran
+    sudo apt install -y libyaml-cpp-dev libgoogle-glog-dev libgflags-dev
+    sudo apt install -y libglew-dev
+
   - Run ``cmake`` with the options ``RUN_SLAM`` and ``USE_CMAKE_NOT_SCRIPT`` set to ``ON`` (``cmake -DRUN_SLAM=ON -DUSE_CMAKE_NOT_SCRIPT=ON ..``)
   - This will fetch and install all the relevant packages
+  - Please make sure you install all the apt packages that are dependencies of OpenVSLAM (refer to L51-L64 of ``install_openvslam.sh``)
 
 .. note::
   This will only allow the libraries build to be accessible by this project and by no other. This can be changed by adding the appropriate paths to ~/.bashrc
@@ -79,6 +95,7 @@ To build and run with SLAM:
 
   git clone https://github.com/vss2sn/tello.git
   cd tello
+  # Install SLAM here using ``bash -i install_openvslam`` OR run the cmake command below with -DUSE_CMAKE_NOT_SCRIPT
   mkdir -p build && cd build
   cmake -DRUN_SLAM ..
   make -j4

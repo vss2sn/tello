@@ -1,0 +1,67 @@
+
+.. _program_listing_file_inc_command_terminal.hpp:
+
+Program Listing for File command_terminal.hpp
+=============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_inc_command_terminal.hpp>` (``inc/command_terminal.hpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   #ifdef USE_TERMINAL
+   
+   #ifndef TERMINAL_HPP
+   #define TERMINAL_HPP
+   
+   #include <mutex>
+   #include <atomic>
+   
+   enum TERMINAL_CMD_TYPE
+   {
+     ADD,
+     START,
+     STOP,
+     ADD_FRONT,
+     CLEAR,
+     REMOVE_NEXT,
+     ALLOW_AUTO_LAND,
+     DO_NOT_AUTO_LAND,
+     UNKNOWN
+   };
+   
+   class Terminal{
+   
+   public:
+   
+     static std::mutex terminal_mutex_;
+     static std::mutex& getMutex();
+   
+     Terminal(bool& on);
+   
+     // TODO: add a constructor without a ref that sets the internal bool to true
+     // and a destrcutor that sets it to false
+   
+     std::string getCommand();
+   
+     bool hasCommnad();
+   
+     void terminalWorker();
+   
+     TERMINAL_CMD_TYPE convertToEnum(const std::string& cmd_type);
+     ~Terminal();
+   
+   private:
+   
+     std::string timedRead(int timeout_s = 1, int timeout_ms = 0);
+     bool& on_;
+     int pt_, xterm_fd_, saved_stdout_;
+     char * ptname_;
+     std::string s;
+     std::atomic<bool> received_cmd_;
+   
+   };
+   
+   #endif // TERMINAL_HPP
+   #endif // TERMINAL

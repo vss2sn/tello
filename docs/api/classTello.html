@@ -95,6 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../commandcontrolmethods.html">Command/control methods</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../commandcontrolmethods.html#joystick-mode">Joystick mode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commandcontrolmethods.html#autonomous-mode">Autonomous mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commandcontrolmethods.html#command-line-interface">Command line interface</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../building.html">Building the code</a><ul>
@@ -105,9 +106,21 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../cmakeoptions.html">CMake Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code_overview.html">Code overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../code_overview.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../joystick_mapping.html">Default joystick mappings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cmd_terminal.html">Command Terminal</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../SLAMnotes.html">Notes on running with SLAM</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../SLAMnotes.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../SLAMnotes.html#calibrating-the-tello-camera">Calibrating the tello camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ongoing.html">Project paths (current &amp; projected)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#for-issues-with-x11-gdk-pangolin-crashes">For issues with X11/gdk/pangolin crashes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#response-does-not-match-command">Response does not match command</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="library_root.html">Library API</a><ul class="current">
@@ -183,6 +196,20 @@
 <li class="toctree-l5"><a class="reference internal" href="file_inc_command_socket.hpp.html#includes">Includes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="file_inc_command_socket.hpp.html#included-by">Included By</a></li>
 <li class="toctree-l5"><a class="reference internal" href="file_inc_command_socket.hpp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="file_inc_command_terminal.hpp.html">File command_terminal.hpp</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_command_terminal.hpp.html#definition-inc-command-terminal-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">inc/command_terminal.hpp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="program_listing_file_inc_command_terminal.hpp.html">Program Listing for File command_terminal.hpp</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="file_inc_config_handler.hpp.html">File config_handler.hpp</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="file_inc_config_handler.hpp.html#definition-inc-config-handler-hpp">Definition (<code class="docutils literal notranslate"><span class="pre">inc/config_handler.hpp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="program_listing_file_inc_config_handler.hpp.html">Program Listing for File config_handler.hpp</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="file_lib_openvslam_openvslam_api.cpp.html">File openvslam_api.cpp</a><ul>
@@ -320,11 +347,13 @@
 <dl class="class">
 <dt id="_CPPv35Tello">
 <span id="_CPPv25Tello"></span><span id="Tello"></span><span class="target" id="classTello"></span><em class="property">class </em><code class="descname">Tello</code><a class="headerlink" href="#_CPPv35Tello" title="Permalink to this definition">¶</a><br /></dt>
-<dd><div class="breathe-sectiondef docutils container">
+<dd><p>Class defining the drone, associated sockets, and input methods. </p>
+<p>In addition to defining instances of the sockets and input methods, this class also acts as a single point of communication for any and all command input and output, and encapsulates a tello </p>
+<div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Functions</p>
 <dl class="function">
-<dt id="_CPPv3N5Tello5TelloERN4asio10io_serviceERNSt18condition_variableE">
-<span id="_CPPv2N5Tello5TelloERN4asio10io_serviceERNSt18condition_variableE"></span><span id="Tello::Tello__asio::io_serviceR.std::condition_variableR"></span><span class="target" id="classTello_1a73eaec94ead6d6e9452487fd7d3df116"></span><code class="descname">Tello</code><span class="sig-paren">(</span>asio::io_service &amp;<em>io_service</em>, std::condition_variable &amp;<em>cv_run</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N5Tello5TelloERN4asio10io_serviceERNSt18condition_variableE" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv3N5Tello5TelloERN4asio10io_serviceERNSt18condition_variableEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKiKiKNSt6stringEKNSt6stringEKNSt6stringEbbf">
+<span id="_CPPv2N5Tello5TelloERN4asio10io_serviceERNSt18condition_variableEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKiKiKNSt6stringEKNSt6stringEKNSt6stringEbbf"></span><span id="Tello::Tello__asio::io_serviceR.std::condition_variableR.ssC.ssC.ssC.ssC.ssC.ssC.iC.iC.ssC.ssC.ssC.b.b.float"></span><span class="target" id="classTello_1a71f7b5b5e881b1602457d0d21a3a2211"></span><code class="descname">Tello</code><span class="sig-paren">(</span>asio::io_service &amp;<em>io_service</em>, std::condition_variable &amp;<em>cv_run</em>, <em class="property">const</em> std::string <em>drone_ip</em> = &quot;192.168.10.1&quot;, <em class="property">const</em> std::string <em>local_drone_port</em> = &quot;8889&quot;, <em class="property">const</em> std::string <em>local_video_port</em> = &quot;11111&quot;, <em class="property">const</em> std::string <em>local_state_port</em> = &quot;8890&quot;, <em class="property">const</em> std::string <em>camera_config_file</em> = &quot;../camera_config.yaml&quot;, <em class="property">const</em> std::string <em>vocabulary_file</em> = &quot;../orb_vocab.dbow2&quot;, <em class="property">const</em> int <em>n_retries</em> = 0, <em class="property">const</em> int <em>timeout</em> = 5, <em class="property">const</em> std::string <em>load_map_db_path</em> = &quot;&quot;, <em class="property">const</em> std::string <em>save_map_db_path</em> = &quot;&quot;, <em class="property">const</em> std::string <em>mask_img_path</em> = &quot;&quot;, bool <em>load_map</em> = false, bool <em>continue_mapping</em> = false, float <em>scale</em> = 1.0<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N5Tello5TelloERN4asio10io_serviceERNSt18condition_variableEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKiKiKNSt6stringEKNSt6stringEKNSt6stringEbbf" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
@@ -333,6 +362,20 @@
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">io_service</span></code>: io_service object used to handle all socket communication </li>
 <li><code class="docutils literal notranslate"><span class="pre">cv_run</span></code>: condition variable for the lifetime of the code </li>
+<li><code class="docutils literal notranslate"><span class="pre">drone_ip</span></code>: ip address of drone </li>
+<li><code class="docutils literal notranslate"><span class="pre">local_drone_port</span></code>: local port through which commands will be sent to the drone </li>
+<li><code class="docutils literal notranslate"><span class="pre">local_video_port</span></code>: local port that will receive the drone video stream </li>
+<li><code class="docutils literal notranslate"><span class="pre">local_state_port</span></code>: local port which will receive state information from the drone </li>
+<li><code class="docutils literal notranslate"><span class="pre">camera_config_file</span></code>: </li>
+<li><code class="docutils literal notranslate"><span class="pre">vocabulary_file</span></code>: </li>
+<li><code class="docutils literal notranslate"><span class="pre">n_retries</span></code>: number of retries for command if no response received </li>
+<li><code class="docutils literal notranslate"><span class="pre">timeout</span></code>: timeout before a command is said to have failed and is resent if retries are enabled </li>
+<li><code class="docutils literal notranslate"><span class="pre">load_map_db_path</span></code>: path and file name from which the map must be loaded </li>
+<li><code class="docutils literal notranslate"><span class="pre">save_map_db_path</span></code>: path and file name to which the map must be saved </li>
+<li><code class="docutils literal notranslate"><span class="pre">mask_img_path</span></code>: path to pattern mask input images </li>
+<li><code class="docutils literal notranslate"><span class="pre">load_map</span></code>: bool for whether the map should be loaded </li>
+<li><code class="docutils literal notranslate"><span class="pre">continue_mapping</span></code>: continue adding to the map even when a map has been loaded </li>
+<li><code class="docutils literal notranslate"><span class="pre">scale</span></code>: scale for SLAM </li>
 </ul>
 </dd>
 </dl>
@@ -356,22 +399,26 @@
 <dl class="member">
 <dt id="_CPPv3N5Tello2csE">
 <span id="_CPPv2N5Tello2csE"></span><span id="Tello::cs__std::unique_ptr:CommandSocket:"></span><span class="target" id="classTello_1adb3b87d181cc67a5c8d9d362d820af1f"></span>std::unique_ptr&lt;<a class="reference internal" href="classCommandSocket.html#_CPPv313CommandSocket" title="CommandSocket">CommandSocket</a>&gt; <code class="descname">cs</code><a class="headerlink" href="#_CPPv3N5Tello2csE" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Unique pointer to <a class="reference internal" href="classCommandSocket.html#classCommandSocket"><span class="std std-ref">CommandSocket</span></a> object associated with this tello. </p>
+</dd></dl>
 
 <dl class="member">
 <dt id="_CPPv3N5Tello3js_E">
 <span id="_CPPv2N5Tello3js_E"></span><span id="Tello::js___std::unique_ptr:Joystick:"></span><span class="target" id="classTello_1a531e5d442c6e1b4aecad56a9763ab2b1"></span>std::unique_ptr&lt;Joystick&gt; <code class="descname">js_</code><a class="headerlink" href="#_CPPv3N5Tello3js_E" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Unique pointer to Joystick object associated with this tello. </p>
+</dd></dl>
 
 <dl class="member">
 <dt id="_CPPv3N5Tello2vsE">
 <span id="_CPPv2N5Tello2vsE"></span><span id="Tello::vs__std::unique_ptr:VideoSocket:"></span><span class="target" id="classTello_1adaa7d0aad8847d2b2e951aac5c2ea237"></span>std::unique_ptr&lt;<a class="reference internal" href="classVideoSocket.html#_CPPv311VideoSocket" title="VideoSocket">VideoSocket</a>&gt; <code class="descname">vs</code><a class="headerlink" href="#_CPPv3N5Tello2vsE" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Unique pointer to <a class="reference internal" href="classVideoSocket.html#classVideoSocket"><span class="std std-ref">VideoSocket</span></a> associated with this tello. </p>
+</dd></dl>
 
 <dl class="member">
 <dt id="_CPPv3N5Tello2ssE">
 <span id="_CPPv2N5Tello2ssE"></span><span id="Tello::ss__std::unique_ptr:StateSocket:"></span><span class="target" id="classTello_1a8aec9fac293134233d4d08ff8eca540b"></span>std::unique_ptr&lt;<a class="reference internal" href="classStateSocket.html#_CPPv311StateSocket" title="StateSocket">StateSocket</a>&gt; <code class="descname">ss</code><a class="headerlink" href="#_CPPv3N5Tello2ssE" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Unique pointer to <a class="reference internal" href="classStateSocket.html#classStateSocket"><span class="std std-ref">StateSocket</span></a> associated with this tello. </p>
+</dd></dl>
 
 </div>
 </dd></dl>

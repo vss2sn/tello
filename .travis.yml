@@ -10,14 +10,16 @@ addons:
     packages:
     - libopencv-dev
     - libasio-dev
+    - xterm
+    - libyaml-cpp-dev
 
 before_script:
-  - sudo apt install libopencv-dev libasio-dev
+  - sudo apt install libopencv-dev libasio-dev xterm libyaml-cpp-dev
   - bash -i install_openvslam.sh
   - source ~/.bashrc
   - mkdir build
   - cd build
-  - cmake -DRUN_SLAM=ON ..
+  - cmake -DRUN_SLAM=ON -DUSE_TERMINAL=ON -DUSE_CONFIG=ON ..
 
 script:
   - make -j
