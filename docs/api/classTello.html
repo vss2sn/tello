@@ -352,8 +352,8 @@
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Functions</p>
 <dl class="function">
-<dt id="_CPPv3N5Tello5TelloERN4asio10io_serviceERNSt18condition_variableEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKiKiKNSt6stringEKNSt6stringEKNSt6stringEbbf">
-<span id="_CPPv2N5Tello5TelloERN4asio10io_serviceERNSt18condition_variableEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKiKiKNSt6stringEKNSt6stringEKNSt6stringEbbf"></span><span id="Tello::Tello__asio::io_serviceR.std::condition_variableR.ssC.ssC.ssC.ssC.ssC.ssC.iC.iC.ssC.ssC.ssC.b.b.float"></span><span class="target" id="classTello_1a71f7b5b5e881b1602457d0d21a3a2211"></span><code class="descname">Tello</code><span class="sig-paren">(</span>asio::io_service &amp;<em>io_service</em>, std::condition_variable &amp;<em>cv_run</em>, <em class="property">const</em> std::string <em>drone_ip</em> = &quot;192.168.10.1&quot;, <em class="property">const</em> std::string <em>local_drone_port</em> = &quot;8889&quot;, <em class="property">const</em> std::string <em>local_video_port</em> = &quot;11111&quot;, <em class="property">const</em> std::string <em>local_state_port</em> = &quot;8890&quot;, <em class="property">const</em> std::string <em>camera_config_file</em> = &quot;../camera_config.yaml&quot;, <em class="property">const</em> std::string <em>vocabulary_file</em> = &quot;../orb_vocab.dbow2&quot;, <em class="property">const</em> int <em>n_retries</em> = 0, <em class="property">const</em> int <em>timeout</em> = 5, <em class="property">const</em> std::string <em>load_map_db_path</em> = &quot;&quot;, <em class="property">const</em> std::string <em>save_map_db_path</em> = &quot;&quot;, <em class="property">const</em> std::string <em>mask_img_path</em> = &quot;&quot;, bool <em>load_map</em> = false, bool <em>continue_mapping</em> = false, float <em>scale</em> = 1.0<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N5Tello5TelloERN4asio10io_serviceERNSt18condition_variableEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKiKiKNSt6stringEKNSt6stringEKNSt6stringEbbf" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv3N5Tello5TelloERN4asio10io_serviceERNSt18condition_variableEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKiKiKNSt6stringEKNSt6stringEKNSt6stringEbbfKNSt6stringE">
+<span id="_CPPv2N5Tello5TelloERN4asio10io_serviceERNSt18condition_variableEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKiKiKNSt6stringEKNSt6stringEKNSt6stringEbbfKNSt6stringE"></span><span id="Tello::Tello__asio::io_serviceR.std::condition_variableR.ssC.ssC.ssC.ssC.ssC.ssC.iC.iC.ssC.ssC.ssC.b.b.float.ssC"></span><span class="target" id="classTello_1aea176ab4866cf462b552ff259ba15b42"></span><code class="descname">Tello</code><span class="sig-paren">(</span>asio::io_service &amp;<em>io_service</em>, std::condition_variable &amp;<em>cv_run</em>, <em class="property">const</em> std::string <em>drone_ip</em> = &quot;192.168.10.1&quot;, <em class="property">const</em> std::string <em>local_drone_port</em> = &quot;8889&quot;, <em class="property">const</em> std::string <em>local_video_port</em> = &quot;11111&quot;, <em class="property">const</em> std::string <em>local_state_port</em> = &quot;8890&quot;, <em class="property">const</em> std::string <em>camera_config_file</em> = &quot;../camera_config.yaml&quot;, <em class="property">const</em> std::string <em>vocabulary_file</em> = &quot;../orb_vocab.dbow2&quot;, <em class="property">const</em> int <em>n_retries</em> = 0, <em class="property">const</em> int <em>timeout</em> = 5, <em class="property">const</em> std::string <em>load_map_db_path</em> = &quot;&quot;, <em class="property">const</em> std::string <em>save_map_db_path</em> = &quot;&quot;, <em class="property">const</em> std::string <em>mask_img_path</em> = &quot;&quot;, bool <em>load_map</em> = false, bool <em>continue_mapping</em> = false, float <em>scale</em> = 1.0, <em class="property">const</em> std::string <em>sequence_file</em> = &quot;&quot;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N5Tello5TelloERN4asio10io_serviceERNSt18condition_variableEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKNSt6stringEKiKiKNSt6stringEKNSt6stringEKNSt6stringEbbfKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
@@ -376,6 +376,23 @@
 <li><code class="docutils literal notranslate"><span class="pre">load_map</span></code>: bool for whether the map should be loaded </li>
 <li><code class="docutils literal notranslate"><span class="pre">continue_mapping</span></code>: continue adding to the map even when a map has been loaded </li>
 <li><code class="docutils literal notranslate"><span class="pre">scale</span></code>: scale for SLAM </li>
+<li><code class="docutils literal notranslate"><span class="pre">sequence_file</span></code>: file containing a sequence of commands that will be added to execute queue </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N5Tello12readSequenceERKNSt6stringE">
+<span id="_CPPv2N5Tello12readSequenceERKNSt6stringE"></span><span id="Tello::readSequence__ssCR"></span><span class="target" id="classTello_1a4f67c8b6f4143f58c6a87772cd7b4da4"></span>void <code class="descname">readSequence</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N5Tello12readSequenceERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>reads a sequence of commands from a file and adds them to the execution queue </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>void </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">file</span></code>: name of the file containing the sequence of commands </li>
 </ul>
 </dd>
 </dl>

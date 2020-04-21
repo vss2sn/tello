@@ -42,8 +42,11 @@ Program Listing for File tello.hpp
            const std::string mask_img_path = "",
            bool load_map = false,
            bool continue_mapping = false,
-           float scale = 1.0
+           float scale = 1.0,
+           const std::string sequence_file = ""
          );
+   
+     void readSequence(const std::string& file);
    
      ~Tello();
    

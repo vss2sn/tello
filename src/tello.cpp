@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include "tello.hpp"
 
 Tello::Tello(
@@ -20,7 +22,8 @@ const std::string save_map_db_path,
 const std::string mask_img_path,
 bool load_map,
 bool continue_mapping,
-float scale
+float scale,
+const std::string sequence_file
 ):
 io_service_(io_service),
 cv_run_(cv_run)
@@ -44,6 +47,11 @@ cv_run_(cv_run)
   term_thread_worker_.detach();
   term_thread_fetch_.detach();
 #endif // TERMINAL
+
+  // If using joystick, joystick should be initailized before adding to
+  // command queue; safety.
+  readSequence(sequence_file);
+
 }
 
 #ifdef USE_TERMINAL
@@ -298,6 +306,23 @@ void Tello::jsToCommand(AxisId update){
         utils_log::LogDebug() << "Axis: [" << update << "] Value: [" << js_->mapConstLimits(value) <<"]";
         break;
   }
+}
+
+void Tello::readSequence(const std::string& file){
+  if(!file.empty()){
+    std::ifstream ifile(file);
+    if(!ifile.is_open()){
+      utils_log::LogErr() << "File does not exist";
+      return;
+    }
+    std::string line;
+    while(std::getline(ifile, line)){
+      //  NOTE: add check here?
+      utils_log::LogDebug() << "Adding to queue from file: [" << line << "]";
+      cs->addCommandToQueue(line);
+    }
+  }
+
 }
 
 Tello::~Tello(){

@@ -374,8 +374,11 @@
         <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">mask_img_path</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
         <span class="kt">bool</span> <span class="n">load_map</span> <span class="o">=</span> <span class="nb">false</span><span class="p">,</span>
         <span class="kt">bool</span> <span class="n">continue_mapping</span> <span class="o">=</span> <span class="nb">false</span><span class="p">,</span>
-        <span class="kt">float</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="kt">float</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">sequence_file</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
       <span class="p">);</span>
+
+  <span class="kt">void</span> <span class="nf">readSequence</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">file</span><span class="p">);</span>
 
   <span class="o">~</span><span class="n">Tello</span><span class="p">();</span>
 

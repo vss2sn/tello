@@ -40,6 +40,7 @@ public:
   * @param [in] load_map bool for whether the map should be loaded
   * @param [in] continue_mapping continue adding to the map even when a map has been loaded
   * @param [in] scale scale for SLAM
+  * @param [in]  sequence_file file containing a sequence of commands that will be added to execute queue
   * @return none
   */
   Tello(asio::io_service& io_service,
@@ -57,8 +58,16 @@ public:
         const std::string mask_img_path = "",
         bool load_map = false,
         bool continue_mapping = false,
-        float scale = 1.0
+        float scale = 1.0,
+        const std::string sequence_file = ""
       );
+
+  /**
+  * @brief reads a sequence of commands from a file and adds them to the execution queue
+  * @param [in] file name of the file containing the sequence of commands
+  * @return void
+  */
+  void readSequence(const std::string& file);
 
   /**
   * @brief Destructor

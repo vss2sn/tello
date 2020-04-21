@@ -1,0 +1,6 @@
+command
+takeoff
+wait 5
+forward 10
+back 10
+land

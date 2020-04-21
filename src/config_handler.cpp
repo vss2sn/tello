@@ -62,7 +62,8 @@ std::map<std::string, std::unique_ptr<Tello>> handleConfig(
           config[type_id]["mask_img_path"].as<std::string>(),
           config[type_id]["load_map"].as<bool>(),
           config[type_id]["continue_mapping"].as<bool>(),
-          config[type_id]["scale"].as<double>() // NOTE: double to float implicit conversion
+          config[type_id]["scale"].as<double>(), // NOTE: double to float implicit conversion
+          config[type_id]["sequence_file"].as<std::string>()
           // TODO: Config object?
         );
         m.insert(
