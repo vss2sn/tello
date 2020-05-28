@@ -85,7 +85,7 @@ SLAM integration has been provided using the OpenVSLAM library.
 <a name="bslam"></a>
 #### To build and run with SLAM ####
 
-Please refer to the [documentation](https://vss2sn.github.io/building.html) for details
+Please refer to the [documentation](https://vss2sn.github.io/tello/building.html) for details
 
 <a name="joy"></a>
 #### Default joystick mappings ####
@@ -94,7 +94,7 @@ Please note that mappings have been provided for PS3 and Xbox360 controllers as 
 
 The mappings include querying `battery`, `wifi`, etc as well as `stop`, `emergency`, and `flip` commands.
 
-Please refer to the [documentation](https://vss2sn.github.io/joystick_mapping.html) for details
+Please refer to the [documentation](https://vss2sn.github.io/tello/joystick_mapping.html) for details
 
 <a name="notes"></a>
 #### Notes ####
@@ -113,4 +113,4 @@ Please refer to the [documentation](https://vss2sn.github.io/tello/ongoing.html)
 
 <a name="ts"></a>
 #### Troubleshooting ####
-Please refer to the [documentation](https://vss2sn.github.io/troubleshooting.html) for details
+Please refer to the [documentation](https://vss2sn.github.io/tello/troubleshooting.html) for details

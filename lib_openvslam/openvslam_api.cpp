@@ -164,7 +164,7 @@ void OpenVSLAM_API::impl::mono_tracking(
           }
           const auto tp_1 = std::chrono::steady_clock::now();
           auto m = SLAM.feed_monocular_frame(frame, timestamp, mask);
-          
+
           const auto tp_2 = std::chrono::steady_clock::now();
           const auto track_time = std::chrono::duration_cast<std::chrono::duration<double>>(tp_2 - tp_1).count();
 
@@ -210,8 +210,9 @@ void OpenVSLAM_API::impl::startMonoThread(){
     }
     catch(...){
        spdlog::info( "----------- Mono thread crashed -----------" );
-       spdlog::info( "Please check whether the config.yaml file is in the build directory" );
-       spdlog::info( "Please check whether the ORB vocabulary is in the build directory" );
+       spdlog::info( "Please check whether the camera_config.yaml file and the ORB "
+       "vocabulary file are in the tello directory or the correct path if not "
+       "using the default" );
     }
   });
   mono_thread.detach();

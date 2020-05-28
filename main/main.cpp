@@ -45,7 +45,7 @@ int main(){
 
 #else
 
-  Tello t(io_service, cv_run, "192.168.10.1", "8889", "11111", "8890", "../orb_vocab.dbow2", "../camera_config.yaml");
+  Tello t(io_service, cv_run, "192.168.10.1", "8889", "11111", "8890", "../camera_config.yaml", "../orb_vocab.dbow2");
 
   t.cs->addCommandToQueue("command");
   t.cs->addCommandToQueue("sdk?");
