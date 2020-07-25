@@ -94,7 +94,7 @@ public:
   * @brief queries whether queue execution is enabled.
   * @return bool whether queue execution is enabled
   */
-  bool isExecutingQueue();
+  bool isExecutingQueue() const;
 
   /**
   * @brief Enables autoland and sends the command "land" to the drone.
@@ -121,8 +121,8 @@ private:
 
   enum{ max_length_ = 1024 };
   bool waiting_for_response_ = false, execute_queue_ = false, dnal_ = false, on_ = true;
-  char data_[max_length_];
-  int timeout_, n_retries_ = 0, n_retries_allowed_ = 0, dnal_timeout = 7 /*dnal --> do not auto land*/ ;
+  char data_[max_length_]{};
+  int timeout_, n_retries_ = 0, n_retries_allowed_ = 0;
   std::string last_command_, response_;
   std::deque<std::string> command_queue_;
   std::mutex queue_mutex_, m, dnal_mutex;

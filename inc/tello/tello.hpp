@@ -45,21 +45,21 @@ public:
   */
   Tello(asio::io_service& io_service,
         std::condition_variable& cv_run,
-        const std::string drone_ip = "192.168.10.1",
-        const std::string local_drone_port = "8889",
-        const std::string local_video_port = "11111",
-        const std::string local_state_port = "8890",
-        const std::string camera_config_file = "../camera_config.yaml",
-        const std::string vocabulary_file = "../orb_vocab.dbow2",
+        const std::string& drone_ip = "192.168.10.1",
+        const std::string& local_drone_port = "8889",
+        const std::string& local_video_port = "11111",
+        const std::string& local_state_port = "8890",
+        const std::string& camera_config_file = "../camera_config.yaml",
+        const std::string& vocabulary_file = "../orb_vocab.dbow2",
         const int n_retries = 0,
         const int timeout = 5,
-        const std::string load_map_db_path = "",
-        const std::string save_map_db_path = "",
-        const std::string mask_img_path = "",
+        const std::string& load_map_db_path = "",
+        const std::string& save_map_db_path = "",
+        const std::string& mask_img_path = "",
         bool load_map = false,
         bool continue_mapping = false,
         float scale = 1.0,
-        const std::string sequence_file = ""
+        const std::string& sequence_file = ""
       );
 
   /**
@@ -67,7 +67,7 @@ public:
   * @param [in] file name of the file containing the sequence of commands
   * @return void
   */
-  void readSequence(const std::string& file);
+  void readSequence(const std::string& file) const;
 
   /**
   * @brief Destructor
@@ -96,7 +96,7 @@ private:
   std::condition_variable& cv_run_;
   void jsToCommandThread();
   void jsToCommand(ButtonId update);
-  void jsToCommand(AxisId update);
+  void jsToCommand(AxisId update) const;
   bool run_ = true;
 
 #ifdef USE_TERMINAL

@@ -32,7 +32,7 @@ private:
 
   enum{ max_length_ = 1024 };
   bool received_response_ = true;
-  char data_[max_length_];
+  char data_[max_length_]{};
   std::string response_;
 
 };

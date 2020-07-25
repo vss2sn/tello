@@ -1,6 +1,6 @@
-#include <queue>
-#include <mutex>
 #include <iostream>
+#include <mutex>
+#include <queue>
 
 #include <libavutil/frame.h>
 #include <opencv2/highgui.hpp>
@@ -11,17 +11,22 @@
 #include "tello/video_socket.hpp"
 #include "utils/utils.hpp"
 
+namespace constants {
+  constexpr auto frame_buffer_bytes_received_lim = 1460;
+  constexpr auto snapshot_name_size = 80;
+} // namespace constants
+
 VideoSocket::VideoSocket(
   asio::io_service& io_service,
   const std::string& drone_ip,
   const std::string& drone_port,
   const std::string& local_port,
   bool& run,
-  const std::string camera_config_file,
-  const std::string vocabulary_file,
-  const std::string load_map_db_path_,
-  const std::string save_map_db_path_,
-  const std::string mask_img_path_,
+  const std::string& camera_config_file,
+  const std::string& vocabulary_file,
+  const std::string& load_map_db_path_,
+  const std::string& save_map_db_path_,
+  const std::string& mask_img_path_,
   bool load_map_,
   bool continue_mapping,
   float scale
@@ -72,7 +77,7 @@ VideoSocket::VideoSocket(
   system(create_folder.c_str());
 }
 
-void VideoSocket::handleResponseFromDrone(const std::error_code& error, size_t bytes_recvd)
+void VideoSocket::handleResponseFromDrone(const std::error_code&  /*error*/, size_t bytes_recvd)
 {
   if(first_empty_index == 0){
     first_empty_index = 0;
@@ -90,7 +95,7 @@ void VideoSocket::handleResponseFromDrone(const std::error_code& error, size_t b
   first_empty_index += bytes_recvd;
   frame_buffer_n_packets_++;
 
-  if (bytes_recvd < 1460) {
+  if (bytes_recvd < constants::frame_buffer_bytes_received_lim) {
     decodeFrame();
     first_empty_index = 0;
     frame_buffer_n_packets_ = 0;
@@ -118,7 +123,9 @@ void VideoSocket::decodeFrame()
 
         cv::Mat mat{frame.height, frame.width, CV_8UC3, bgr24};
 
-        if(snap_) takeSnapshot(mat);
+        if(snap_) {
+          takeSnapshot(mat);
+        }
 
 #ifdef RECORD
         video->write(mat.clone());
@@ -158,10 +165,9 @@ VideoSocket::~VideoSocket(){
   video->release();
 #endif
   cv::destroyAllWindows();
-  socket_.close();
 }
 
-void VideoSocket::handleSendCommand(const std::error_code& error, size_t bytes_sent, std::string cmd)
+void VideoSocket::handleSendCommand(const std::error_code&  /*error*/, size_t  /*bytes_sent*/, std::string  /*cmd*/)
 {
   utils_log::LogErr() << "VideoSocket class does not implement handleSendCommand()";
 }
@@ -171,10 +177,10 @@ void VideoSocket::takeSnapshot(cv::Mat& image){
 
   time_t rawtime;
   struct tm * timeinfo;
-  char buffer [80];
+  char buffer [constants::snapshot_name_size];
   time (&rawtime);
   timeinfo = localtime (&rawtime);
-  strftime (buffer,80,"../snapshots/tello_img_%Y_%m_%d_%H_%M_%S.jpg",timeinfo);
+  strftime (buffer, constants::snapshot_name_size, "../snapshots/tello_img_%Y_%m_%d_%H_%M_%S.jpg",timeinfo);
   cv::imwrite(std::string(buffer), image);
   utils_log::LogInfo() << "Picture taken. File " << buffer;
 }

@@ -1,8 +1,8 @@
-#include <mutex>
 #include <condition_variable>
+#include <mutex>
 
-#include "utils/utils.hpp"
 #include "tello/tello.hpp"
+#include "utils/utils.hpp"
 
 #ifdef USE_TERMINAL
 #include "tello/command_terminal.hpp"
@@ -11,6 +11,10 @@
 #ifdef USE_CONFIG
 #include "tello/config_handler.hpp"
 #endif
+
+namespace constants {
+  constexpr auto max_flight_time = std::chrono::minutes(5);
+}  // namespace constants
 
 int main(){
   asio::io_service io_service;
@@ -65,14 +69,14 @@ int main(){
   {
     std::mutex mtx;
     std::unique_lock<std::mutex> lck(mtx);
-    cv_run.wait_for(lck,std::chrono::seconds(300));
+    cv_run.wait_for(lck,std::chrono::seconds(constants::max_flight_time));
   }
 
   utils_log::LogWarn() << "----------- Done -----------";
   utils_log::LogWarn() << "----------- Landing -----------";
   // t.cs->exitAllThreads();
   io_service.stop();
-  usleep(1000000); // Ensure this is greater than timeout to prevent seg faults
+  // usleep(1000000); // Ensure this is greater than timeout to prevent seg faults
   utils_log::LogDebug() << "----------- Main thread returns -----------";
   return 0;
 }

@@ -2,6 +2,11 @@
 
 #include "tello/tello.hpp"
 
+namespace constants {
+  constexpr auto joystick_timeout = std::chrono::milliseconds(1);
+  constexpr auto wait_for_land = std::chrono::seconds(5);
+} // namespace constants
+
 Tello::Tello(
 #ifdef USE_BOOST
     boost::asio::io_service& io_service,
@@ -9,21 +14,21 @@ Tello::Tello(
     asio::io_service& io_service,
 #endif
 std::condition_variable& cv_run,
-const std::string drone_ip,
-const std::string local_drone_port,
-const std::string local_video_port,
-const std::string local_state_port,
-const std::string camera_config_file,
-const std::string vocabulary_file,
+const std::string& drone_ip,
+const std::string& local_drone_port,
+const std::string& local_video_port,
+const std::string& local_state_port,
+const std::string& camera_config_file,
+const std::string& vocabulary_file,
 const int n_retries,
 const int timeout,
-const std::string load_map_db_path,
-const std::string save_map_db_path,
-const std::string mask_img_path,
+const std::string& load_map_db_path,
+const std::string& save_map_db_path,
+const std::string& mask_img_path,
 bool load_map,
 bool continue_mapping,
 float scale,
-const std::string sequence_file
+const std::string& sequence_file
 ):
 io_service_(io_service),
 cv_run_(cv_run)
@@ -58,7 +63,7 @@ cv_run_(cv_run)
 void Tello::terminalToCommandThread(){
   while(run_)
   {
-    usleep(1000);
+    std::this_thread::sleep_for(joystick_timeout);
     if(term_->hasCommnad()){
       terminalToCommand(term_->getCommand());
     }
@@ -134,9 +139,11 @@ void Tello::terminalToCommand(const std::string& cmd){
 void Tello::jsToCommandThread(){
   while(run_)
   {
-      usleep(1000);
+      std::this_thread::sleep_for(constants::joystick_timeout);
       js_->update();
-      if(!run_) break; // Is this necessary?
+      if(!run_) {
+        break; // Is this necessary?
+      }
       if (js_->hasButtonUpdate())
       {
           jsToCommand(js_->getUpdatedButton());
@@ -149,16 +156,18 @@ void Tello::jsToCommandThread(){
 }
 
 
-// TODO: Consider setting wait for response to false when using joysticlk?
+// TODO(vss): Consider setting wait for response to false when using joysticlk?
 void Tello::jsToCommand(ButtonId update){
   int value = (int)js_->getButtonState(update);
   if(value!=0){
     bool check = cs->isExecutingQueue();
-    if(check) cs->stopQueueExecution();
+    if(check) {
+      cs->stopQueueExecution();
+    }
     switch (update)
     {
       case BUTTON_A:
-        if(js_->getButtonState(BUTTON_LEFT_BUMPER_2)){
+        if(js_->getButtonState(BUTTON_LEFT_BUMPER_2) != 0u){
           vs->setSnapshot();
         }
         else{
@@ -173,7 +182,7 @@ void Tello::jsToCommand(ButtonId update){
         cs->sendCommand("land");
         break;
       case BUTTON_X:
-        if(js_->getButtonState(BUTTON_LEFT_BUMPER_2)){
+        if(js_->getButtonState(BUTTON_LEFT_BUMPER_2) != 0u){
           cs->sendCommand("mon");
         }
         else{
@@ -182,7 +191,7 @@ void Tello::jsToCommand(ButtonId update){
         utils_log::LogDebug() << "Button [X]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_Y:
-        if(js_->getButtonState(BUTTON_LEFT_BUMPER_2)){
+        if(js_->getButtonState(BUTTON_LEFT_BUMPER_2) != 0u){
           cs->sendCommand("moff");
         }
         else{
@@ -199,8 +208,11 @@ void Tello::jsToCommand(ButtonId update){
         utils_log::LogDebug() << "Button [RIGHT_BUMPER_2]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_LEFT_BUMPER_1:
-        if(cs->dnal_) cs->allowAutoLand();
-        else cs->doNotAutoLand();
+        if(cs->dnal_) {
+          cs->allowAutoLand();
+        } else {
+          cs->doNotAutoLand();
+        }
         utils_log::LogDebug() << "Button [LEFT_BUMPER_1]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_LEFT_BUMPER_2:
@@ -208,10 +220,10 @@ void Tello::jsToCommand(ButtonId update){
         utils_log::LogDebug() << "Button [LEFT_BUMPER_2]: [" << update << "] Value: [" << value <<"]";
         break;
       case BUTTON_START:
-        if(js_->getButtonState(BUTTON_LEFT_BUMPER_2)){
-          usleep(1000000);
+        if(js_->getButtonState(BUTTON_LEFT_BUMPER_2) != 0u){
+          usleep(1000000); // TODO(vss): Why?
           cs->land();
-          usleep(5000000); // Block any other joystick input
+          std::this_thread::sleep_for(constants::wait_for_land); // Block any other joystick input
           utils_log::LogWarn() << "Exit called from joystick";
           // NOTE: Notification of calling end of code kept here* to allow expansion
           // to swarm, where a single joystick might be used to command multiple
@@ -237,7 +249,7 @@ void Tello::jsToCommand(ButtonId update){
           // NOTE: as joystick commands would immediately stop execution just
           // pressing L2 (shift) would stop execution of the queue, but for HRI
           // reasons using L2+Select will be used to call stop execution.
-        if(js_->getButtonState(BUTTON_LEFT_BUMPER_2)){
+        if(js_->getButtonState(BUTTON_LEFT_BUMPER_2) != 0u){
           utils_log::LogDebug() << "Button select stop execute";
           cs->stopQueueExecution();
         }
@@ -254,16 +266,18 @@ void Tello::jsToCommand(ButtonId update){
   }
 }
 
-void Tello::jsToCommand(AxisId update){
+void Tello::jsToCommand(AxisId update) const {
   int16_t value = js_->getAxisState(update);
   utils_log::LogDebug() << "Axis: [" << update << "] Value: [" << js_->mapConstLimits(value) <<"]";
   std::string cmd = "rc "
-  + std::to_string(js_->mapConstLimits(js_->getValueAxis(2))) + " "
-  + std::to_string(js_->mapConstLimits(js_->getValueAxis(3))*-1) + " "
-  + std::to_string(js_->mapConstLimits(js_->getValueAxis(1))*-1) + " "
-  + std::to_string(js_->mapConstLimits(js_->getValueAxis(0)));
+    + std::to_string(js_->mapConstLimits(js_->getValueAxis(2))) + " "
+    + std::to_string(js_->mapConstLimits(js_->getValueAxis(3))*-1) + " "
+    + std::to_string(js_->mapConstLimits(js_->getValueAxis(1))*-1) + " "
+    + std::to_string(js_->mapConstLimits(js_->getValueAxis(0)));
   bool check = cs->isExecutingQueue();
-  if(check) cs->stopQueueExecution();
+  if(check) {
+    cs->stopQueueExecution();
+  }
   switch (update)
   {
     case AXIS_LEFT_STICK_HORIZONTAL:
@@ -284,22 +298,32 @@ void Tello::jsToCommand(AxisId update){
       break;
     case AXIS_BUTTONS_HORIZONTAL:
       if(js_->getButtonState(BUTTON_LEFT_BUMPER_2) > 0){
-        if(value > 0) cs->sendCommand("speed?");
-        else if(value < 0) cs->sendCommand("battery?");
-      }
-      else{
-        if(value > 0) cs->sendCommand("flip r");
-        else if(value < 0) cs->sendCommand("flip l");
+        if(value > 0) {
+          cs->sendCommand("speed?");
+        } else if(value < 0) {
+          cs->sendCommand("battery?");
+        }
+      } else {
+        if(value > 0) {
+          cs->sendCommand("flip r");
+        } else if(value < 0) {
+          cs->sendCommand("flip l");
+        }
       }
       break;
     case AXIS_BUTTONS_VERTICAL:
-      if(js_->getButtonState(BUTTON_LEFT_BUMPER_2)){
-        if(value > 0) cs->sendCommand("time?");
-        else if(value < 0) cs->sendCommand("wifi?");
-      }
-      else{
-        if(value > 0) cs->sendCommand("flip b");
-        else if(value < 0) cs->sendCommand("flip f");
+      if(js_->getButtonState(BUTTON_LEFT_BUMPER_2) != 0u){
+        if(value > 0) {
+          cs->sendCommand("time?");
+        } else if(value < 0) {
+          cs->sendCommand("wifi?");
+        }
+      } else {
+        if(value > 0) {
+          cs->sendCommand("flip b");
+        } else if(value < 0) {
+          cs->sendCommand("flip f");
+        }
       }
       break;
     default:
@@ -308,7 +332,7 @@ void Tello::jsToCommand(AxisId update){
   }
 }
 
-void Tello::readSequence(const std::string& file){
+void Tello::readSequence(const std::string& file) const{
   if(!file.empty()){
     std::ifstream ifile(file);
     if(!ifile.is_open()){
@@ -327,5 +351,4 @@ void Tello::readSequence(const std::string& file){
 
 Tello::~Tello(){
   run_ = false;
-  usleep(1000000);
 }

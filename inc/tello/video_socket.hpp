@@ -44,11 +44,11 @@ public:
     const std::string& drone_port,
     const std::string& local_port,
     bool& run,
-    const std::string camera_config_file,
-    const std::string vocabulary_file,
-    const std::string load_map_db_path,
-    const std::string save_map_db_path,
-    const std::string mask_img_path,
+    const std::string& camera_config_file,
+    const std::string& vocabulary_file,
+    const std::string& load_map_db_path,
+    const std::string& save_map_db_path,
+    const std::string& mask_img_path,
     bool load_map,
     bool continue_mapping,
     float scale
@@ -78,8 +78,8 @@ private:
   enum{ max_length_large_ =  65536 };
   bool received_response_ = true;
 
-  char data_[max_length_];
-  char frame_buffer_[max_length_large_];
+  char data_[max_length_]{};
+  char frame_buffer_[max_length_large_]{};
 
   size_t first_empty_index = 0;
   int frame_buffer_n_packets_ = 0;

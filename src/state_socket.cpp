@@ -46,10 +46,9 @@ void StateSocket::handleResponseFromDrone(const std::error_code& error, size_t b
 }
 
 StateSocket::~StateSocket(){
-  socket_.close();
 }
 
-void StateSocket::handleSendCommand(const std::error_code& error, size_t bytes_sent, std::string cmd)
+void StateSocket::handleSendCommand(const std::error_code&  /*error*/, size_t  /*bytes_sent*/, std::string  /*cmd*/)
 {
   std::cout << "StateSocket class does not implement handleSendCommand()" << std::endl;
 }
