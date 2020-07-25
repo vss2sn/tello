@@ -1,11 +1,11 @@
-project(openvslam_with_api)
+project(slam_api)
 
 cmake_minimum_required(VERSION 3.5)
 
-add_definitions(-std=c++17)
-set(LIB_OPENVSLAM_WITH_API_HEADERS ${CMAKE_CURRENT_SOURCE_DIR} PARENT_SCOPE)
-add_library(${PROJECT_NAME} SHARED ${CMAKE_CURRENT_SOURCE_DIR}/openvslam_api.hpp ${CMAKE_CURRENT_SOURCE_DIR}/openvslam_api.cpp)
-
+add_library(${PROJECT_NAME} )
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
+file( GLOB LIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp )
+target_sources(${PROJECT_NAME} PUBLIC ${LIB_SOURCES})
 # ==============================================================================
 # If you prefer to use CMake to get and build all the dependencies thus leaving
 # the bashrc file untouched, set the varaiable USE_CMAKE_NOT_SCRIPT to ON

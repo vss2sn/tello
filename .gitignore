@@ -1,6 +1,5 @@
 build/
-lib_openvslam/external_dependencies
-lib_openvslam/openvslam
+lib/openvslam/
 docssrc/*
 !docssrc/conf.py
 !docssrc/Doxyfile

@@ -7,11 +7,11 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/videoio.hpp>
 
-#include "base_socket.hpp"
-#include "h264decoder.hpp"
+#include "tello/base_socket.hpp"
+#include "h264decoder/h264decoder.hpp"
 
 #ifdef RUN_SLAM
-#include "openvslam_api.hpp"
+#include "slam_api/slam_api.hpp"
 #endif // RUN_SLAM
 
 /**

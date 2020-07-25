@@ -7,7 +7,7 @@
 #include <map>
 
 #include "asio.hpp"
-#include "tello.hpp"
+#include "tello/tello.hpp"
 
 /**
 * @brief Function to create a tello class object using a configuraion file

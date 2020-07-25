@@ -8,8 +8,8 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/videoio.hpp>
 
-#include "video_socket.hpp"
-#include "utils.hpp"
+#include "tello/video_socket.hpp"
+#include "utils/utils.hpp"
 
 VideoSocket::VideoSocket(
   asio::io_service& io_service,

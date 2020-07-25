@@ -1,6 +1,6 @@
 #include <fstream>
 
-#include "tello.hpp"
+#include "tello/tello.hpp"
 
 Tello::Tello(
 #ifdef USE_BOOST

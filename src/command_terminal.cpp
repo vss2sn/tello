@@ -8,7 +8,7 @@
 #include <sys/time.h>
 #include <stdio.h>
 
-#include "command_terminal.hpp"
+#include "tello/command_terminal.hpp"
 
 // #include <memory>
 // #include <thread>

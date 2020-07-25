@@ -3,11 +3,11 @@
 
 #include  <memory>
 
-#include "command_socket.hpp"
-#include "video_socket.hpp"
-#include "state_socket.hpp"
-#include "joystick.hpp"
-#include "utils.hpp"
+#include "tello/command_socket.hpp"
+#include "tello/video_socket.hpp"
+#include "tello/state_socket.hpp"
+#include "joystick/joystick.hpp"
+#include "utils/utils.hpp"
 
 #ifdef USE_TERMINAL
 #include "command_terminal.hpp"

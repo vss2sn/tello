@@ -3,9 +3,9 @@
 #include <map>
 #include <yaml-cpp/yaml.h>
 
-#include "config_handler.hpp"
-#include "utils.hpp"
-#include "tello.hpp"
+#include "tello/config_handler.hpp"
+#include "utils/utils.hpp"
+#include "tello/tello.hpp"
 
 std::map<std::string, std::unique_ptr<Tello>> handleConfig(
   const std::string& config_file,

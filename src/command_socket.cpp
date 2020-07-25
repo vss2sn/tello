@@ -1,5 +1,5 @@
-#include "command_socket.hpp"
-#include "utils.hpp"
+#include "utils/utils.hpp"
+#include "tello/command_socket.hpp"
 
 #define UDP asio::ip::udp
 #define ASYNC_RECEIVE socket_.async_receive_from( asio::buffer(data_, max_length_), endpoint_, [&](const std::error_code& error, size_t bytes_recvd) {return handleResponseFromDrone(error, bytes_recvd);}); // [&](auto... args){return handleResponseFromDrone(args...);});

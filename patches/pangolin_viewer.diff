@@ -1,6 +1,6 @@
-diff -u ./lib_openvslam/openvslam/src/pangolin_viewer/viewer.cc "./lib_openvslam/openvslam/src/pangolin_viewer/viewer.cc"
---- ./lib_openvslam/openvslam/src/pangolin_viewer/viewer.cc
-+++ "./lib_openvslam/openvslam/src/pangolin_viewer/viewer.cc"
+diff -u ./lib/slam_api/openvslam/src/pangolin_viewer/viewer.cc "./lib/slam_api/openvslam/openvslam/src/pangolin_viewer/viewer.cc"
+--- ./lib/openvslam/openvslam/src/pangolin_viewer/viewer.cc
++++ "./lib/openvslam/openvslam/src/pangolin_viewer/viewer.cc"
 @@ -88,9 +92,12 @@
          pangolin::FinishFrame();
 
@@ -17,9 +17,9 @@ diff -u ./lib_openvslam/openvslam/src/pangolin_viewer/viewer.cc "./lib_openvslam
 
          // 3. state transition
 
-diff -u ./lib_openvslam/openvslam/src/pangolin_viewer/viewer.h "./lib_openvslam/openvslam/src/pangolin_viewer/viewer.h"
---- ./lib_openvslam/openvslam/src/pangolin_viewer/viewer.h
-+++ "./lib_openvslam/openvslam/src/pangolin_viewer/viewer.h"
+diff -u ./lib/openvslam/openvslam/src/pangolin_viewer/viewer.h "./lib/openvslam/openvslam/src/pangolin_viewer/viewer.h"
+--- ./lib/openvslam/openvslam/src/pangolin_viewer/viewer.h
++++ "./lib/openvslam/openvslam/src/pangolin_viewer/viewer.h"
 @@ -24,8 +24,11 @@
 
  namespace pangolin_viewer {

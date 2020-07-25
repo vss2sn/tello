@@ -1,5 +1,3 @@
-#ifdef RUN_SLAM
-
 #ifndef OPENVSLAM_API_HPP
 #define OPENVSLAM_API_HPP
 
@@ -11,7 +9,7 @@
 
 /**
 * @class OpenVSLAM_API
-* @brief API for OpenVSLAM 
+* @brief API for OpenVSLAM
 */
 class OpenVSLAM_API{
 public:
@@ -71,7 +69,5 @@ private:
   std::unique_ptr<impl> openvslam_impl;
 
 };
-
-#endif
 
 #endif

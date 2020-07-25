@@ -1,5 +1,5 @@
-#include "state_socket.hpp"
-#include "utils.hpp"
+#include "tello/state_socket.hpp"
+#include "utils/utils.hpp"
 
 StateSocket::StateSocket(
   asio::io_service& io_service,

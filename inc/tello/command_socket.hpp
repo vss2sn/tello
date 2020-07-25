@@ -7,8 +7,8 @@
 #include <thread>
 #include <condition_variable>
 
-#include "base_socket.hpp"
-#include "joystick.hpp"
+#include "tello/base_socket.hpp"
+#include "joystick/joystick.hpp"
 
 /**
 * @class CommandSocket

@@ -1,7 +1,7 @@
 #ifndef STATESOCKET_HPP
 #define STATESOCKET_HPP
 
-#include "base_socket.hpp"
+#include "tello/base_socket.hpp"
 
 /**
 * @class StateSocket

@@ -2,8 +2,7 @@
 #include <queue>
 #include <iostream>
 
-#ifdef RUN_SLAM
-#include "openvslam_api.hpp"
+#include "slam_api/slam_api.hpp"
 
 #include "pangolin_viewer/viewer.h"
 #include "openvslam/system.h"
@@ -221,5 +220,3 @@ void OpenVSLAM_API::impl::startMonoThread(){
 void OpenVSLAM_API::startMonoThread(){
   openvslam_impl->startMonoThread();
 }
-
-#endif

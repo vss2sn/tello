@@ -1,15 +1,15 @@
 #include <mutex>
 #include <condition_variable>
 
-#include "utils.hpp"
-#include "tello.hpp"
+#include "utils/utils.hpp"
+#include "tello/tello.hpp"
 
 #ifdef USE_TERMINAL
-#include "command_terminal.hpp"
+#include "tello/command_terminal.hpp"
 #endif
 
 #ifdef USE_CONFIG
-#include "config_handler.hpp"
+#include "tello/config_handler.hpp"
 #endif
 
 int main(){

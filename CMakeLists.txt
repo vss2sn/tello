@@ -2,9 +2,11 @@ project(tello)
 
 cmake_minimum_required(VERSION 3.5)
 
-add_definitions(-std=c++17)
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -DDEBUG")
+# if(${CMAKE_VERSION} VERSION_LESS 3.5)
+#     cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
+# else()
+#     cmake_policy(VERSION 3.5)
+# endif()
 
 # These should be the only options the user requires
 
@@ -26,19 +28,6 @@ message(STATUS "CMake_Option `USE_CONFIG` - Use configuration file to set up tel
 
 option(USE_CMAKE_NOT_SCRIPT "Use Cmake ExternalProject to get and build OpenVSLAM and its dependencies" OFF)
 option(REBUILD_OPENVSLAM "Rebuild OpenVSLAM" OFF)
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc
-                    ${CMAKE_CURRENT_SOURCE_DIR}/lib_h264decoder
-                    ${CMAKE_CURRENT_SOURCE_DIR}/lib_joystick
-                    ${CMAKE_CURRENT_SOURCE_DIR}/lib_utils
-                    ${CMAKE_CURRENT_SOURCE_DIR}/lib_openvslam/openvslam/src
-                   )
-
-file( GLOB LIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
-file( GLOB LIB_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.hpp)
-
-file( GLOB LIB_SOURCES_JOYSTICK ${CMAKE_CURRENT_SOURCE_DIR}/lib_joystick/*.cpp)
-file( GLOB LIB_HEADERS_JOYSTICK ${CMAKE_CURRENT_SOURCE_DIR}/lib_joystick/*.h)
 
 if(SIMPLE)
   add_definitions(-DSIMPLE)
@@ -67,52 +56,38 @@ if(USE_CONFIG)
   add_definitions(-DUSE_CONFIG)
 endif(USE_CONFIG)
 
-find_package(Threads REQUIRED)
-
-add_library( h264decoder SHARED
-            ${CMAKE_CURRENT_SOURCE_DIR}/lib_h264decoder/h264decoder.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/lib_h264decoder/h264decoder.hpp
-            )
-
-target_link_libraries(h264decoder
-                      avcodec
-                      avutil
-                      swscale)
-
-add_library( utils SHARED
-             ${CMAKE_CURRENT_SOURCE_DIR}/lib_utils/utils.cpp
-             ${CMAKE_CURRENT_SOURCE_DIR}/lib_utils/utils.hpp
-           )
-
-add_library( joystick SHARED
-             ${LIB_SOURCES_JOYSTICK}
-             ${LIB_HEADERS_JOYSTICK}
-           )
-
-add_executable( ${PROJECT_NAME}
-                ${CMAKE_CURRENT_SOURCE_DIR}/main/main.cpp
-                ${LIB_SOURCES}
-                ${LIB_HEADERS}
-              )
-
 if(RUN_SLAM)
   add_definitions(-DRUN_SLAM)
-  add_subdirectory(lib_openvslam)
-  add_dependencies( ${PROJECT_NAME} openvslam_with_api )
-  include_directories(${LIB_OPENVSLAM_WITH_API_HEADERS})
-  target_link_libraries( ${PROJECT_NAME} openvslam_with_api )
-else(RUN_SLAM)
-  find_package(OpenCV REQUIRED COMPONENTS core imgcodecs videoio features2d calib3d highgui)
-  target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBRARIES})
 endif(RUN_SLAM)
 
-if(USE_CONFIG)
-  target_link_libraries( ${PROJECT_NAME} yaml-cpp)
-endif(USE_CONFIG)
+add_executable(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/main/main.cpp)
 
-target_link_libraries( ${PROJECT_NAME}
+set_target_properties(${PROJECT_NAME}
+  PROPERTIES
+    CXX_STANDARD "17"
+    CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O3 -Wall -Werror"
+)
+
+find_package(OpenCV REQUIRED COMPONENTS core imgcodecs videoio features2d calib3d highgui)
+find_package(Threads REQUIRED)
+add_subdirectory(lib)
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc/)
+
+target_link_libraries( ${PROJECT_NAME} PUBLIC
+                       ${OpenCV_LIBRARIES}
                        Threads::Threads
                        h264decoder
                        joystick
                        utils
                      )
+if(RUN_SLAM)
+  target_link_libraries( ${PROJECT_NAME} PUBLIC slam_api )
+endif(RUN_SLAM)
+
+if(USE_CONFIG)
+  target_link_libraries( ${PROJECT_NAME} PUBLIC yaml-cpp)
+endif(USE_CONFIG)
+
+file( GLOB LIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+target_sources(${PROJECT_NAME} PRIVATE ${LIB_SOURCES})

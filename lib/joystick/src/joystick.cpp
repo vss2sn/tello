@@ -1,4 +1,4 @@
-#include "joystick.hpp"
+#include "joystick/joystick.hpp"
 
 Joystick::Joystick(std::string port)
 {

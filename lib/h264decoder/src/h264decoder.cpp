@@ -19,7 +19,7 @@ extern "C" {
 #define CODEC_FLAG_TRUNCATED AV_CODEC_FLAG_TRUNCATED
 #endif
 
-#include "h264decoder.hpp"
+#include "h264decoder/h264decoder.hpp"
 #include <utility>
 
 typedef unsigned char ubyte;
