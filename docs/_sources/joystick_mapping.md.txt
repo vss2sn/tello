@@ -15,6 +15,7 @@ The default mapping is for the gameSirT1s. Mappings have been provided for PS3 a
 | X  | Control command `streamon` |
 | Y  | Control command `streamoff` |
 | A  + L2 | Take snapshot |
+| B  + L2 | Toggle video recording |
 | X  + L2 | Control command `mon` |
 | Y  + L2 | Control command `moff` |
 | START | Control command `command` |

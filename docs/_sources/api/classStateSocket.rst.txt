@@ -3,7 +3,7 @@
 Class StateSocket
 =================
 
-- Defined in :ref:`file_inc_state_socket.hpp`
+- Defined in :ref:`file_inc_tello_state_socket.hpp`
 
 
 Inheritance Relationships

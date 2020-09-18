@@ -59,16 +59,13 @@ SLAM integration has been provided using the OpenVSLAM library.
 2. `USE_JOYSTICK`
     - Default `ON`
     - When set to `ON` allows the use of a joystick to control the drone and exits if a joystick is not found at startup.
-3. `RECORD`
-    - Default `OFF`
-    - When set to `ON` records the video
-4. `RUN_SLAM`
+3. `RUN_SLAM`
     - Default `OFF`
     - When set to `ON` runs OpenVSLAM, creating a map of the area and localizing the drone
-5. `USE_TERMINAL`
+4. `USE_TERMINAL`
     - Default `OFF`
     - When set to `ON` opens up an xterm that takes in lines and sends them as commands to the Tello (example: `command` , `takeoff`, etc)
-6. `USE_CONFIG`
+5. `USE_CONFIG`
     - Default `OFF`
     - When set to `ON` uses the config manager to create the Tello from the config file `config.yaml`
 

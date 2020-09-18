@@ -118,6 +118,26 @@ public:
    */
   ~CommandSocket();
 
+  /**
+   * @brief util function to be called before ecxiting to allow all threads
+   * to exit cleanly
+   * @return none
+   */
+  void prepareToExit();
+
+  /**
+   * @brief Sends the command to the drone
+   * @param [in] cmd sommand to be sent to the drone
+   * @return none
+   */
+  void sendCommand(const std::string &cmd);
+
+  /**
+   * @brief check whether do not allow autonal is enabled
+   * @return whether do not allow autonal is enabled
+   */
+  bool dnal() const;
+
 private:
   void handleResponseFromDrone(const std::error_code &error,
                                size_t bytes_recvd) override;
@@ -125,25 +145,22 @@ private:
                          std::string cmd) override;
 
   void waitForResponse();
-  void retry(const std::string &cmd);
   void sendQueueCommands();
-  void sendCommand(const std::string &cmd);
   void doNotAutoLandWorker();
+  bool shouldWaitForResponse(const std::string& cmd);
 
   enum { max_length_ = 1024 };
   bool waiting_for_response_ = false, execute_queue_ = false, dnal_ = false,
        on_ = true;
+  // on_ needs to be differnbet from tello's run_ as on exit we need to call stop and land before killing the command thread
   char data_[max_length_]{};
   int timeout_, n_retries_ = 0, n_retries_allowed_ = 0;
   std::string last_command_, response_;
   std::deque<std::string> command_queue_;
-  std::mutex queue_mutex_, m, dnal_mutex;
+  std::mutex queue_mutex_, execute_queue_mutex_, dnal_mutex_;
   std::condition_variable cv_execute_queue_, cv_dnal_;
   std::chrono::system_clock::time_point command_sent_time_;
-
   std::thread cmd_thread, dnal_thread;
-
-  friend class Tello;
 };
 
 #endif // COMMANDSOCKET_HPP

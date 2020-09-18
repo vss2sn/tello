@@ -65,17 +65,27 @@ public:
    */
   void setSnapshot();
 
-private:
-  void handleResponseFromDrone(const std::error_code &error, size_t r) override;
-  void handleSendCommand(const std::error_code &error, size_t bytes_sent,
-                         std::string cmd) override;
+  /**
+   * @brief toggle video recording
+   * @return void
+   */
+  void toggleRecordVideo();
 
+private:
   void decodeFrame();
+  void handleResponseFromDrone(const std::error_code &error, size_t r) override;
+  void handleSendCommand(const std::error_code &error, size_t bytes_sent, std::string cmd) override;
+  void setUpVideo();
   void takeSnapshot(cv::Mat &image);
 
   enum { max_length_ = 2048 };
   enum { max_length_large_ = 65536 };
+
   bool received_response_ = true;
+  bool &run_;
+  bool record_ = false;
+
+  std::atomic<bool> snap_ = false;
 
   char data_[max_length_]{};
   char frame_buffer_[max_length_large_]{};
@@ -85,15 +95,12 @@ private:
 
   H264Decoder decoder_;
   ConverterRGB24 converter_;
-#ifdef RECORD
+  std::string video_file_;
   std::unique_ptr<cv::VideoWriter> video;
-#endif
 
 #ifdef RUN_SLAM
   std::unique_ptr<OpenVSLAM_API> api_;
 #endif // RUN_SLAM
-  bool &run_;
-  std::atomic<bool> snap_ = false;
 };
 
 #endif // VIDEOSOCKET_HPP

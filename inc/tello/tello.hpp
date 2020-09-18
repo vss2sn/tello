@@ -7,7 +7,6 @@
 #include "tello/command_socket.hpp"
 #include "tello/state_socket.hpp"
 #include "tello/video_socket.hpp"
-#include "utils/utils.hpp"
 
 #ifdef USE_TERMINAL
 #include "command_terminal.hpp"
@@ -24,9 +23,6 @@ class Tello {
 public:
   /**
    * @brief Constructor
-   * @param [in] io_service io_service object used to handle all socket
-   * communication
-   * @param [in] cv_run condition variable for the lifetime of the code
    * @param [in] drone_ip ip address of drone
    * @param [in] local_drone_port local port through which commands will be sent
    * to the drone
@@ -48,12 +44,12 @@ public:
    * @param [in] continue_mapping continue adding to the map even when a map has
    * been loaded
    * @param [in] scale scale for SLAM
-   * @param [in]  sequence_file file containing a sequence of commands that will
+   * @param [in] sequence_file file containing a sequence of commands that will
    * be added to execute queue
+   * @param [in] station_mode whether the drone is in station mode or not
    * @return none
    */
-  Tello(asio::io_service &io_service, std::condition_variable &cv_run,
-        const std::string &drone_ip = "192.168.10.1",
+  Tello(const std::string &drone_ip = "192.168.10.1",
         const std::string &local_drone_port = "8889",
         const std::string &local_video_port = "11111",
         const std::string &local_state_port = "8890",
@@ -64,7 +60,9 @@ public:
         const std::string &save_map_db_path = "",
         const std::string &mask_img_path = "", bool load_map = false,
         bool continue_mapping = false, float scale = 1.0,
-        const std::string &sequence_file = "");
+        const std::string &sequence_file = "",
+        bool station_mode = false  // NOTE(vss): make const?
+      );
 
   /**
    * @brief reads a sequence of commands from a file and adds them to the
@@ -80,35 +78,40 @@ public:
    */
   ~Tello();
 
-  // TODO: Move to private
-
-  /** \brief Unique pointer to CommandSocket object associated with this tello
+  /**
+   * @brief Check whether the drone is active
+   * @return whether the rone is active
    */
-  std::unique_ptr<CommandSocket> cs;
+  bool active() const;
 
-  /** \brief Unique pointer to Joystick object associated with this tello */
-  std::unique_ptr<Joystick> js_;
-
-  /** \brief Unique pointer to VideoSocket associated with this tello */
-  std::unique_ptr<VideoSocket> vs;
-
-  /** \brief Unique pointer to StateSocket associated with this tello */
-  std::unique_ptr<StateSocket> ss;
+  /**
+   * @brief Command interface to call some command socket functions
+   * @param [in] cmd_fx function to call
+   * @param [in] cmd argument passed to the command function
+   * @return none
+   */
+  void commandInterface(const std::string& cmd_fx, const std::string& cmd = "");
 
 private:
-  asio::io_service &io_service_;
-  std::thread js_thread_;
-  std::condition_variable &cv_run_;
   void jsToCommandThread();
   void jsToCommand(ButtonId update);
   void jsToCommand(AxisId update) const;
+
   bool run_ = true;
+  bool station_mode_ = false;
+  // NOTE: io_service_ needs to be destroyed after the sockets, not before
+  asio::io_service io_service_;
+  std::thread js_thread_;
+  std::unique_ptr<Joystick> js_;
+  std::unique_ptr<CommandSocket> cs;
+  std::unique_ptr<VideoSocket> vs;
+  std::unique_ptr<StateSocket> ss;
 
 #ifdef USE_TERMINAL
-  std::unique_ptr<Terminal> term_;
-  std::thread term_thread_worker_, term_thread_fetch_;
   void terminalToCommandThread();
   void terminalToCommand(const std::string &cmd);
+  std::thread term_thread_worker_, term_thread_fetch_;
+  std::unique_ptr<Terminal> term_;
 #endif // TERMINAL
 };
 

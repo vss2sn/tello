@@ -1,0 +1,56 @@
+
+.. _file_inc_tello_video_socket.hpp:
+
+File video_socket.hpp
+=====================
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``inc/tello/video_socket.hpp``)
+-------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_inc_tello_video_socket.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``atomic``
+
+- ``h264decoder/h264decoder.hpp``
+
+- ``libavutil/frame.h``
+
+- ``opencv2/core/core.hpp``
+
+- ``opencv2/videoio.hpp``
+
+- ``tello/base_socket.hpp`` (:ref:`file_inc_tello_base_socket.hpp`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_inc_tello_tello.hpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classVideoSocket`
+

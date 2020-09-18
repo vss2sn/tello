@@ -3,7 +3,7 @@
 Class VideoSocket
 =================
 
-- Defined in :ref:`file_inc_video_socket.hpp`
+- Defined in :ref:`file_inc_tello_video_socket.hpp`
 
 
 Inheritance Relationships

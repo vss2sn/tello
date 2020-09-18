@@ -3,7 +3,7 @@
 Class CommandSocket
 ===================
 
-- Defined in :ref:`file_inc_command_socket.hpp`
+- Defined in :ref:`file_inc_tello_command_socket.hpp`
 
 
 Inheritance Relationships

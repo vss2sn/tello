@@ -20,6 +20,11 @@ Classes and Structs
 .. toctree::
    :maxdepth: 5
 
+   classOpenVSLAM__API.rst
+
+.. toctree::
+   :maxdepth: 5
+
    classStateSocket.rst
 
 .. toctree::
@@ -44,7 +49,27 @@ Directories
 .. toctree::
    :maxdepth: 5
 
-   dir_lib_openvslam.rst
+   dir_inc.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   dir_lib.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   dir_slam_api.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   dir_slam_api.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   dir_tello.rst
 
 Files
 *****
@@ -53,32 +78,22 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file_inc_base_socket.hpp.rst
+   file_inc_tello_base_socket.hpp.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file_inc_command_socket.hpp.rst
+   file_inc_tello_command_socket.hpp.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file_inc_command_terminal.hpp.rst
+   file_inc_tello_command_terminal.hpp.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file_inc_config_handler.hpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_lib_openvslam_openvslam_api.cpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_lib_openvslam_openvslam_api.hpp.rst
+   file_inc_tello_config_handler.hpp.rst
 
 .. toctree::
    :maxdepth: 5
@@ -88,14 +103,19 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file_inc_state_socket.hpp.rst
+   file_lib_slam_api_inc_slam_api_slam_api.hpp.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file_inc_tello.hpp.rst
+   file_inc_tello_state_socket.hpp.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file_inc_video_socket.hpp.rst
+   file_inc_tello_tello.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_inc_tello_video_socket.hpp.rst

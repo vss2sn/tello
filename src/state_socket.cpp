@@ -1,4 +1,5 @@
 #include "tello/state_socket.hpp"
+
 #include "utils/utils.hpp"
 
 StateSocket::StateSocket(asio::io_service &io_service,
@@ -19,8 +20,7 @@ StateSocket::StateSocket(asio::io_service &io_service,
       });
   // [&](auto... args){return handleResponseFromDrone(args...);});
 
-  io_thread = std::thread([&] { io_service_.run(); });
-  io_thread.detach();
+  io_thread_ = std::thread([&] { io_service_.run(); });
 }
 
 void StateSocket::handleResponseFromDrone(const std::error_code &error,
@@ -30,7 +30,7 @@ void StateSocket::handleResponseFromDrone(const std::error_code &error,
     std::replace(response_.begin(), response_.end(), ';', '\n');
     // std::cout << "Status: \n" << response_ << std::endl;
   } else {
-    // utils_log::LogDebug() << "Error/Nothing received" ;
+    utils_log::LogDebug() << "Error/Nothing received";
   }
 
   socket_.async_receive_from(
@@ -41,7 +41,9 @@ void StateSocket::handleResponseFromDrone(const std::error_code &error,
   // [&](auto... args){return handleResponseFromDrone(args...);});
 }
 
-StateSocket::~StateSocket() {}
+StateSocket::~StateSocket() {
+  utils_log::LogDebug() << "About to call stop on state_socket";
+}
 
 void StateSocket::handleSendCommand(const std::error_code & /*error*/,
                                     size_t /*bytes_sent*/,

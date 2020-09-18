@@ -1,0 +1,75 @@
+
+.. _program_listing_file_inc_tello_tello.hpp:
+
+Program Listing for File tello.hpp
+==================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_inc_tello_tello.hpp>` (``inc/tello/tello.hpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   #ifndef TELLO_HPP
+   #define TELLO_HPP
+   
+   #include <memory>
+   
+   #include "joystick/joystick.hpp"
+   #include "tello/command_socket.hpp"
+   #include "tello/state_socket.hpp"
+   #include "tello/video_socket.hpp"
+   
+   #ifdef USE_TERMINAL
+   #include "command_terminal.hpp"
+   #endif
+   
+   class Tello {
+   public:
+     Tello(const std::string &drone_ip = "192.168.10.1",
+           const std::string &local_drone_port = "8889",
+           const std::string &local_video_port = "11111",
+           const std::string &local_state_port = "8890",
+           const std::string &camera_config_file = "../camera_config.yaml",
+           const std::string &vocabulary_file = "../orb_vocab.dbow2",
+           const int n_retries = 0, const int timeout = 5,
+           const std::string &load_map_db_path = "",
+           const std::string &save_map_db_path = "",
+           const std::string &mask_img_path = "", bool load_map = false,
+           bool continue_mapping = false, float scale = 1.0,
+           const std::string &sequence_file = "",
+           bool station_mode = false  // NOTE(vss): make const?
+         );
+   
+     void readSequence(const std::string &file) const;
+   
+     ~Tello();
+   
+     bool active() const;
+   
+     void commandInterface(const std::string& cmd_fx, const std::string& cmd = "");
+   
+   private:
+     void jsToCommandThread();
+     void jsToCommand(ButtonId update);
+     void jsToCommand(AxisId update) const;
+   
+     bool run_ = true;
+     bool station_mode_ = false;
+     // NOTE: io_service_ needs to be destroyed after the sockets, not before
+     asio::io_service io_service_;
+     std::thread js_thread_;
+     std::unique_ptr<Joystick> js_;
+     std::unique_ptr<CommandSocket> cs;
+     std::unique_ptr<VideoSocket> vs;
+     std::unique_ptr<StateSocket> ss;
+   
+   #ifdef USE_TERMINAL
+     void terminalToCommandThread();
+     void terminalToCommand(const std::string &cmd);
+     std::thread term_thread_worker_, term_thread_fetch_;
+     std::unique_ptr<Terminal> term_;
+   #endif // TERMINAL
+   };
+   
+   #endif // TELLO_HPP

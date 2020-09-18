@@ -1,19 +1,17 @@
 #ifdef USE_TERMINAL
 
+#include "tello/command_terminal.hpp"
+
 #include <fcntl.h>
-#include <iostream>
-#include <sstream>
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
 #include <unistd.h>
 
-#include "tello/command_terminal.hpp"
+#include <iostream>
+#include <sstream>
 
-// #include <memory>
-// #include <thread>
-
-Terminal::Terminal(bool &on) : on_(on) {
+Terminal::Terminal(bool &run) : run_(run), terminal_mutex_{display_mutex} {
   pt_ = posix_openpt(O_RDWR);
   if (pt_ == -1) {
     std::cerr << "Could not open pseudo terminal." << std::endl;
@@ -51,7 +49,7 @@ void Terminal::terminalWorker() {
   // }
 
   dup2(xterm_fd_, 0);
-  while (on_) {
+  while (run_) {
     s = timedRead();
     if (!s.empty()) {
       std::cout << "Received command from terminal: " << s << std::endl;
@@ -88,7 +86,6 @@ std::mutex Terminal::terminal_mutex_;
 std::mutex &Terminal::getMutex() { return terminal_mutex_; }
 
 std::string Terminal::timedRead(int timeout_s, int timeout_ms) {
-
   fd_set fdset;
   struct timeval timeout;
   int rc;
@@ -138,20 +135,4 @@ TERMINAL_CMD_TYPE Terminal::convertToEnum(const std::string &cmd_type) {
   }
 }
 
-// int main()
-// {
-//   bool on = true;
-//   std::unique_ptr<Terminal> upt_terminal = std::make_unique<Terminal>(on);
-//   auto t = std::thread([&]{upt_terminal->runTerminal();});
-//
-//   // for(int i=0;i<10;i++){
-//     usleep(10000000);
-//     // std::cout << "Should be on primary screen>"<< std::endl;
-//   // }
-//   on = false;
-//   t.join();
-//
-//   return 0;
-// }
-
-#endif // TERMINAL
+#endif  // TERMINAL

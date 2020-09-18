@@ -1,0 +1,16 @@
+.. _exhale_class_classOpenVSLAM__API:
+
+Class OpenVSLAM_API
+===================
+
+- Defined in :ref:`file_lib_slam_api_inc_slam_api_slam_api.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: OpenVSLAM_API
+   :members:
+   :protected-members:
+   :undoc-members:

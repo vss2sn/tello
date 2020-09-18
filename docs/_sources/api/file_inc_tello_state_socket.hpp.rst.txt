@@ -1,0 +1,46 @@
+
+.. _file_inc_tello_state_socket.hpp:
+
+File state_socket.hpp
+=====================
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``inc/tello/state_socket.hpp``)
+-------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_inc_tello_state_socket.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``tello/base_socket.hpp`` (:ref:`file_inc_tello_base_socket.hpp`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_inc_tello_tello.hpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classStateSocket`
+

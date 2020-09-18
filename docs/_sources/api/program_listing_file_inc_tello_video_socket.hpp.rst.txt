@@ -1,0 +1,77 @@
+
+.. _program_listing_file_inc_tello_video_socket.hpp:
+
+Program Listing for File video_socket.hpp
+=========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_inc_tello_video_socket.hpp>` (``inc/tello/video_socket.hpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   #ifndef VIDEOSOCKET_HPP
+   #define VIDEOSOCKET_HPP
+   
+   #include <atomic>
+   
+   #include <libavutil/frame.h>
+   #include <opencv2/core/core.hpp>
+   #include <opencv2/videoio.hpp>
+   
+   #include "h264decoder/h264decoder.hpp"
+   #include "tello/base_socket.hpp"
+   
+   #ifdef RUN_SLAM
+   #include "slam_api/slam_api.hpp"
+   #endif // RUN_SLAM
+   
+   class VideoSocket : public BaseSocket {
+   public:
+     VideoSocket(asio::io_service &io_service, const std::string &drone_ip,
+                 const std::string &drone_port, const std::string &local_port,
+                 bool &run, const std::string &camera_config_file,
+                 const std::string &vocabulary_file,
+                 const std::string &load_map_db_path,
+                 const std::string &save_map_db_path,
+                 const std::string &mask_img_path, bool load_map,
+                 bool continue_mapping, float scale);
+   
+     ~VideoSocket();
+   
+     void setSnapshot();
+   
+     void toggleRecordVideo();
+   
+   private:
+     void decodeFrame();
+     void handleResponseFromDrone(const std::error_code &error, size_t r) override;
+     void handleSendCommand(const std::error_code &error, size_t bytes_sent, std::string cmd) override;
+     void setUpVideo();
+     void takeSnapshot(cv::Mat &image);
+   
+     enum { max_length_ = 2048 };
+     enum { max_length_large_ = 65536 };
+   
+     bool received_response_ = true;
+     bool &run_;
+     bool record_ = false;
+   
+     std::atomic<bool> snap_ = false;
+   
+     char data_[max_length_]{};
+     char frame_buffer_[max_length_large_]{};
+   
+     size_t first_empty_index = 0;
+     int frame_buffer_n_packets_ = 0;
+   
+     H264Decoder decoder_;
+     ConverterRGB24 converter_;
+     std::unique_ptr<cv::VideoWriter> video;
+   
+   #ifdef RUN_SLAM
+     std::unique_ptr<OpenVSLAM_API> api_;
+   #endif // RUN_SLAM
+   };
+   
+   #endif // VIDEOSOCKET_HPP

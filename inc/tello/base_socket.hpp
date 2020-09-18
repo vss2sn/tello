@@ -30,7 +30,7 @@ protected:
   asio::io_service &io_service_;
   asio::ip::udp::socket socket_;
   asio::ip::udp::endpoint endpoint_;
-  std::thread io_thread;
+  std::thread io_thread_;
 
 private:
   /**

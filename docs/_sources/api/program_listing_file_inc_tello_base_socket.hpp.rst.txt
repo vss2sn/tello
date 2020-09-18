@@ -1,0 +1,44 @@
+
+.. _program_listing_file_inc_tello_base_socket.hpp:
+
+Program Listing for File base_socket.hpp
+========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_inc_tello_base_socket.hpp>` (``inc/tello/base_socket.hpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   #ifndef BASESOCKET_HPP
+   #define BASESOCKET_HPP
+   
+   #include "asio.hpp"
+   #include <thread>
+   
+   class BaseSocket {
+   public:
+     BaseSocket(asio::io_service &io_service, const std::string &drone_ip,
+                const std::string &drone_port, const std::string &local_port);
+   
+     virtual ~BaseSocket();
+   
+   protected:
+     std::string local_port_, drone_ip_, drone_port_;
+     asio::io_service &io_service_;
+     asio::ip::udp::socket socket_;
+     asio::ip::udp::endpoint endpoint_;
+     std::thread io_thread_;
+   
+   private:
+     virtual void handleResponseFromDrone(const std::error_code &error,
+                                          size_t bytes_recvd) = 0;
+   
+     // NOTE: Passing cmd by ref or as const causes problems dues to async nature
+     // of code
+   
+     virtual void handleSendCommand(const std::error_code &error,
+                                    size_t bytes_sent, std::string cmd) = 0;
+   };
+   
+   #endif // BASESOCKET_HPP

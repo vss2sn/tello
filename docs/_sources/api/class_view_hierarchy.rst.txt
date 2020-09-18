@@ -8,7 +8,7 @@ Class Hierarchy
    <ul class="treeView" id="class-treeView">
      <li>
        <ul class="collapsibleList">
-         <li>Class <a href="classBaseSocket.html#exhale-class-classBaseSocket">BaseSocket</a></li><li>Class <a href="classCommandSocket.html#exhale-class-classCommandSocket">CommandSocket</a></li><li>Class <a href="classStateSocket.html#exhale-class-classStateSocket">StateSocket</a></li><li>Class <a href="classTello.html#exhale-class-classTello">Tello</a></li><li class="lastChild">Class <a href="classVideoSocket.html#exhale-class-classVideoSocket">VideoSocket</a></li>
+         <li>Class <a href="classBaseSocket.html#exhale-class-classBaseSocket">BaseSocket</a></li><li>Class <a href="classCommandSocket.html#exhale-class-classCommandSocket">CommandSocket</a></li><li>Class <a href="classOpenVSLAM__API.html#exhale-class-classOpenVSLAM-API">OpenVSLAM_API</a></li><li>Class <a href="classStateSocket.html#exhale-class-classStateSocket">StateSocket</a></li><li>Class <a href="classTello.html#exhale-class-classTello">Tello</a></li><li class="lastChild">Class <a href="classVideoSocket.html#exhale-class-classVideoSocket">VideoSocket</a></li>
        </ul>
      </li><!-- only tree view element -->
    </ul><!-- /treeView class-treeView -->

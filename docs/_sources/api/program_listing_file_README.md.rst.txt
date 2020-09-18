@@ -71,16 +71,13 @@ Program Listing for File README.md
    2. `USE_JOYSTICK`
        - Default `ON`
        - When set to `ON` allows the use of a joystick to control the drone and exits if a joystick is not found at startup.
-   3. `RECORD`
-       - Default `OFF`
-       - When set to `ON` records the video
-   4. `RUN_SLAM`
+   3. `RUN_SLAM`
        - Default `OFF`
        - When set to `ON` runs OpenVSLAM, creating a map of the area and localizing the drone
-   5. `USE_TERMINAL`
+   4. `USE_TERMINAL`
        - Default `OFF`
        - When set to `ON` opens up an xterm that takes in lines and sends them as commands to the Tello (example: `command` , `takeoff`, etc)
-   6. `USE_CONFIG`
+   5. `USE_CONFIG`
        - Default `OFF`
        - When set to `ON` uses the config manager to create the Tello from the config file `config.yaml`
    
@@ -97,7 +94,7 @@ Program Listing for File README.md
    <a name="bslam"></a>
    #### To build and run with SLAM ####
    
-   Please refer to the [documentation](https://vss2sn.github.io/building.html) for details
+   Please refer to the [documentation](https://vss2sn.github.io/tello/building.html) for details
    
    <a name="joy"></a>
    #### Default joystick mappings ####
@@ -106,7 +103,7 @@ Program Listing for File README.md
    
    The mappings include querying `battery`, `wifi`, etc as well as `stop`, `emergency`, and `flip` commands.
    
-   Please refer to the [documentation](https://vss2sn.github.io/joystick_mapping.html) for details
+   Please refer to the [documentation](https://vss2sn.github.io/tello/joystick_mapping.html) for details
    
    <a name="notes"></a>
    #### Notes ####
@@ -125,4 +122,4 @@ Program Listing for File README.md
    
    <a name="ts"></a>
    #### Troubleshooting ####
-   Please refer to the [documentation](https://vss2sn.github.io/troubleshooting.html) for details
+   Please refer to the [documentation](https://vss2sn.github.io/tello/troubleshooting.html) for details

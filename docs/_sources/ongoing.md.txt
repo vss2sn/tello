@@ -3,8 +3,16 @@
 #### Project paths (current & projected) ####
 1. Refactor OpenVSLAM API
 2. Add in other SLAM options
-3. Clean up includes and refactor cmake directory structure
+3. Clean up includes and refactor cmake directory structure (DONE)
 4. Add watchdog to check for state data
 5. Integrate SLAM data into command structure to allow waypoints
-6. Allow CLI to interact with execute queue funcitonality
-7. Move options to config file
+6. Allow CLI to interact with execute queue funcitonality (DONE - TO CHECK)
+7. Move options to config file  (DONE)
+8. Update README.md  (DONE)
+9. Remove 5 min dependency in main (DONE)
+10. Update docs (DONE)
+11. Allow for station mode with no video (DONE)
+12. Auto scale
+13. Get position from SLAM
+14. Sequence file to allow different timeouts an retry attempts per command
+15. Warning for battery life in watchdog

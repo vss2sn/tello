@@ -3,7 +3,7 @@
 Class BaseSocket
 ================
 
-- Defined in :ref:`file_inc_base_socket.hpp`
+- Defined in :ref:`file_inc_tello_base_socket.hpp`
 
 
 Inheritance Relationships

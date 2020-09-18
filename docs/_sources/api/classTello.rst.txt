@@ -3,7 +3,7 @@
 Class Tello
 ===========
 
-- Defined in :ref:`file_inc_tello.hpp`
+- Defined in :ref:`file_inc_tello_tello.hpp`
 
 
 Class Documentation

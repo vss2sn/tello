@@ -8,15 +8,4 @@ Directory inc
 *Directory path:* ``inc``
 
 
-Files
------
-
-- :ref:`file_inc_base_socket.hpp`
-- :ref:`file_inc_command_socket.hpp`
-- :ref:`file_inc_command_terminal.hpp`
-- :ref:`file_inc_config_handler.hpp`
-- :ref:`file_inc_state_socket.hpp`
-- :ref:`file_inc_tello.hpp`
-- :ref:`file_inc_video_socket.hpp`
-
 

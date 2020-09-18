@@ -24,18 +24,15 @@ enum TERMINAL_CMD_TYPE {
  * input
  */
 class Terminal {
-
 public:
-  static std::mutex terminal_mutex_;
-  static std::mutex &getMutex();
 
   /**
    * @brief Constructor
-   * @param [in] on refernce to a bool variable that is set to false whn the
+   * @param [in] run refernce to a bool variable that is set to false whn the
    * code is exiting
    * @return none
    */
-  Terminal(bool &on);
+  Terminal(bool &run, std::mutex &display_mutex);
 
   // TODO: add a constructor without a ref that sets the internal bool to true
   // and a destrcutor that sets it to false
@@ -72,13 +69,20 @@ public:
    */
   ~Terminal();
 
+  /**
+   * @brief Get the mutex used by the terminal for controlling input/output
+   * @return reference to the mutex used for display 
+   */
+  std::mutex &getMutex();
+
 private:
   std::string timedRead(int timeout_s = 1, int timeout_ms = 0);
-  bool &on_;
+  bool &run_;
   int pt_, xterm_fd_, saved_stdout_;
   char *ptname_;
   std::string s;
   std::atomic<bool> received_cmd_;
+  std::mutex& terminal_mutex_;
 };
 
 #endif // TERMINAL_HPP

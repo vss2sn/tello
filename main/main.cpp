@@ -13,70 +13,45 @@
 #endif
 
 namespace constants {
-  constexpr auto max_flight_time = std::chrono::minutes(5);
+constexpr auto max_flight_time = std::chrono::minutes(5);
 }  // namespace constants
 
 int main(){
-  asio::io_service io_service;
-  asio::io_service::work work(io_service);
 
-  std::condition_variable cv_run;
+// NOTE: This has been modified to consistently test the code with and without the config handler.
 
 #ifdef USE_CONFIG
-
-  std::map<std::string, std::unique_ptr<Tello>>  m = handleConfig("../config.yaml", io_service, cv_run);
-
-  if(m.count("0.prime.0") > 0){
-    Tello& t = *m["0.prime.0"];
-    t.cs->addCommandToQueue("command");
-    t.cs->addCommandToQueue("sdk?");
-    t.cs->addCommandToQueue("command");
-    t.cs->addCommandToQueue("sdk?");
-    t.cs->addCommandToQueue("streamon");
-    t.cs->addCommandToQueue("takeoff");
-    t.cs->executeQueue();
-    t.cs->addCommandToQueue("forward 20");
-    t.cs->addCommandToQueue("back 20");
-    t.cs->addCommandToQueue("delay 5");
-    t.cs->addCommandToFrontOfQueue("stop");
-    // t.cs->stopQueueExecution();
-    t.cs->doNotAutoLand();
-    t.cs->addCommandToQueue("land");
-  }
-  else{
+  std::map<std::string, std::unique_ptr<Tello>>  m = handleConfig("../config.yaml");
+  if(m.count("0.prime.0") == 0){
     utils_log::LogErr() << "The requested drone does not exist.";
+    return;
   }
-
+  Tello* t = m["0.prime.0"].get();
 #else
-
-  Tello t(io_service, cv_run, "192.168.10.1", "8889", "11111", "8890", "../camera_config.yaml", "../orb_vocab.dbow2");
-
-  t.cs->addCommandToQueue("command");
-  t.cs->addCommandToQueue("sdk?");
-  t.cs->addCommandToQueue("streamon");
-  t.cs->addCommandToQueue("takeoff");
-  t.cs->executeQueue();
-  t.cs->addCommandToQueue("forward 20");
-  t.cs->addCommandToQueue("back 20");
-  t.cs->addCommandToQueue("delay 5");
-  t.cs->addCommandToFrontOfQueue("stop");
-  // t.cs->stopQueueExecution();
-  t.cs->doNotAutoLand();
-  t.cs->addCommandToQueue("land");
-
+  std::unique_ptr<Tello> tello = std::make_unique<Tello>("192.168.10.1", "8889", "11111", "8890", "../camera_config.yaml", "../orb_vocab.dbow2");
+  Tello* t = tello.get();
 #endif
 
-  {
-    std::mutex mtx;
-    std::unique_lock<std::mutex> lck(mtx);
-    cv_run.wait_for(lck,std::chrono::seconds(constants::max_flight_time));
+  t->commandInterface("add_command_to_queue", "command");
+  t->commandInterface("add_command_to_queue", "sdk?");
+  t->commandInterface("add_command_to_queue", "command");
+  t->commandInterface("add_command_to_queue", "sdk?");
+  t->commandInterface("add_command_to_queue", "streamon");
+  t->commandInterface("add_command_to_queue", "takeoff");
+  t->commandInterface("execute_queue");
+  t->commandInterface("add_command_to_queue", "forward 20");
+  t->commandInterface("add_command_to_queue", "back 20");
+  t->commandInterface("add_command_to_queue", "delay 5");
+  t->commandInterface("add_command_to_front_of_queue", "stop");
+  t->commandInterface("stop_queue_execution");
+  t->commandInterface("do_not_auto_land");
+  t->commandInterface("add_command_to_queue", "land");
+
+  while(t->active()) {
+    std::this_thread::sleep_for(std::chrono::seconds(1));
   }
 
   utils_log::LogWarn() << "----------- Done -----------";
-  utils_log::LogWarn() << "----------- Landing -----------";
-  // t.cs->exitAllThreads();
-  io_service.stop();
-  // usleep(1000000); // Ensure this is greater than timeout to prevent seg faults
   utils_log::LogDebug() << "----------- Main thread returns -----------";
   return 0;
 }
