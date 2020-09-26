@@ -78,18 +78,18 @@ echo "Installing Eigen 3.3.4"
 echo "----------------------------------------"
 
 cd ${EXT_DEP}
-wget -q http://bitbucket.org/eigen/eigen/get/3.3.4.tar.bz2
-tar xf 3.3.4.tar.bz2
-rm -rf 3.3.4.tar.bz2
-cd eigen-eigen-5a0156e40feb
+wget -q https://gitlab.com/libeigen/eigen/-/archive/3.3.4/eigen-3.3.4.tar.bz2
+tar xf eigen-3.3.4.tar.bz2
+rm -rf eigen-3.3.4.tar.bz2
+cd eigen-3.3.4
 mkdir -p build && cd build
 cmake \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=${EXT_DEP}/install/eigen-eigen-5a0156e40feb/ \
+    -DCMAKE_INSTALL_PREFIX=${EXT_DEP}/install/eigen-3.3.4/ \
     ..
 make -j2 --silent
 make install
-cd ${EXT_DEP}/install/eigen-eigen-5a0156e40feb/
+cd ${EXT_DEP}/install/eigen-3.3.4/
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
 sudo echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$(pwd)/lib" >> ~/.bashrc
 

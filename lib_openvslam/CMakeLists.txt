@@ -48,15 +48,15 @@ if(NOT WIN32)
 endif()
 
 # Eigen
-set(install_dir ${MAIN_INSTALL_DIR}/eigen-eigen-5a0156e40feb)
+set(install_dir ${MAIN_INSTALL_DIR}/eigen-3.3.4)
 find_package(Eigen3 PATHS ${install_dir} NO_DEFAULT_PATH)
 if(NOT Eigen3_FOUND)
   set(EXTP_EIGEN "EXTP_EIGEN")
   message(STATUS "${BoldBlue}Eigen not found. Building.${ColourReset}")
   ExternalProject_Add(
     EXTP_EIGEN
-    PREFIX ${MAIN_PREFIX_DIR}/eigen-eigen-5a0156e40feb
-    URL http://bitbucket.org/eigen/eigen/get/3.3.4.tar.bz2
+    PREFIX ${MAIN_PREFIX_DIR}/eigen-3.3.4
+    URL https://gitlab.com/libeigen/eigen/-/archive/3.3.4/eigen-3.3.4.tar.bz2
     INSTALL_DIR ${install_dir}
     CMAKE_CACHE_ARGS
       -DCMAKE_CXX_FLAGS="-w"
