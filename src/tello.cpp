@@ -38,7 +38,7 @@ Tello::Tello(const std::string &drone_ip, const std::string &local_drone_port,
 #endif  // USE_JOYSTICK
 
 #ifdef USE_TERMINAL
-  term_ = std::make_unique<Terminal>(run_);
+  term_ = std::make_unique<Terminal>(run_, utils_log::DisplayMutex::getMutex());
   // term_thread_worker_ = std::thread(&Tello::terminalWorker, this);
   // term_thread_fetch_ = std::thread(&Tello::terminalToCommandThread, this);
   term_thread_worker_ =
@@ -55,7 +55,7 @@ Tello::Tello(const std::string &drone_ip, const std::string &local_drone_port,
 #ifdef USE_TERMINAL
 void Tello::terminalToCommandThread() {
   while (run_) {
-    std::this_thread::sleep_for(joystick_timeout);
+    std::this_thread::sleep_for(constants::joystick_timeout);
     if (term_->hasCommnad()) {
       terminalToCommand(term_->getCommand());
     }

@@ -9,11 +9,20 @@
 
 namespace utils_log{
 
-	#define LogDebug() LogDebugDetailed(__FILENAME__, __LINE__)
-	#define LogInfo() LogInfoDetailed(__FILENAME__, __LINE__)
-	#define LogStatus() LogStatusDetailed(__FILENAME__, __LINE__)
-	#define LogWarn() LogWarnDetailed(__FILENAME__, __LINE__)
-	#define LogErr() LogErrorDetailed(__FILENAME__, __LINE__)
+class DisplayMutex {
+public:
+	static std::mutex& getMutex() {
+		return display_mutex;
+	}
+private:
+	static std::mutex display_mutex;
+};
+
+#define LogDebug() LogDebugDetailed(__FILENAME__, __LINE__)
+#define LogInfo() LogInfoDetailed(__FILENAME__, __LINE__)
+#define LogStatus() LogStatusDetailed(__FILENAME__, __LINE__)
+#define LogWarn() LogWarnDetailed(__FILENAME__, __LINE__)
+#define LogErr() LogErrorDetailed(__FILENAME__, __LINE__)
 
 enum class Colour { BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, RESET };
 enum  LogLevel {Debug, Info, Warn, Err, Status};

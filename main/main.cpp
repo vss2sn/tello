@@ -24,7 +24,7 @@ int main(){
   std::map<std::string, std::unique_ptr<Tello>>  m = handleConfig("../config.yaml");
   if(m.count("0.prime.0") == 0){
     utils_log::LogErr() << "The requested drone does not exist.";
-    return;
+    return EXIT_FAILURE;
   }
   Tello* t = m["0.prime.0"].get();
 #else
@@ -53,5 +53,5 @@ int main(){
 
   utils_log::LogWarn() << "----------- Done -----------";
   utils_log::LogDebug() << "----------- Main thread returns -----------";
-  return 0;
+  return EXIT_SUCCESS;
 }

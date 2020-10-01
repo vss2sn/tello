@@ -11,12 +11,12 @@
 #define ANSI_COLOUR_WHITE "\x1b[1;37m"
 #define ANSI_COLOUR_RESET "\x1b[1;0m"
 
-std::mutex display_mutex;
+std::mutex utils_log::DisplayMutex::display_mutex;
 
 utils_log::LogDetailed::~LogDetailed()
 {
 	if(_log_level >= _min_level){
-		std::lock_guard<std::mutex> lock(display_mutex);
+		std::lock_guard<std::mutex> lock(DisplayMutex::getMutex());
 #ifndef SIMPLE
 		switch (_log_level){
 		case LogLevel::Debug:

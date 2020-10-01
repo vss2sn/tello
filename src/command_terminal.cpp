@@ -11,7 +11,7 @@
 #include <iostream>
 #include <sstream>
 
-Terminal::Terminal(bool &run) : run_(run), terminal_mutex_{display_mutex} {
+Terminal::Terminal(bool &run, std::mutex &display_mutex) : run_(run), terminal_mutex_{display_mutex} {
   pt_ = posix_openpt(O_RDWR);
   if (pt_ == -1) {
     std::cerr << "Could not open pseudo terminal." << std::endl;
@@ -77,11 +77,9 @@ std::string Terminal::getCommand() {
 
 Terminal::~Terminal() {
   close(pt_);
-  std::cout << "----------- Termial exiting gracefully -----------"
+  std::cout << "----------- Terminal exiting gracefully -----------"
             << std::endl;
 }
-
-std::mutex Terminal::terminal_mutex_;
 
 std::mutex &Terminal::getMutex() { return terminal_mutex_; }
 
@@ -130,6 +128,8 @@ TERMINAL_CMD_TYPE Terminal::convertToEnum(const std::string &cmd_type) {
     return ALLOW_AUTO_LAND;
   } else if (cmd_type == "donotautoland") {
     return DO_NOT_AUTO_LAND;
+  } else if (cmd_type == "readsequence") {
+    return READ_SEQUENCE;
   } else {
     return UNKNOWN;
   }
