@@ -32,6 +32,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc
                     ${CMAKE_CURRENT_SOURCE_DIR}/lib_joystick
                     ${CMAKE_CURRENT_SOURCE_DIR}/lib_utils
                     ${CMAKE_CURRENT_SOURCE_DIR}/lib_openvslam/openvslam/src
+                    ${CMAKE_CURRENT_SOURCE_DIR}/lib_openvslam/external_dependencies/socket.io-client-cpp/lib/asio/asio/include
                    )
 
 file( GLOB LIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
