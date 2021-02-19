@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -xe
 echo "----------------------------------------"
 echo "This script installs OpenVSLAM and its dependencies"
 echo ""
@@ -34,12 +35,14 @@ echo ""
 export MAIN_DIR=$(pwd)
 
 #Begin openvslam dependencies
-mkdir lib_openvslam
+mkdir -p lib_openvslam
 cd lib_openvslam
 
+rm -rf openvslam
 git clone https://github.com/xdspacelab/openvslam.git
 
-mkdir external_dependencies
+rm -rf external_dependencies
+mkdir -p external_dependencies
 cd external_dependencies
 export EXT_DEP=$(pwd)
 
@@ -70,7 +73,7 @@ sudo apt install -y libglew-dev
 # (if you plan on using SocketViewer)
 # Protobuf dependencies
 sudo apt install -y autogen autoconf libtool
-curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 sudo apt install -y nodejs
 
 echo "----------------------------------------"
@@ -87,7 +90,7 @@ cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=${EXT_DEP}/install/eigen-3.3.4/ \
     ..
-make -j2 --silent
+make -j`nproc` --silent
 make install
 cd ${EXT_DEP}/install/eigen-3.3.4/
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
@@ -123,7 +126,7 @@ cmake \
     -DBUILD_opencv_cudacodec=OFF \
     -DCMAKE_CXX_FLAGS="-w" \
     ..
-make -j2 --silent
+make -j`nproc` --silent
 make install
 cd ${EXT_DEP}/install/opencv-3.4.0
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
@@ -147,7 +150,7 @@ cmake \
     -DCMAKE_INSTALL_PREFIX=${EXT_DEP}/install/DBoW2/ \
     -DCMAKE_CXX_FLAGS="-w" \
     ..
-make -j2 --silent
+make -j`nproc` --silent
 make install
 cd ${EXT_DEP}/install/DBoW2/
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
@@ -181,7 +184,7 @@ cmake \
     -DBUILD_opencv_apps=ON \
     -DCMAKE_CXX_FLAGS="-w" \
     ..
-make -j2 --silent
+make -j`nproc` --silent
 make install
 cd ${EXT_DEP}/install/g2o/
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
@@ -206,7 +209,7 @@ cmake \
     -DCMAKE_INSTALL_PREFIX=${EXT_DEP}/install/Pangolin/ \
     -DCMAKE_CXX_FLAGS="-w" \
     ..
-make -j2 --silent
+make -j`nproc` --silent
 make install
 cd ${EXT_DEP}/install/Pangolin/
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
@@ -233,7 +236,7 @@ cmake \
     -DBUILD_UNIT_TESTS=OFF \
     -DCMAKE_CXX_FLAGS="-w" \
     ..
-make -j2 --silent
+make -j`nproc` --silent
 make install
 cd ${EXT_DEP}/install/socket.io-client-cpp/
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
@@ -269,7 +272,7 @@ cmake \
     -DCMAKE_INSTALL_PREFIX=$(pwd)/../install/ \
     -DCMAKE_CXX_FLAGS="-w" \
     ..
-make -j2 --silent
+make -j`nproc` --silent
 make install
 cd ../install
 sudo echo "export CMAKE_PREFIX_PATH=\$CMAKE_PREFIX_PATH:$(pwd)" >> ~/.bashrc
