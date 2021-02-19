@@ -440,7 +440,7 @@ make -j4
 <span class="nb">cd</span> tello
 <span class="c1"># Install SLAM here using ``bash -i install_openvslam`` OR run the cmake command below with -DUSE_CMAKE_NOT_SCRIPT</span>
 mkdir -p build <span class="o">&amp;&amp;</span> <span class="nb">cd</span> build
-cmake -DRUN_SLAM ..
+cmake -DRUN_SLAM=ON ..
 make -j4
 ./tello
 </pre></div>
